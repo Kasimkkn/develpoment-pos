@@ -1,0 +1,48 @@
+{
+  "name": "restuarant-pos",
+  "version": "1.0.0",
+  "description": "pos for restuarant",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon --exec electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build:css": "tailwindcss -i ./src/css/input.css -o ./src/css/output.css --watch"
+  },
+  "build": {
+    "appId": "com.kasimkkn.pos-restaurant",
+    "win": {
+      "icon": "/assets/adaptive-icon.ico",
+      "target": "nsis"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.1.6",
+    "electron-builder": "^24.13.3",
+    "electron-packager": "^17.1.2",
+    "tailwindcss": "^3.4.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "csv-parser": "^3.0.0",
+    "datatables.net": "^2.0.5",
+    "datatables.net-autofill-dt": "^2.7.0",
+    "datatables.net-buttons-dt": "^3.0.2",
+    "datatables.net-dt": "^2.0.5",
+    "dotenv": "^16.4.5",
+    "flowbite": "^2.3.0",
+    "html-to-text": "^9.0.5",
+    "is-online": "^10.0.0",
+    "jquery": "^3.7.1",
+    "jszip": "^3.10.1",
+    "mongoose": "^8.2.4",
+    "node-thermal-printer": "^4.4.2",
+    "pdfmake": "^0.2.10",
+    "puppeteer": "^22.10.0",
+    "sweetalert2": "^11.10.7",
+    "xlsx": "^0.18.5"
+  }
+}

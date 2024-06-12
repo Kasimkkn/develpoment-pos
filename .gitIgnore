@@ -1,0 +1,7 @@
+/node_modules
+src/uploads
+/out
+/dist
+/.env
+/icon.icns
+/database.db

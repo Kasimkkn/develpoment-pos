@@ -1,0 +1,304 @@
+/* create a variable */
+:root {
+  --common-color: #104373;
+  --common-hover-color : #21205F;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  list-style: none;
+  user-select: none;
+  outline: none;
+}
+
+body{
+  overflow-x: hidden;
+}
+
+input{
+  border: 1px solid var(--common-color) !important;
+  color: var(--common-color);
+  outline: none !important;
+}
+div.dt-container .dt-search input {
+  border: 1px solid var(--common-color) !important;
+  color: var(--common-color);
+  outline: none !important;
+  background-color: white !important;
+}
+select{
+  border: 1px solid var(--common-color) !important;
+  color: var(--common-color);
+  border-radius: 10px;
+  padding: 0.625rem; 
+}
+
+input:focus {
+  outline: none !important;
+}
+input:active {
+  outline: none !important;
+}
+input:hover {
+  outline: none !important;
+}
+
+#keyboard {
+  position: fixed;
+  max-width: 300px;
+  z-index: 10000;
+  background: var(--common-color);
+  padding: 5px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+#alphKeyboard{
+  position: fixed;
+  max-width: 480px;
+  z-index: 10000;
+  background: var(--common-color);
+  padding: 5px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.keys, .alphakeys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: space-around;
+}
+
+.key {
+  font-size: 1.5rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 2 1 29%;
+  text-align: center;
+}
+.alphakey {
+  font-size: 1.5rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  flex: 1 1 16%;
+  text-align: center;
+}
+
+.beautyBtn {
+  background-color: var(--common-color);
+  color: white;
+}
+.border-primary {
+  border-color: var(--common-color);
+  border-width: 1px;
+}
+.text-darkish {
+  color: var(--common-color);
+}
+.dt-layout-cell table tbody tr td {
+  border:1px solid #eee;
+  font-size: 13px;
+} 
+.dt-layout-cell table tbody tr:last-child td {
+  border: none;
+} 
+.dt-layout-cell table tbody tr:last-child td:nth-child(1) {
+  text-align: end;
+} 
+.dt-layout-cell table tbody tr:last-child td {
+  font-weight: 700;
+} 
+.dt-layout-cell table tbody tr td {
+  text-align: right;
+}
+#Item-Wise-Daily-table tbody tr td:nth-child(1) {
+  text-align: start;
+}
+#item-wise-monthly-table tbody tr td:nth-child(1) {
+  text-align: start;
+}
+#menu-print-table tbody tr td:nth-child(2) {
+  text-align: start;
+}
+#unpaid-bills-table tbody tr td:nth-child(2) {
+  text-align: start;
+}
+#loyal-customers-table tbody tr td:nth-child(2) {
+  text-align: start;
+}
+
+#sidebarCloseBtn:hover{
+  cursor: pointer;
+  transform: rotate(180deg);
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background-color: var(--common-color);
+  height: 0px;
+}
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+}
+
+.left_side_section {
+  padding-top: 2.6rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  flex: 0 0 21%;
+  max-width: 21%;
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
+.main_section {
+  flex: 0 0 57%;
+  max-width: 57%;
+  max-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow: overlay;
+}
+
+.right_side_section {
+  flex: 0 0 22%;
+  max-width: 22%;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+  appearance: none;
+  background-color: var(--common-color); 
+}
+.checkbox-container input[type="checkbox"]:checked::after {
+  content: " ";
+  color: white;
+  font-weight: bold;
+  font-size: 16px; 
+  position: relative;
+  top: -13%;
+  left: 20%;
+  z-index: 1;
+
+}
+
+.checkbox-label {
+  font-size: 16px;
+  color: var(--common-color);
+}
+
+.button {
+  width: 100%;
+  background-color: var(--common-color);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #ed576b;
+}
+
+.beautyBtn {
+  background-color: var(--common-color);
+  color: white;
+}
+.beautyBtn:hover {
+  background-color: var(--common-hover-color);
+}
+#whoteCartSection{
+  padding: 1rem 1rem;
+}
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 315px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  transition: width 0.3s ease;
+  z-index: 2;
+  overflow-y: auto;
+}
+
+#sidebar.hidden {
+  width: 0;
+}
+
+#sidebarCloseBtn {
+  color: #ccc;
+  cursor: pointer;
+}
+
+#sidebarCloseBtn:hover {
+  color: white;
+}
+#locationTables{
+  border-radius: 10px;
+  max-height: 78vh;
+  overflow-y: scroll;
+}
+#locationTables::-webkit-scrollbar{
+  display: none;
+}
+#category-list{
+  overflow-x: scroll;
+}
+#category-list::-webkit-scrollbar{
+  display: none;
+}
+#userDropdown,
+#userSidebarDropdown {
+  transform: translate3d(-1px, -73.8px, 0px) !important;
+}
+.darkOrange {
+  background-color: #fb923c;
+}
+.dt-button, .dt-paging-button{
+  background-color: var(--common-color) !important;
+  color: white !important;
+  border-radius: 5px !important;
+  border:none !important;
+}
+div.dt-container div.dt-layout-row{
+  padding: 0.2rem 1rem !important;
+}
+main {
+  padding-left: 16rem;
+}
+@media not all and (min-width: 640px) {
+  main {
+    padding: 0;
+  }
+}

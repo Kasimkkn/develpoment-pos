@@ -1,0 +1,19 @@
+.edit-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    z-index:  1;
+    min-height: 100vh;
+  }
+  .edit_main_section {
+    flex: 0 0 75%;
+    max-width: 75%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .edit_right_side_section {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+    

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unsettle Bill</title>
+    <link
+      rel="stylesheet"
+      href="../node_modules/flowbite/dist/flowbite.min.css"
+    />
+    <link rel="stylesheet" href="css/output.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/edit-bill.css" />
+  </head>
+
+  <body>
+    <!-- Main Content -->
+    <div class="edit-wrapper">
+      <main
+        class="edit_main_section bg-secondary"
+        style="padding-left: 0 !important"
+      >
+        <div class="flex flex-col space-y-3 w-full py-2 px-4">
+          <div class="flex items-start gap-2" style="padding-left: 1rem;">
+            <a href="index.html" class="text-darkish text-2xl">
+              <svg id="Layer_2" width="40" height="40" fill="var(--common-color)" enable-background="new 0 0 512 512" viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg">
+              <g>
+                <g>
+                  <path
+                    d="m201.85 314.54c-6.08 0-12.18-2.21-16.99-6.67l-101.44-94.08c-5.14-4.77-8.05-11.48-8-18.5s3.04-13.69 8.25-18.39l104.22-94.08c10.25-9.25 26.06-8.44 35.31 1.81s8.44 26.06-1.81 35.31l-83.94 75.77 81.4 75.5c10.12 9.39 10.72 25.21 1.33 35.33-4.92 5.31-11.62 8-18.33 8z" />
+                </g>
+                <g>
+                  <path
+                    d="m304.54 435.61h-204.46c-13.81 0-25-11.19-25-25s11.19-25 25-25h204.46c45.42 0 82.37-36.95 82.37-82.37s-36.95-82.37-82.37-82.37h-204.46c-13.81 0-25-11.19-25-25s11.19-25 25-25h204.46c72.99 0 132.37 59.38 132.37 132.37s-59.38 132.37-132.37 132.37z" />
+                </g>
+              </g>
+            </svg>
+          </a>
+          </div>
+          <div class="p-2">
+            <h1>Unsettled Bills</h1>
+            <div class="flex gap-4 items-center justify-start mt-4">
+              <div class="relative">
+                <input
+                  type="date"
+                  id="UnsettledBilldatepicker"
+                  class="bg-primary border border-gray-300 text-black text-sm rounded-lg block w-full p-2.5"
+                  placeholder="Select date"
+                />
+              </div>
+            </div>
+
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
+              <div
+                class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white"
+              >
+                <table
+                  class="w-full text-sm text-left rtl:text-right text-black"
+                >
+                  <thead class="text-xs text-black uppercase bg-primary">
+                    <tr>
+                      <th scope="col" class="px-6 py-3">
+                        <div class="flex items-center checkbox-container">
+                          <input
+                            id="checkbox-all-search"
+                            type="checkbox"
+                            class="w-4 h-4 rounded"
+                          />
+                          <label
+                            for="checkbox-all-search"
+                            class="sr-only checkbox-label"
+                            >checkbox</label
+                          >
+                        </div>
+                      </th>
+                      <th scope="col" class="px-6 py-3">Bill_No</th>
+                      <th scope="col" class="px-6 py-3">Customer_Name</th>
+                      <th scope="col" class="px-6 py-3">Discount By %</th>
+                      <th scope="col" class="px-6 py-3">Discount</th>
+                      <th scope="col" class="px-6 py-3">Round_Off</th>
+                      <th scope="col" class="px-6 py-3">Final_Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="Unsettled-bills-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Side Section -->
+      <aside class="edit_right_side_section bg-tertiary p-8">
+        <div class="py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg">
+          <h1 class="text-2xl text-center">Select Pay Mode</h1>
+          <div class="flex gap-4 items-center justify-center mt-4">
+            <ul class="flex gap-4 items-start justify-center mt-4 flex-col">
+              <li
+                onclick="setPayMode('CASH')"
+                class="hover:underline text-xl text-darkish hover:text-black active:text-black"
+              >
+                CASH
+              </li>
+              <li
+                onclick="setPayMode('UPI')"
+                class="hover:underline text-xl text-darkish hover:text-black active:text-black"
+              >
+                UPI
+              </li>
+              <li
+                onclick="setPayMode('CARD')"
+                class="hover:underline text-xl text-darkish hover:text-black active:text-black"
+              >
+                CARD
+              </li>
+              <li
+                onclick="setPayMode('OTHER')"
+                class="hover:underline text-xl text-darkish hover:text-black active:text-black"
+              >
+                OTHER
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="keyboard" class="hidden fixed shadow-lg">
+    </div>
+      <div id="alphKeyboard" class="hidden fixed shadow-lg">
+    </div>
+
+    <script src="global.js"></script>
+    <script src="js/unsettled-bills.js"></script>
+    <script defer src="../node_modules/flowbite/dist/flowbite.min.js"></script>
+  </body>
+</html>

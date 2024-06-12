@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Preferences</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/output.css" />
+  <link rel="stylesheet" href="css/input.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+</head>
+
+<body class="max-h-screen">
+  <section class="min-h-screen flex items-center justify-center shadow-lg">
+    <div id="preference-form" class="bg-tertiary p-5 flex rounded-2xl shadow-lg flex-col gap-5">
+      <!-- Step 1: Country and Currency Name -->
+      <div id="step1" class="flex flex-col gap-4 w-96">
+        <h2 class="text-xl font-bold text-darkish">Select Currency</h2>
+        <select name="currencyName" id="currencyName" class="w-full px-4 py-3 text-darkish rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none">
+          <option value="INR">India (₹) - INR</option>
+          <option value="AUD">Australia (A$) - AUD</option>
+          <option value="CAD">Canada (C$) - CAD</option>
+          <option value="CNY">China (¥) - CNY</option>
+          <option value="JPY">Japan (¥) - JPY</option>
+          <option value="SGD">Singapore (S$) - SGD</option>
+          <option value="HKD">Hong Kong (HK$) - HKD</option>
+          <option value="CHF">Switzerland (CHF) - CHF</option>
+          <option value="NZD">New Zealand (NZ$) - NZD</option>
+          <option value="SEK">Sweden (kr) - SEK</option>
+          <option value="KRW">South Korea (₩) - KRW</option>
+          <option value="ZAR">South Africa (R) - ZAR</option>
+          <option value="AED">United Arab Emirates (د.إ) - AED</option>
+          <option value="BRL">Brazil (R$) - BRL</option>
+          <option value="MXN">Mexico (Mex$) - MXN</option>
+          <option value="RUB">Russia (₽) - RUB</option>
+          <option value="SAR">Saudi Arabia (﷼) - SAR</option>
+          <option value="QAR">Qatar (﷼) - QAR</option>
+          <option value="THB">Thailand (฿) - THB</option>
+          <option value="MYR">Malaysia (RM) - MYR</option>
+          <option value="IDR">Indonesia (Rp) - IDR</option>
+          <option value="PHP">Philippines (₱) - PHP</option>
+          <option value="TWD">Taiwan (NT$) - TWD</option>
+          <option value="PLN">Poland (zł) - PLN</option>
+          <option value="HUF">Hungary (Ft) - HUF</option>
+          <option value="CZK">Czech Republic (Kč) - CZK</option>
+          <option value="DKK">Denmark (kr) - DKK</option>
+          <option value="NOK">Norway (kr) - NOK</option>
+          <option value="ILS">Israel (₪) - ILS</option>
+          <option value="GBP">England (£) - GBP</option>
+          <option value="EUR">Europe (€) - EUR</option>
+          <option value="USD">USA ($) - USD</option>
+          <option value="VND">Vietnam (₫) - VND</option>
+          <option value="TRY">Turkey (₤) - TRY</option>
+          <option value="Other">Other</option>
+        </select>
+        <button type="button" onclick="nextStep(2)" class="button mt-6">
+          Next
+        </button>
+      </div>
+
+      <!-- Step 2: Tax Options -->
+      <div id="step2" style="display: none" class="flex flex-col gap-4 w-96">
+        <h2 class="text-xl font-bold text-darkish">Select Tax Options</h2>
+        <label class="checkbox-container">
+          <input type="checkbox" name="taxOption" id="isGstAvailable" onchange="toggleTaxOptions()" />
+          <span class="checkbox-label">GST</span>
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="taxOption" id="isValueAddedTax" onchange="toggleTaxOptions()" />
+          <span class="checkbox-label">Value Added Tax</span>
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" name="taxOption" id="noTax" onchange="toggleTaxOptions()" />
+          <span class="checkbox-label">No Tax</span>
+        </label>
+        <div id="gstInputs" style="display: none">
+          <input id="gstTaxRate" placeholder="GST Tax Rate" type="tel" maxlength="3" max="100"
+            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none text-darkish" />
+        </div>
+        <div id="valueAddedInputs" style="display: none">
+          <input id="valueAddedTaxRate" placeholder="Tax Rate" type="tel" maxlength="3" max="100"
+            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none text-darkish" />
+        </div>
+        <div class="flex justify-between gap-1">
+          <button onclick="previousStep(2)" class="button">Previous</button>
+          <button type="button" onclick="nextStep(3)" class="button">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Bill Printing Type -->
+      <form id="step3" style="display: none" class="flex flex-col gap-4 w-96">
+        <h2 class="text-xl font-bold text-darkish">
+          Select Bill Printing Type
+        </h2>
+        <label class="checkbox-container">
+          <input type="checkbox" id="billA4" onchange="togglePrintFormat()" />
+          <span class="checkbox-label">A4</span>
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" id="billA5" onchange="togglePrintFormat()" />
+          <span class="checkbox-label">A5</span>
+        </label>
+        <label class="checkbox-container">
+          <input type="checkbox" id="bill76mm" onchange="togglePrintFormat()" checked />
+          <span class="checkbox-label">76mm</span>
+        </label>
+        <div class="flex gap-2 justify-between">
+          <button onclick="previousStep(3)" class="button">Previous</button>
+          <button type="submit" class="button">Done</button>
+        </div>
+      </form>
+    </div>
+    <div id="keyboard" class="hidden fixed shadow-lg">
+    </div>
+      <div id="alphKeyboard" class="hidden fixed shadow-lg">
+    </div>
+  </section>
+
+  <script src="global.js"></script>
+  
+  <script>
+    const userDetails = JSON.parse(localStorage.getItem("loggedInUser"));
+    const user_id = userDetails._doc.user_id;
+
+    // document.addEventListener("DOMContentLoaded", () => {
+    //   ipcRenderer.send("fetch-user-preference");
+    //   ipcRenderer.on("fetch-user-preference-data", (event, data) => {
+    //     if (data != null) {
+    //       localStorage.setItem("userPreferences", JSON.stringify(data));
+    //       window.location.href = "index.html";
+    //     }
+    //   });
+    // });
+    let currentStep = 1;
+
+    function previousStep() {
+      if (currentStep > 1) {
+        const currentStepElement = document.getElementById(`step${currentStep}`);
+        currentStepElement.style.display = "none";
+        currentStep--;
+        const previousStepElement = document.getElementById(`step${currentStep}`);
+        previousStepElement.style.display = "flex";
+      }
+    }
+
+    function nextStep() {
+      const currentStepElement = document.getElementById(
+        `step${currentStep}`
+      );
+      if (validateInputs(currentStep)) {
+        currentStepElement.style.display = "none";
+        currentStep++;
+        const nextStepElement = document.getElementById(`step${currentStep}`);
+        nextStepElement.style.display = "flex";
+      }
+    }
+
+    function validateInputs(step) {
+      if (step === 1) {
+        const currencyName = document.getElementById("currencyName").value.trim();
+
+        if (currencyName === "") {
+          showAlert("Please Fill This Field!");
+          return false;
+        }
+
+      } else if (step === 2) {
+        const isGstAvailable =
+          document.getElementById("isGstAvailable").checked;
+        const isValueAddedTax =
+          document.getElementById("isValueAddedTax").checked;
+        const isNoTax = document.getElementById("noTax").checked;
+
+        if (!isGstAvailable && !isValueAddedTax && !isNoTax) {
+          showAlert("Please select either GST or Value Added Tax!");
+          return false;
+        }
+
+        if (isGstAvailable) {
+          const gstTaxRate = document.getElementById("gstTaxRate").value.trim();
+          if (gstTaxRate === "") {
+            showAlert("GST Tax Rate are required!");
+            return false;
+          }
+        } else if (isValueAddedTax) {
+          const valueAddedTaxRate = document.getElementById("valueAddedTaxRate").value.trim();
+          if (valueAddedTaxRate === "") {
+            showAlert("Tax Rate is required!");
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    function showAlert(message) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: message,
+        timer: 1500,
+      });
+    }
+
+    function togglePrintFormat() {
+      const a4 = document.getElementById("billA4").checked;
+      const a5 = document.getElementById("billA5").checked;
+      const mm = document.getElementById("bill76mm").checked;
+
+      if (a4) {
+        document.getElementById("billA5").checked = false;
+        document.getElementById("bill76mm").checked = false;
+      }
+      if (a5) {
+        document.getElementById("billA4").checked = false;
+        document.getElementById("bill76mm").checked = false;
+      }
+      if (mm) {
+        document.getElementById("billA4").checked = false;
+        document.getElementById("billA5").checked = false;
+      }
+    }
+
+    function toggleTaxOptions() {
+      const isGstAvailable = document.getElementById("isGstAvailable").checked;
+      const isValueAddedTax = document.getElementById("isValueAddedTax").checked;
+      const noTax = document.getElementById("noTax").checked;
+
+      if (isGstAvailable) {
+        document.getElementById("gstInputs").style.display = "flex";
+        document.getElementById("valueAddedInputs").style.display = "none";
+        document.getElementById("isValueAddedTax").checked = false;
+        document.getElementById("noTax").checked = false;
+      }
+      if (isValueAddedTax) {
+        document.getElementById("valueAddedInputs").style.display = "flex";
+        document.getElementById("gstInputs").style.display = "none";
+        document.getElementById("isGstAvailable").checked = false;
+        document.getElementById("noTax").checked = false;
+      }
+      if (noTax) {
+        document.getElementById("gstInputs").style.display = "none";
+        document.getElementById("valueAddedInputs").style.display = "none";
+        document.getElementById("isGstAvailable").checked = false;
+        document.getElementById("isValueAddedTax").checked = false;
+      }
+    }
+
+    const currencySymbols = {
+      INR: "₹",
+      AUD: "A$",
+      CAD: "C$",
+      CNY: "¥",
+      JPY: "¥",
+      SGD: "S$",
+      HKD: "HK$",
+      CHF: "CHF",
+      NZD: "NZ$",
+      SEK: "kr",
+      KRW: "₩",
+      ZAR: "R",
+      AED: "د.إ",
+      BRL: "R$",
+      MXN: "Mex$",
+      RUB: "₽",
+      SAR: "﷼",
+      QAR: "﷼",
+      THB: "฿",
+      MYR: "RM",
+      IDR: "Rp",
+      PHP: "₱",
+      TWD: "NT$",
+      PLN: "zł",
+      HUF: "Ft",
+      CZK: "Kč",
+      DKK: "kr",
+      NOK: "kr",
+      ILS: "₪",
+      GBP: "£",
+      EUR: "€",
+      USD: "$",
+      VND: "₫",
+      TRY: "₤",
+      Other: "",
+    };
+
+  
+    document.getElementById("step3").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const currencySelect = document.getElementById("currencyName");
+      const currencyName = currencySelect.options[currencySelect.selectedIndex].value;
+
+      const billA4 = document.getElementById("billA4").checked;
+      const billA5 = document.getElementById("billA5").checked;
+      const bill76mm = document.getElementById("bill76mm").checked;
+
+      if (!billA4 && !billA5 && !bill76mm) {
+        showAlert("Please select at least one Bill Printing Type!");
+        return;
+      }
+
+      let selectedTaxOption;
+
+      if (document.getElementById("isGstAvailable").checked) {
+        selectedTaxOption = "GST";
+      } else if (document.getElementById("isValueAddedTax").checked) {
+        selectedTaxOption = "Value Added Tax";
+      } else if (document.getElementById("noTax").checked) {
+        selectedTaxOption = "No Tax";
+      } else {
+        selectedTaxOption = "No Tax";
+      }
+
+      const taxRates = {};
+      if (selectedTaxOption === "GST") {
+        taxRates.gstTaxRate = document.getElementById("gstTaxRate").value.trim();
+      } else if (selectedTaxOption === "Value Added Tax") {
+        taxRates.valueAddedTaxRate = document.getElementById("valueAddedTaxRate").value.trim();
+      } else if (selectedTaxOption === "No Tax") {
+        taxRates.noTax = true;
+      }
+
+      let selectedTypes;
+      if (billA4) selectedTypes = "A4";
+      if (billA5) selectedTypes = "A5";
+      if (bill76mm) selectedTypes = "76mm";
+
+      const preferences = {
+        user_id: userDetails._doc.user_id,
+        currency_name: currencySymbols[currencyName],
+        tax_option: selectedTaxOption,
+        tax_rates: taxRates,
+        bill_printing_type: selectedTypes,
+      };
+
+      ipcRenderer.send("save-preference", preferences);
+      ipcRenderer.on("preference-saved", (event, data) => {
+        localStorage.setItem("userPreferences", JSON.stringify(data));
+        window.location.href = "index.html";
+      });
+    });
+  </script>
+
+
+</body>
+
+</html>

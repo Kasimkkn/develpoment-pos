@@ -1,0 +1,495 @@
+const { Modal } = require("flowbite");
+const urlParams = new URLSearchParams(window.location.search);
+const locationName = urlParams.get("location") || "Common-Hall";
+const tableNo = urlParams.get("id") || 1;
+document.getElementById("locationName").innerHTML = locationName;
+document.getElementById("tableNo").innerHTML = "Table No: " + tableNo;
+const userPref = JSON.parse(localStorage.getItem("userPreferences"));
+const userCurrency = userPref ? userPref._doc.currency_name : "₹";
+
+let userTaxPerc;
+
+if (userPref._doc.is_gstAvailable) {
+  userTaxPerc = userPref._doc.gst_percentage / 100;
+}
+else if (userPref._doc.is_ValueAddedTaxAvailable) {
+  userTaxPerc = userPref._doc.vat_percentage / 100;
+}
+else {
+  userTaxPerc = 0;
+}
+
+let apiProduct = [];
+let cartItems = [];
+let Locations = [];
+let apiCategory = JSON.parse(localStorage.getItem("categories"));
+
+
+let spInfList = [];
+ipcRenderer.send("get-special-info");
+ipcRenderer.on("get-special-info-success", (event, data) => {
+  spInfList = data;
+})
+
+
+const updateCartUI = () => {
+  const cartElement = document.getElementById("cart");
+  cartElement.innerHTML = "";
+  cartItems.forEach((item) => {
+    const sp_info = item._doc.sp_info ? item._doc.sp_info : "none";
+    const itemElement = document.createElement("div");
+    itemElement.classList = "flex items-center justify-between py-2 px-3 rounded-lg";
+    if (item._doc.is_printed) {
+      itemElement.classList.add("bg-secondary");
+    }
+    else {
+      itemElement.classList.add("bg-white");
+    }
+    itemElement.innerHTML = `
+    <input type="hidden" value="${item._doc.item_no}" id="itemNo"/>
+    <div class="flex items-center justify-center p-2">
+          <span class="w-14 h-14 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+            <p class="text-2xl">${item._doc.item_no}</p>
+          </span>
+        </div>
+    <div class="flex flex-col gap-2 items-start w-40 max-lg:w-32">
+      <div class="flex gap-1 justify-between items-center text-sm">
+      <p class="text-sm flex gap-2">${item._doc.item_name.split(" ").slice(0, 2).join(" ")}</p>
+      ${sp_info !== "none" ? `(${sp_info})` : ``}
+      <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item._doc.item_no}" class="bg-primary text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
+      </div>
+      <div class="text-xs flex gap-2 items-center">
+      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item._doc.item_no}','${item._doc.price}', event)">+</button>
+      ${item._doc.quantity} 
+      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleDecrement(${item._doc.item_no}, event)">-</button>
+      
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 justify-center items-center">
+      <p class="text-xs">${(item._doc.price * item._doc.quantity).toFixed(2)}</p>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" id="delete" class="hover:cursor-pointer"
+      onclick='removeItemFromCart("${locationName}", "${tableNo}", ${JSON.stringify(item._doc)})'>
+      <path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"></path>
+      </svg>
+    </div>
+    <input type="hidden" value="${item._doc.sp_info}" />
+  `;
+
+    cartElement.appendChild(itemElement);
+  });
+  cartElement.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-modal-toggle="quantityAddModal"]');
+    if (button) {
+      document.getElementById("newQuantity").value = 1;
+      const itemId = button.id.replace('quantity-', '');
+      openQuantityModal(itemId);
+    }
+  });
+  updateCartSummary(cartItems);
+};
+
+const updateCartSummary = (cartItems) => {
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item._doc.quantity,
+    0
+  );
+  const totalAmount = cartItems.reduce(
+    (total, item) => total + item._doc.price * item._doc.quantity,
+    0
+  );
+  const taxAmount = totalAmount * userTaxPerc;
+  const netAmount = totalAmount + taxAmount;
+
+  document.getElementById(
+    "total-items"
+  ).textContent = `Total (${totalItems} Items)`;
+  document.getElementById("total-amount").textContent = `${userCurrency} ${totalAmount.toFixed(
+    2
+  )}`;
+  document.getElementById("tax-amount").textContent = `${userCurrency} ${taxAmount.toFixed(
+    2
+  )}`;
+  document.getElementById("net-amount").textContent = `${userCurrency} ${netAmount.toFixed(
+    2
+  )}`;
+  document.getElementById("Bill_amount").textContent = `${userCurrency} ${netAmount.toFixed(
+    2
+  )}`;
+};
+
+
+const addItemToCart = (product, price) => {
+  const newItem = {
+    tableNo: tableNo,
+    locationName: locationName,
+    id: product._doc.item_no,
+    name: product._doc.item_name,
+    image: product._doc.item_image,
+    price,
+    quantity: 1,
+  };
+
+  ipcRenderer.send("add-cartItem", newItem);
+  if(cartItems.length === 0 ){
+    renderLocationBlocks()
+  }
+  updateCartUI();
+};
+
+const removeItemFromCart = (locationName, tableNo, item) => {
+  try {
+    ipcRenderer.send(
+      "delete-whole-cartItem",
+      locationName,
+      tableNo,
+      JSON.stringify(item)
+    );
+    if (item.is_printed == true) {
+      printCancelKot(locationName,tableNo,item);
+    }
+    ipcRenderer.on("cartItems-data", (event, receivedCartItems) => { // Use once to avoid multiple event listeners
+      cartItems = receivedCartItems;
+      updateCartUI();
+    });
+  } catch (error) {
+    console.log("Error removing item from cart:", error);
+  }
+};
+
+
+const handleIncrement = (productId, price, event) => {
+  event.preventDefault();
+  const product = apiProduct.find(
+    (product) => product._doc.item_no == productId
+  );
+  if (product) {
+    addItemToCart(product, price);
+  } else {
+    console.error(`Element with ID 'quantity-${productId}' not found.`);
+  }
+};
+
+const handleDecrement = (productId, event) => {
+  event.preventDefault();
+  const product = cartItems.find(
+    (item) => item._doc.item_no === productId
+  )
+  if (product) {
+    console.log(product)
+    if (product._doc.quantity == 0) {
+      removeItemFromCart(locationName, tableNo, product);
+      return
+    }
+    const toUpdateData = {
+      tableNo: tableNo,
+      locationName: locationName,
+      itemId: productId,
+      newQuantity: product._doc.quantity === 1 ? 0 : product._doc.quantity - 1,
+    };
+    ipcRenderer.send("update-cartItem-quantity", toUpdateData);
+    ipcRenderer.on("cartItems-data", (event, receivedCartItems) => { // Use once to avoid multiple event listeners
+      cartItems = receivedCartItems;
+      updateCartUI();
+    })
+  }
+};
+
+const isNumeric = document.getElementById("isNumeric")
+
+const searchInput = document.getElementById("searchInput");
+
+window.addEventListener('load', () => {
+  const savedIsNumericState = localStorage.getItem('isNumeric');
+  if (savedIsNumericState) {
+    isNumeric.checked = JSON.parse(savedIsNumericState);
+    updateSearchInputType();
+  }
+});
+
+function updateSearchInputType() {
+  if (isNumeric.checked) {
+    searchInput.type = 'number';
+  } else {
+    searchInput.type = 'text';
+  }
+}
+
+isNumeric.addEventListener('change', () => {
+  localStorage.setItem('isNumeric', isNumeric.checked);
+  updateSearchInputType();
+});
+
+searchInput.addEventListener('input', () => {
+  const searchText = searchInput.value.toLowerCase();
+  if (searchText === "") {
+    populateProducts(apiProduct, locationName, Locations);
+    return;
+  }
+  const filteredProducts = apiProduct.filter((product) =>
+    isNumeric.checked
+      ? product._doc.item_no.toString().includes(searchText)
+      : product._doc.item_name.toLowerCase().includes(searchText) ||
+      product._doc.item_no.toString().includes(searchText)
+  );
+  populateProducts(filteredProducts, locationName, Locations);
+});
+
+const getCartItemQuantity = (itemNo) => {
+  let totalQuantity = 0;
+
+  cartItems.forEach((item) => {
+    if (item._doc.item_no === itemNo) {
+      totalQuantity += item._doc.quantity;
+    }
+  });
+
+  return totalQuantity;
+};
+
+const extractAndCapitalize = (str) => {
+  const matches = str.match(/(\b\S)|\s+(\S)/g);
+  if (matches) {
+    return matches.map(match => match.trim().toUpperCase()).join('');
+  }
+  return '';
+};
+
+const populateProducts = (products, locationName) => {
+  const productList = document.getElementById("product-list");
+  productList.innerHTML = "";
+
+  products.forEach((product) => {
+    if (!product._doc.status) {
+      return;
+    }
+    const currentLocation = Locations.find(loc => loc._doc.location_name == locationName);
+    const locationPriceKey = currentLocation ? "rate_" + currentLocation._doc.location_price : "rate_one";
+
+
+    let price;
+    switch (locationPriceKey) {
+      case "rate_one":
+        price = product._doc.rate_one;
+        break;
+      case "rate_two":
+        price = product._doc.rate_two;
+        break;
+      case "rate_three":
+        price = product._doc.rate_three;
+        break;
+      case "rate_four":
+        price = product._doc.rate_four;
+        break;
+      case "rate_five":
+        price = product._doc.rate_five;
+        break;
+      case "rate_six":
+        price = product._doc.rate_six;
+        break;
+      default:
+        price = product._doc.rate_one;
+    }
+    const productElement = document.createElement("a");
+    productElement.href = "#";
+    productElement.classList.add("product", "w-40", "bg-white", "rounded-xl", "duration-500", "hover:shadow-xl");
+    productElement.innerHTML = `
+          <div class="flex items-center justify-between px-2 py-2 gap-2">
+          <span class="w-16 h-16 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+            <p class="text-xl">${product._doc.item_no}</p>
+            </span>
+            <div class="flex flex-col gap-1 w-full">
+                        <p class="text-sm font-bold " style="text-transform: capitalize;">
+            ${product._doc.item_name.split(" ").slice(0, 2).join(" ")}</p> 
+            <p class="text-sm font-extralight">${userCurrency}${price}</p>
+            </div>
+          </div>
+
+    `;
+    productElement.addEventListener('click', () => {
+      handleIncrement(product._doc.item_no, price, event);
+    })
+    productList.appendChild(productElement);
+  });
+  productList.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-modal-toggle="quantityAddModal"]');
+    if (button) {
+      document.getElementById("newQuantity").value = 1;
+      const itemId = button.id.replace('quantity-', '');
+      openQuantityModal(itemId);
+    }
+  });
+};
+
+const handleCategoryClick = (categoryNo) => {
+  const buttonClicked = document.getElementById(categoryNo);
+
+  if (buttonClicked) {
+    buttonClicked.classList.add("bg-darkish");
+    buttonClicked.classList.remove("bg-white");
+    buttonClicked.classList.add("text-white");
+    const allCategoryButtons = document.querySelectorAll("#category-list button");
+    allCategoryButtons.forEach((button) => {
+      if (button !== buttonClicked) {
+        button.classList.add("bg-white");
+        button.classList.remove("text-white");
+        button.classList.add("text-black");
+      }
+    });
+  }
+
+  if (categoryNo === "all") {
+    populateProducts(apiProduct);
+  } else {
+    const filteredProducts = apiProduct.filter(
+      (product) => product._doc.category_no === parseInt(categoryNo)
+    );
+    populateProducts(filteredProducts);
+  }
+};
+
+const populateCateogories = (categories) => {
+  const categoryList = document.getElementById("category-list");
+  categoryList.innerHTML = "";
+
+  const allCategoryOption = document.createElement("button");
+  allCategoryOption.id = "all";
+  allCategoryOption.textContent = "ALL";
+  allCategoryOption.className = "flex items-center justify-center rounded-md border bg-darkish text-white border-primary p-2 text-xs";
+  allCategoryOption.addEventListener("click", () => {
+    handleCategoryClick("all");
+  })
+  categoryList.appendChild(allCategoryOption);
+
+  const categoriesWithProducts = categories.filter((category) =>
+    apiProduct.some((product) => product._doc.category_no === category._doc.category_no && product._doc.status)
+  );
+
+  categoriesWithProducts.forEach((category) => {
+    const categoryElement = document.createElement("button");
+    categoryElement.id = category._doc.category_no.toString();
+    categoryElement.textContent = category._doc.category_name.split(" ")[0].toUpperCase();
+    categoryElement.className = "flex items-center justify-center rounded-md border border-primary p-2 text-xs bg-white";
+
+    categoryElement.addEventListener("click", () => {
+      handleCategoryClick(category._doc.category_no);
+    });
+
+    categoryList.appendChild(categoryElement);
+  });
+};
+
+const $targetEl = document.getElementById('quantityAddModal');
+const $targetEl2 = document.getElementById('customerInfoModal');
+const $targetEl3 = document.getElementById('quantityAddModal');
+
+const options = {
+  placement: 'bottom-right',
+  backdrop: 'dynamic',
+  backdropClasses:
+    'bg-gray-900/50 fixed inset-0 z-40',
+  closable: true,
+};
+
+const quantityAddModal = new Modal($targetEl, options);
+const customerInfoModal = new Modal($targetEl2, options);
+
+let cartItemId = 0
+const openQuantityModal = (itemId) => {
+  cartItemId = itemId
+  quantityAddModal.show();
+}
+
+function closeModal() {
+  quantityAddModal.hide();
+  customerInfoModal.hide();
+}
+
+
+const specialInfo = document.getElementById("specialInfo");
+const datalist = document.getElementById("specialInfoSuggestions");
+
+specialInfo.addEventListener("input", (event) => {
+  const inputText = event.target.value.trim().toLowerCase();
+  renderFilteredSuggestions(inputText);
+});
+
+function printCancelKot(locationName,tableNo,cancelItem) {
+  const todaysDate = document.getElementById("todaysDate").textContent;
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const KOtContent = {
+    table_no: tableNo,
+    date: todaysDate,
+    location: locationName,
+    loggedInUser: loggedInUser,
+    cancelItem
+  }
+
+
+  ipcRenderer.send("print-cancel-kot", KOtContent);
+ 
+}
+
+
+function renderFilteredSuggestions(inputText) {
+  // Clear previous options
+  datalist.innerHTML = "";
+
+  spInfList.forEach(spInf => {
+    const spInfText = spInf._doc.sp_info.toLowerCase();
+    if (spInfText.includes(inputText)) {
+      const option = document.createElement("option");
+      option.value = spInf._doc.sp_info;
+      datalist.appendChild(option);
+    }
+  });
+}
+
+
+ipcRenderer.send("fetch-cartItems", tableNo, locationName);
+
+ipcRenderer.send("fetch-products");
+
+ipcRenderer.send("fetch-location");
+
+ipcRenderer.on("cartItems-data", (event, receivedCartItems) => {
+  cartItems = receivedCartItems;
+  updateCartUI();
+});
+
+ipcRenderer.on("location-data", (event, data) => {
+  Locations = data;
+  populateProducts(apiProduct, locationName);
+});
+
+ipcRenderer.once("fetch-error", (event, error) => {
+  console.log(error + "error fetching products");
+});
+
+ipcRenderer.on("products-data", (event, products) => {
+  apiProduct = products;
+  populateProducts(apiProduct, locationName);
+  populateCateogories(apiCategory);
+});
+
+document.getElementById("add-quantity-btn").addEventListener("click", () => {
+  const getNewQty = parseInt(document.getElementById("newQuantity").value);
+  const specialInfo = document.getElementById("specialInfo").value;
+  try {
+    if (getNewQty > 0) {
+      let toUpdateData = {
+        tableNo: tableNo,
+        locationName: locationName,
+        itemId: cartItemId,
+        newQuantity: getNewQty,
+        specialInfo: specialInfo || "none",
+      };
+      ipcRenderer.send("add-new-quantity", toUpdateData);
+      location.reload();
+    }
+  } catch (error) {
+    console.log(error);
+    location.reload();
+  }
+});
+
+
