@@ -172,9 +172,13 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
     printer.println(billFooter);
     printer.cut();
 
-    // Execute the print
-    await printer.execute();
-    console.log("Bill printed successfully");
+    if(await printer.isPrinterConnected()){
+      await printer.execute();
+     console.log("Bill printed successfully");
+     }
+     else{
+       console.log("Printer not connected");
+     }
 
     event.reply('bill-saved');
   } catch (error) {
@@ -232,10 +236,14 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
     });
     printer.println('End of KOT');
 
-    // Execute the print
-    await printer.execute();
-    console.log("KOT printed successfully");
     printer.cut();
+    if(await printer.isPrinterConnected()){
+      await printer.execute();
+     console.log("Kot printed successfully");
+     }
+     else{
+       console.log("Printer not connected");
+     }
 
     event.reply('bill-saved');
   } catch (error) {
@@ -280,8 +288,13 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     // Execute the print
 
     printer.cut();
-    await printer.execute();
+    if(await printer.isPrinterConnected()){
+     await printer.execute();
     console.log("Cancel KOT printed successfully");
+    }
+    else{
+      console.log("Printer not connected");
+    }
 
     event.reply('bill-saved');
   } catch (error) {

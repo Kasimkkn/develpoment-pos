@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 
-<body class="bg-tertiary">
+<body>>
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
     class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-gray-200">
@@ -26,14 +26,14 @@
     class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
     aria-label="Sidebar">
     <div class="h-full px-3 py-4 overflow-y-auto bg-primary">
-      <ul class="space-y-6 font-medium" style="max-height: 88%; overflow-x: scroll;">
+      <ul class="space-y-6 font-medium">
         <li>
           <a href="../index.html" id="CustomerHotelName" class="text-2xl font-bold text-darkish">BitePoint</a>
         </li>
 
         <li>
           <button type="button" id="master_option"
-            class="inline-flex items-center justify-between rounded-md text-sm hover:bg-ssecondary h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
+            class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
             aria-controls="dropdown-master" data-collapse-toggle="dropdown-master">
 
             <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Master</span>
@@ -44,44 +44,48 @@
           </button>
           <ul id="dropdown-master" class="hidden py-2 space-y-2">
             <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
-                href="../masters/category.html">purchase</a>
+              <a id="master_category"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+                href="../masters/category.html">Categories</a>
             </li>
             <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_items" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/items.html">Items</a>
             </li>
 
             <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_location"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/location.html">Locations</a>
             </li>
             <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_table" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/table.html">Tables</a>
             </li>
             <li>
-            <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_billbook"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/billbook.html">Bill Book</a>
             </li>
             <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_loyalty"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/loyalty.html">Loyalty</a>
             </li>
             <li id="userLink">
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_user" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/user.html">Users</a>
             </li>
             <li id="userRights">
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="master_userRights"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/userRights.html">User Rights</a>
             </li>
           </ul>
         </li>
-
         <li>
           <button type="button" id="reports"
-            class="inline-flex items-center justify-between rounded-md text-sm hover:bg-ssecondary h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
+            class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
             aria-controls="dropdown-reports" data-collapse-toggle="dropdown-reports">
 
             <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Reports</span>
@@ -91,44 +95,54 @@
             </svg>
           </button>
           <ul id="dropdown-reports" class="hidden py-2 space-y-2">
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="daily_sales">
+              <a id="daily_sales_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/daily-sales.html">Daily Sales</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="monthly_sales">
+              <a id="monthly_sales_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/monthly-sales.html">Monthly Sales</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="location_wise_report">
+              <a id="location_wise_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/locatoion-wise-sale.html">Location Wise</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="item_wise_report">
+              <a id="item_wise_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/item-wise-daily.html">Item Wise Daily</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="item_wise_monthly_report">
+              <a id="item_wise_monthly_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/item-wise-monthly.html">Item Wise Monthly</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="table_wise_report">
+              <a id="table_wise_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/table-wise-sales.html">Table Wise Sales</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="menu_print">
+              <a id="menu_print_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/menu-print.html">Menu Print</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="category_wise_report">
+              <a id="category_wise_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/category-items.html">Category Items Sales</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="unpaid_bills">
+              <a id="unpaid_bills_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/unpaid-bills.html">Unpaid Bills</a>
             </li>
-            <li>
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+            <li id="payment_wise_report">
+              <a id="payment_wise_report_btn"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../reports/payment-wise.html">Payment Wise</a>
             </li>
 
@@ -136,7 +150,7 @@
         </li>
         <li>
           <button type="button" id="stocks"
-            class="inline-flex items-center justify-between rounded-md text-sm hover:bg-ssecondary h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
+            class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-full mb-2 beautyBtn text-white"
             aria-controls="dropdown-stock" data-collapse-toggle="dropdown-stock">
 
             <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Stock</span>
@@ -147,15 +161,15 @@
           </button>
           <ul id="dropdown-stock" class="hidden py-2 space-y-2">
             <li id="stock_details">
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="rawMaterial" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../stock/stocks.html">Raw Material</a>
             </li>
             <li id="purchase_details">
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="purchase" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../stock/purchase.html">Purchase</a>
             </li>
             <li id="receipe_details">
-              <a class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+              <a id="receipe" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../stock/receipe.html">Recipe</a>
             </li>
           </ul>
@@ -176,10 +190,10 @@
         <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
           <ul class="py-2 text-sm text-black" aria-labelledby="userDropdownButton">
             <li id="profileLink">
-              <a href="../profile.html" class="block px-4 py-2  hover:bg-secondary">Profile</a>
+              <a id="profileBtn" href="../profile.html" class="block px-4 py-2  hover:bg-secondary">Profile</a>
             </li>
             <li id="setting">
-              <a href="../settting.html" class="block px-4 py-2  hover:bg-secondary">Setting</a>
+              <a id="settingBtn" href="../settting.html" class="block px-4 py-2  hover:bg-secondary">Setting</a>
             </li>
             <li>
               <a href="#" class="block px-4 py-2  hover:bg-secondary" id="syncDataOnline">
@@ -217,7 +231,7 @@
         <div class="relative">
 
           <button id="addNewStockBtn" data-modal-target="addNewStockModal" data-modal-show="addNewStockModal"
-            class="inline-flex items-center justify-between rounded-md text-sm hover:bg-ssecondary h-10 px-4 py-2 w-max mb-2 beautyBtn text-white max-md:h-5 max-md:text-xs">
+            class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max mb-2 beautyBtn text-white max-md:h-5 max-md:text-xs">
             Add New Stock
           </button>
 

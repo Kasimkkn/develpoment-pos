@@ -224,4 +224,4 @@ function setLocale(locale) {
     }
   }
   
-  setLocale("ar");
+  setLocale("en");

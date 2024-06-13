@@ -44,20 +44,20 @@ const updateImageInfoText = document.getElementById("update_image_text");
 const updateImagePreviewIcon = document.getElementById("update_image_icon");
 
 updaeFileInput.addEventListener("change", () => {
-    const file = updaeFileInput.files[0];
+  const file = updaeFileInput.files[0];
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const imagePreview = document.getElementById("update_image_preview");
-            imagePreview.src = e.target.result;
-            imagePreview.classList.remove("hidden");
-            updateImageInfoText.classList.add("hidden");
-            updateImagePreviewIcon.classList.add("hidden");
-        };
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imagePreview = document.getElementById("update_image_preview");
+      imagePreview.src = e.target.result;
+      imagePreview.classList.remove("hidden");
+      updateImageInfoText.classList.add("hidden");
+      updateImagePreviewIcon.classList.add("hidden");
+    };
 
-        reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
+  }
 });
 
 const editItemHandler = async () => {
@@ -107,32 +107,32 @@ const imageInfoText = document.getElementById("image_info_text");
 const imagePreviewIcon = document.getElementById("image_preview_icon");
 
 fileInput.addEventListener("change", () => {
-    const file = fileInput.files[0];
+  const file = fileInput.files[0];
 
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const imagePreview = document.getElementById("image_preview");
-            imagePreview.src = e.target.result;
-            imagePreview.classList.remove("hidden");
-            imageInfoText.classList.add("hidden");
-            imagePreviewIcon.classList.add("hidden");
-        };
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imagePreview = document.getElementById("image_preview");
+      imagePreview.src = e.target.result;
+      imagePreview.classList.remove("hidden");
+      imageInfoText.classList.add("hidden");
+      imagePreviewIcon.classList.add("hidden");
+    };
 
-        reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
+  }
 });
 
 const newItemHandler = () => {
 
   const imageFile = document.getElementById("new_item_image").files[0];
 
-  if(!imageFile){
+  if (!imageFile) {
     Swal.fire({
       icon: 'error',
       title: 'Oops...',
       text: 'Please select an image!',
-      timer:1000,
+      timer: 1000,
     })
   }
   const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
@@ -142,7 +142,7 @@ const newItemHandler = () => {
     const newItemNameInput = document.getElementById("new_item_name").value;
     const newRateOne = document.getElementById("new_rate_one").value;
     const newRateTwo = document.getElementById("new_rate_two").value;
-    const newRateTree   = document.getElementById("new_rate_three").value;
+    const newRateTree = document.getElementById("new_rate_three").value;
     const newRateFour = document.getElementById("new_rate_four").value;
     const newRateFive = document.getElementById("new_rate_five").value;
     const newRateSix = document.getElementById("new_rate_six").value;
@@ -150,48 +150,48 @@ const newItemHandler = () => {
     const newStatusInput = document.getElementById("new_status").value;
     const newTax = document.getElementById("new_tax").value;
 
-    if(newItemNoInput == "" || newItemNameInput== "" || newRateOne == "" || newRateTwo == "" || newRateTree   == "" || newRateFour == "" || newRateFive == "" || newRateSix == "" || newCategoryInput == "" || newStatusInput == ""){
+    if (newItemNoInput == "" || newItemNameInput == "" || newRateOne == "" || newRateTwo == "" || newRateTree == "" || newRateFour == "" || newRateFive == "" || newRateSix == "" || newCategoryInput == "" || newStatusInput == "") {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Please fill all the fields!',
-        timer:1000,
+        timer: 1000,
       })
     }
-    else{
-    const itemData = {
-      item_no: newItemNoInput,
-      itemName: newItemNameInput,
-      itemImage: uploadPath,
-      rate_one: newRateOne, 
-      rate_two: newRateTwo,
-      rate_three: newRateTree,
-      rate_four: newRateFour,
-      rate_five: newRateFive,
-      rate_six: newRateSix,
-      categoryNo: newCategoryInput,
-      isActive: newStatusInput,
-      tax_perc: newTax
-    }
+    else {
+      const itemData = {
+        item_no: newItemNoInput,
+        itemName: newItemNameInput,
+        itemImage: uploadPath,
+        rate_one: newRateOne,
+        rate_two: newRateTwo,
+        rate_three: newRateTree,
+        rate_four: newRateFour,
+        rate_five: newRateFive,
+        rate_six: newRateSix,
+        categoryNo: newCategoryInput,
+        isActive: newStatusInput,
+        tax_perc: newTax
+      }
 
-    ipcRenderer.send("new-item", itemData)
-    const addNewItemModal = document.getElementById("addNewItemModal");
-    addNewItemModal.classList.add("hidden");
-    addNewItemModal.classList.remove("flex");
-    location.reload(true);
-    fetchProduct();
-  }
+      ipcRenderer.send("new-item", itemData)
+      const addNewItemModal = document.getElementById("addNewItemModal");
+      addNewItemModal.classList.add("hidden");
+      addNewItemModal.classList.remove("flex");
+      location.reload(true);
+      fetchProduct();
+    }
   } catch (error) {
     ipcRenderer.on("new-item-error", (event, error) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: error,
-        timer:1000,
+        timer: 1000,
       })
       setTimeout(() => {
         location.reload(true);
-      },1000)
+      }, 1000)
     })
   }
 }
@@ -284,8 +284,23 @@ const renderProducts = (products) => {
           <button type="button" 
           onClick="openEditModal(${product._doc.item_no})"
           data-modal-target="editItemModal" data-modal-show="editItemModal"
-          class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max mb-2 beautyBtn text-white max-md:text-xs">
-          Edit Items</button>
+          class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max mb-2 max-md:text-xs">
+          <svg fill="var(--common-color)" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 348.882 348.882" xml:space="preserve">
+<g>
+	<path d="M333.988,11.758l-0.42-0.383C325.538,4.04,315.129,0,304.258,0c-12.187,0-23.888,5.159-32.104,14.153L116.803,184.231
+		c-1.416,1.55-2.49,3.379-3.154,5.37l-18.267,54.762c-2.112,6.331-1.052,13.333,2.835,18.729c3.918,5.438,10.23,8.685,16.886,8.685
+		c0,0,0.001,0,0.001,0c2.879,0,5.693-0.592,8.362-1.76l52.89-23.138c1.923-0.841,3.648-2.076,5.063-3.626L336.771,73.176
+		C352.937,55.479,351.69,27.929,333.988,11.758z M130.381,234.247l10.719-32.134l0.904-0.99l20.316,18.556l-0.904,0.99
+		L130.381,234.247z M314.621,52.943L182.553,197.53l-20.316-18.556L294.305,34.386c2.583-2.828,6.118-4.386,9.954-4.386
+		c3.365,0,6.588,1.252,9.082,3.53l0.419,0.383C319.244,38.922,319.63,47.459,314.621,52.943z"/>
+	<path d="M303.85,138.388c-8.284,0-15,6.716-15,15v127.347c0,21.034-17.113,38.147-38.147,38.147H68.904
+		c-21.035,0-38.147-17.113-38.147-38.147V100.413c0-21.034,17.113-38.147,38.147-38.147h131.587c8.284,0,15-6.716,15-15
+		s-6.716-15-15-15H68.904c-37.577,0-68.147,30.571-68.147,68.147v180.321c0,37.576,30.571,68.147,68.147,68.147h181.798
+		c37.576,0,68.147-30.571,68.147-68.147V153.388C318.85,145.104,312.134,138.388,303.85,138.388z"/>
+</g>
+</svg>
+          </button>
         </td>
       `;
 
@@ -339,7 +354,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
       const arrayBuffer = e.target.result;
       const fileType = file.name.split('.').pop();
       let data = [];
-    
+
       if (fileType === 'xlsx' || fileType === 'xls') {
         const workbook = xlsx.read(new Uint8Array(arrayBuffer), { type: 'array' });
         const sheetName = workbook.SheetNames[0];
@@ -349,7 +364,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
         const text = new TextDecoder().decode(arrayBuffer);
         data = await parseCsv(text);
       }
-    
+
       ipcRenderer.send('bulk-insert-item', data);
 
       ipcRenderer.on("bulk-insert-response", (event, response) => {
@@ -376,8 +391,8 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
         }
       })
     };
-    
-    reader.readAsArrayBuffer(file);    
+
+    reader.readAsArrayBuffer(file);
   } else {
     Swal.fire({
       icon: 'error',
@@ -392,7 +407,7 @@ function parseCsv(data) {
   return new Promise((resolve, reject) => {
     const results = [];
     const readable = new Readable();
-    readable._read = () => {};
+    readable._read = () => { };
     readable.push(data);
     readable.push(null);
 

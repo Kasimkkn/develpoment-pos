@@ -2,6 +2,7 @@
 :root {
   --common-color: #104373;
   --common-hover-color : #21205F;
+  --input-color : #F5F5DC;
 }
 
 * {
@@ -23,17 +24,20 @@ input{
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
   outline: none !important;
+  background-color: var(--input-color) !important;
+
 }
 div.dt-container .dt-search input {
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
   outline: none !important;
-  background-color: white !important;
+  background-color: var(--input-color) !important;
 }
 select{
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
   border-radius: 10px;
+  background-color: var(--input-color) !important;
   padding: 0.625rem; 
 }
 
