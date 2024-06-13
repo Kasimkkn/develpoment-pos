@@ -55,8 +55,13 @@ function openEditModal(receipeId) {
             </div>
             <div class="col-span-6 sm:col-span-3">
                 <label for="edit_sub_item_quantity_${index}" class="block mb-2 text-sm font-medium text-black">Quantity</label>
-                <input name="edit_sub_item_quantity_${index}" id="edit_sub_item_quantity_${index}" value="${subItem.quantity}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
-            </div>
+        <div class="flex items-center gap-2">
+                        <input name="edit_sub_item_quantity_${index}" id="edit_sub_item_quantity_${index}" value="${subItem.quantity}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
+                   <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteEditReceipe(${receipeId},${index})">Delete</button>
+        </div>
+            </div>   
+        </div>
+
         `;
         subItemsContainer.appendChild(subItemElement);
     });
@@ -67,14 +72,17 @@ function openEditModal(receipeId) {
     editStockModal.dataset.receipeId = receipeId;
 }
 
-
-
+const deleteEditReceipe = (receipeId,index) => {
+    const subItemsContainer = document.getElementById("edit_sub_items_container");
+    subItemsContainer.children[index].remove();
+     ipcRenderer.send("delete-edit-receipe",receipeId ,index);
+}
 const addNewSubItemForEdit = () => {
     const subItemsContainer = document.getElementById("edit_sub_items_container");
     const newSubItem = document.createElement("div");
     newSubItem.classList.add("grid", "grid-cols-6", "gap-6", "sub_item", "mt-4");
 
-    // find the index of prevoius input tag
+    // find the index of previous input tag
     const lastIndex = subItemsContainer.children.length - 1;
     const newIndex = lastIndex + 1;
     newSubItem.innerHTML = `
@@ -86,12 +94,21 @@ const addNewSubItemForEdit = () => {
         </div>
         <div class="col-span-6 sm:col-span-3">
             <label for="edit_sub_item_quantity_${newIndex}" class="block mb-2 text-sm font-medium text-black">Quantity</label>
+            <div class="flex items-center gap-2" >
             <input name="edit_sub_item_quantity_${newIndex}" id="edit_sub_item_quantity_${newIndex}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" placeholder="Enter Quantity" required="true" />
+            <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteSubItem(this)">Delete</button>
+
+            </div>
         </div>
     `;
 
     subItemsContainer.appendChild(newSubItem);
+};
 
+// Function to delete the current sub-item
+const deleteSubItem = (btn) => {
+    const subItemToRemove = btn.closest('.sub_item');
+    subItemToRemove.remove();
 };
 
 
@@ -128,12 +145,6 @@ const editStockHandler = () => {
             });
             
         }
-        // check the subItems any elemnt is no empty if emply remove it
-        subItems.forEach((subItem, index) => {
-            if (subItem.name === '' || subItem.quantity === '') {
-                subItems.splice(index, 1);
-            }
-        });
         console.log(subItems)
         const receipeData = {
             item_name: itemName,
@@ -157,22 +168,22 @@ let subItemCount = 1;
 const addNewSubItem = () => {
     const subItemsContainer = document.getElementById("sub_items_container");
     const newSubItem = document.createElement("div");
-    newSubItem.classList.add("grid", "grid-cols-6", "gap-6", "sub_item","mt-4");
+    newSubItem.classList.add("grid", "grid-cols-6", "gap-6", "sub_item", "mt-4");
 
     newSubItem.innerHTML = `
-    <div class="col-span-6 sm:col-span-3">
-      <label for="new_sub_item_name_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Select Ingredients</label>
-      <select id="new_sub_item_name_${subItemCount}"
-        class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg focus:ring-0 border-primary focus:outline-none peer new_sub_item_name">
-      </select>
-    </div>
-    <div class="col-span-6 sm:col-span-3">
-      <label for="new_sub_item_quantity_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Item Quantity</label>
-      <input name="new_sub_item_quantity_${subItemCount}" id="new_sub_item_quantity_${subItemCount}" max="1000" maxlength="1000"
-        class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5 new_sub_item_quantity"
-        placeholder="e.g. 100, 200" required="true" />
-    </div>
-  `;
+        <div class="col-span-6 sm:col-span-3">
+            <label for="new_sub_item_name_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Select Ingredients</label>
+            <select id="new_sub_item_name_${subItemCount}" class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg focus:ring-0 border-primary focus:outline-none peer new_sub_item_name">
+            </select>
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+            <label for="new_sub_item_quantity_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Item Quantity</label>
+            <div class="flex items-center gap-2">
+            <input name="new_sub_item_quantity_${subItemCount}" id="new_sub_item_quantity_${subItemCount}" max="1000" maxlength="1000" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5 new_sub_item_quantity" placeholder="e.g. 100, 200" required="true" />
+            <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteSubItem(this)">Delete</button>
+            </div>
+        </div>
+    `;
 
     subItemsContainer.appendChild(newSubItem);
 
@@ -183,6 +194,7 @@ const addNewSubItem = () => {
 
     subItemCount++;
 };
+
 
 const renderRawMaterialsDropdown = (apiStock) => {
     const initialDropdown = document.getElementById("new_sub_item_name_0");

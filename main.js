@@ -172,13 +172,13 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
     printer.println(billFooter);
     printer.cut();
 
-    if(await printer.isPrinterConnected()){
+    if (await printer.isPrinterConnected()) {
       await printer.execute();
-     console.log("Bill printed successfully");
-     }
-     else{
-       console.log("Printer not connected");
-     }
+      console.log("Bill printed successfully");
+    }
+    else {
+      console.log("Printer not connected");
+    }
 
     event.reply('bill-saved');
   } catch (error) {
@@ -212,8 +212,8 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
 
     // Print column headers
     printer.tableCustom([
-      { text: 'QTY', align: 'LEFT', width: 0.3,},
-      { text: 'ITEM', align: 'LEFT', width: 0.7,},
+      { text: 'QTY', align: 'LEFT', width: 0.3, },
+      { text: 'ITEM', align: 'LEFT', width: 0.7, },
     ]);
     printer.drawLine();
 
@@ -221,7 +221,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
     Object.keys(currentItemsMap).forEach((productName) => {
       const currentQuantity = currentItemsMap[productName].quantity;
       printer.tableCustom([
-        { text: currentQuantity.toString(), align: 'LEFT', width: 0.3,bold: true, },
+        { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
         { text: productName.toLowerCase(), align: 'LEFT', width: 0.7, bold: true, },
       ]);
     });
@@ -230,20 +230,20 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
       const currentQuantity = currentItemsWithSPInfo[productName].quantity;
       const sp_info = currentItemsWithSPInfo[productName].sp_info;
       printer.tableCustom([
-        { text: currentQuantity.toString(), align: 'LEFT', width: 0.3 ,bold: true,},
-        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', width: 0.7,bold: true, },
+        { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
+        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', width: 0.7, bold: true, },
       ]);
     });
     printer.println('End of KOT');
 
     printer.cut();
-    if(await printer.isPrinterConnected()){
+    if (await printer.isPrinterConnected()) {
       await printer.execute();
-     console.log("Kot printed successfully");
-     }
-     else{
-       console.log("Printer not connected");
-     }
+      console.log("Kot printed successfully");
+    }
+    else {
+      console.log("Printer not connected");
+    }
 
     event.reply('bill-saved');
   } catch (error) {
@@ -252,7 +252,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
 });
 
 ipcMain.on('print-cancel-kot', async (event, kotContent) => {
-  const { table_no, location, loggedInUser, date,cancelItem } = kotContent;
+  const { table_no, location, loggedInUser, date, cancelItem } = kotContent;
 
   try {
     // Initialize the printer
@@ -273,7 +273,7 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     printer.println(`${loggedInUser._doc.first_name} ${loggedInUser._doc.last_name}`);
     printer.println(formattedDate);
     printer.println('Cancel Items');
-    printer.drawLine();      
+    printer.drawLine();
     printer.tableCustom([
       { text: 'QTY', align: 'LEFT', width: 0.3, style: 'B' },
       { text: 'ITEM', align: 'LEFT', width: 0.7, style: 'B' },
@@ -288,11 +288,11 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     // Execute the print
 
     printer.cut();
-    if(await printer.isPrinterConnected()){
-     await printer.execute();
-    console.log("Cancel KOT printed successfully");
+    if (await printer.isPrinterConnected()) {
+      await printer.execute();
+      console.log("Cancel KOT printed successfully");
     }
-    else{
+    else {
       console.log("Printer not connected");
     }
 
@@ -2457,44 +2457,74 @@ ipcMain.on("deduct-qty", async (event, data) => {
   }
 });
 
+ // delete-edit-receipe
+ ipcMain.on("delete-edit-receipe", async (event, receipeId,itemIndex) => {
+  try {
+    const receipeData = await Receipe.findOne({
+      receipe_no : receipeId
+    })
+    if (!receipeData) {
+      event.reply("delete-edit-receipe-error", "Receipe not found");
+      return;
+    }
+
+    const subItems = receipeData.sub_item_details;
+    subItems.splice(itemIndex, 1);
+    receipeData.sub_item_details = subItems;
+    await receipeData.save();
+
+    const data = await Receipe.find();
+    event.reply("fetch-receipe-data", JSON.stringify(data));
+  } catch (error) {
+    console.error("Error deleting receipe:", error);
+    event.reply("delete-edit-receipe-error", "Error deleting receipe");
+  }
+});
 
 // edit-receipe
 ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
   try {
-    console.log("edit-receipe", itemId, itemData);
-
     if (!itemData || !Array.isArray(itemData.sub_items_details)) {
       event.reply("edit-receipe-error", "Invalid data provided");
       return;
     }
-    const recipeData = await Receipe.findOne({
-      receipe_no: itemId
-    });
+
+    const recipeData = await Receipe.findOne({ receipe_no: itemId });
     if (!recipeData) {
       event.reply("edit-receipe-error", "Recipe not found");
       return;
     }
+    
+    itemData.sub_items_details = itemData.sub_items_details.filter(subItem =>
+      subItem.item_name !== '' && subItem.quantity !== '' && subItem.quantity !== 'null'
+    );
+
     itemData.sub_items_details.forEach(subItemData => {
-      // Normalize item names before comparing
       const normalizedItemName = subItemData.item_name.toLowerCase();
-      console.log("Normalized item name:", normalizedItemName);
-      const subItemIndex = recipeData.sub_item_details.findIndex(subItem => subItem.item_name.toLowerCase() == normalizedItemName);
-      console.log("SubItem index:", subItemIndex);
+      const subItemIndex = recipeData.sub_item_details.findIndex(subItem =>
+        subItem.item_name.toLowerCase() === normalizedItemName
+      );
+      console.log("subItemIndex "+subItemIndex)
       if (subItemIndex === -1) {
-        console.log("Creating new subItem");
-        // Create new subItem and push to sub_item_details
-        const newSubItem = {
-          item_no: subItemData.item_no,
+        recipeData.sub_item_details.push({
           item_name: subItemData.item_name,
           quantity: subItemData.quantity
-        };
-        recipeData.sub_item_details.push(newSubItem);
-      } else {
-        // Update existing subItem
-        console.log("Updating existing subItem");
-        recipeData.sub_item_details[subItemIndex].quantity = subItemData.quantity;
+        });
+        recipeData.is_synced = false;
+      } 
+      else {
+        // Update existing sub-item's quantity
+        if (subItemData.quantity !== null || subItemData.item_name !== '') {
+          recipeData.sub_item_details[subItemIndex].quantity = subItemData.quantity;
+          recipeData.is_synced = false;
+        } else {
+          // Remove sub-item if quantity is null
+          recipeData.sub_item_details.splice(subItemIndex, 1);
+          recipeData.is_synced = false;
+        }
       }
     });
+
     await recipeData.save();
 
     const data = await Receipe.find();
@@ -2504,7 +2534,6 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
     event.reply("edit-receipe-error", "Error editing receipe");
   }
 });
-
 
 
 // fetch-purchase
