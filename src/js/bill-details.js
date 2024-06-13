@@ -66,12 +66,12 @@ const renderDailySales =(data) => {
                     <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale.final_amount.toFixed(2)}
             </td>
             ${sale.is_locked ? `<td class="px-6 py-4">
-            <a href="#" class="font-medium text-darkish ">Cannot Edit</a>
+            <a href="#" class="font-medium text-common ">Cannot Edit</a>
         </td>` 
             :
              `
              <td class="px-6 py-4">
-                <a href="edit-bill.html?billNo=${sale.bill_no}" data-bill-no="${sale.bill_no}" class="font-medium text-darkish ">Edit</a>
+                <a href="edit-bill.html?billNo=${sale.bill_no}" data-bill-no="${sale.bill_no}" class="font-medium text-common ">Edit</a>
             </td>
              `}
         `;

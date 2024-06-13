@@ -4,13 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'darkish':"#104373",
-        'white':"#FFFFFF",
-        'black':"#000000",
-        'primary':"#D3D3D3",
-        'secondary':"#F5F5DC",
-        'tertiary':"#62CBE7",
-        'common-hover':"#21205F"
+        'primary': 'var(--primary-color)',
+        'secondary': 'var(--secondary-color)',
+        'tertiary': 'var(--tertiary-color)',
+        'common': 'var(--common-color)',
+        'common-hover': 'var(--common-hover-color)'
       }
     },
   },

@@ -271,7 +271,7 @@ const openIngredientModal = (receipe_no) => {
     ingredientData.sub_item_details.forEach((item) => {
         const span = document.createElement("span");
         span.textContent = `${item.item_name} - ${item.quantity}gm`;
-        span.classList.add("text-sm" , "text-darkish", "font-medium");
+        span.classList.add("text-sm" , "text-common", "font-medium");
         ingredient_container.appendChild(span);
     })
 }

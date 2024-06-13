@@ -48,7 +48,7 @@ const updateCartUI = () => {
     itemElement.innerHTML = `
     <input type="hidden" value="${item._doc.item_no}" id="itemNo"/>
     <div class="flex items-center justify-center p-2">
-          <span class="w-14 h-14 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+          <span class="w-14 h-14 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
             <p class="text-2xl">${item._doc.item_no}</p>
           </span>
         </div>
@@ -56,7 +56,7 @@ const updateCartUI = () => {
       <div class="flex gap-1 justify-between items-center text-sm">
       <p class="text-sm flex gap-2">${item._doc.item_name.split(" ").slice(0, 2).join(" ")}</p>
       ${sp_info !== "none" ? `(${sp_info})` : ``}
-      <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item._doc.item_no}" class="bg-primary text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
+      <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item._doc.item_no}" class="beautyBtn text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
       </div>
       <div class="text-xs flex gap-2 items-center">
       <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item._doc.item_no}','${item._doc.price}', event)">+</button>
@@ -294,7 +294,7 @@ const populateProducts = (products, locationName) => {
     productElement.classList.add("product", "w-40", "bg-white", "rounded-xl", "duration-500", "hover:shadow-xl");
     productElement.innerHTML = `
           <div class="flex items-center justify-between px-2 py-2 gap-2">
-          <span class="w-16 h-16 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+          <span class="w-16 h-16 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
             <p class="text-xl">${product._doc.item_no}</p>
             </span>
             <div class="flex flex-col gap-1 w-full">
@@ -324,7 +324,7 @@ const handleCategoryClick = (categoryNo) => {
   const buttonClicked = document.getElementById(categoryNo);
 
   if (buttonClicked) {
-    buttonClicked.classList.add("bg-darkish");
+    buttonClicked.classList.add("bg-common");
     buttonClicked.classList.remove("bg-white");
     buttonClicked.classList.add("text-white");
     const allCategoryButtons = document.querySelectorAll("#category-list button");
@@ -354,7 +354,7 @@ const populateCateogories = (categories) => {
   const allCategoryOption = document.createElement("button");
   allCategoryOption.id = "all";
   allCategoryOption.textContent = "ALL";
-  allCategoryOption.className = "flex items-center justify-center rounded-md border bg-darkish text-white border-primary p-2 text-xs";
+  allCategoryOption.className = "flex items-center justify-center rounded-md border bg-common text-white border-primary p-2 text-xs";
   allCategoryOption.addEventListener("click", () => {
     handleCategoryClick("all");
   })

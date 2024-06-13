@@ -1,9 +1,47 @@
-/* create a variable */
+
 :root {
-  --common-color: #104373;
   --common-hover-color : #21205F;
   --input-color : #F5F5DC;
+  --primary-color: #D3D3D3;
+  --secondary-color: #F5F5DC;
+  --tertiary-color: #62CBE7;
+  --common-color: #104373;
 }
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.bg-tertiary {
+  background-color: var(--tertiary-color);
+}
+
+.text-tertiary {
+  color: var(--tertiary-color);
+}
+
+.bg-common {
+  background-color: var(--common-color);
+}
+
+.text-common {
+  color: var(--common-color);
+}
+
+
+
 
 * {
   margin: 0;
@@ -27,6 +65,11 @@ input{
   background-color: var(--input-color) !important;
 
 }
+input[type="color"]{
+  background-color: transparent !important;
+  border-radius: 5px;
+  border:none !important;
+}
 div.dt-container .dt-search input {
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
@@ -43,12 +86,15 @@ select{
 
 input:focus {
   outline: none !important;
+  border:none !important;
 }
 input:active {
   outline: none !important;
+  border:none !important;
 }
 input:hover {
   outline: none !important;
+  border:none !important;
 }
 
 #keyboard {
@@ -102,7 +148,7 @@ input:hover {
   border-color: var(--common-color);
   border-width: 1px;
 }
-.text-darkish {
+.text-common {
   color: var(--common-color);
 }
 .dt-layout-cell table tbody tr td {

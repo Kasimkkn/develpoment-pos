@@ -217,7 +217,7 @@ const renderLocationBlocks = () => {
           if (isActive) {
             tableLink.classList.add("beautyBtn");
             tableLink.classList.add("text-white");
-            tableLink.classList.add("bg-darkish");
+            tableLink.classList.add("bg-common");
             const option = document.createElement("option");
             option.value = `${location._doc.location_name} ${table._doc.table_no}`;
             option.textContent = `${location._doc.location_name} ${table._doc.table_no}`;

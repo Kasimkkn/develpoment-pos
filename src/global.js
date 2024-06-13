@@ -1,8 +1,51 @@
 const { ipcRenderer } = require("electron");
 const path = require('path');
 const fs = require('fs');
-document.addEventListener("DOMContentLoaded", () => {
+console.log("hello")
 
+
+// Function to update CSS variables
+const updateColor = (variable, value) => {
+    document.documentElement.style.setProperty(variable, value);
+  };
+  
+  // Function to load saved colors from localStorage
+  const loadSavedColors = () => {
+    const savedPrimaryColor = localStorage.getItem('primary-color');
+    const savedSecondaryColor = localStorage.getItem('secondary-color');
+    const savedTertiaryColor = localStorage.getItem('tertiary-color');
+    const savedCommonColor = localStorage.getItem('common-color');
+    const savedCommonHoverColor = localStorage.getItem('common-hover-color');
+    if (savedPrimaryColor) {
+      updateColor('--primary-color', savedPrimaryColor);
+      updateColor('--input-color',savedPrimaryColor)
+    }
+  
+    if (savedSecondaryColor) {
+      updateColor('--secondary-color', savedSecondaryColor);
+    }
+  
+    if (savedTertiaryColor) {
+      updateColor('--tertiary-color', savedTertiaryColor);
+    }
+  
+    if (savedCommonColor) {
+      updateColor('--common-color', savedCommonColor);
+    }
+  
+    if (savedCommonHoverColor) {
+      updateColor('--common-hover-color', savedCommonHoverColor);
+    }
+  };
+  
+  // Call loadSavedColors() when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    loadSavedColors();
+  });
+  
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM content loaded");
     const loggedInUser = localStorage.getItem('loggedInUser');
     const userPreference = localStorage.getItem('userPreferences');
     const userRights = JSON.parse(localStorage.getItem('userRights'));
@@ -27,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = loginPath;
     }
 });
-
 document.addEventListener('DOMContentLoaded', () => {
     const keyboard = document.getElementById('keyboard');
     const alphKeyboard = document.getElementById('alphKeyboard');

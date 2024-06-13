@@ -1,8 +1,5 @@
 const { default: Swal } = require("sweetalert2");
 const saveBtn = document.getElementById("saveBtn");
-
-
-
 const billInfoStr = localStorage.getItem("billInfo");
 
 if (billInfoStr == null) {
@@ -40,6 +37,97 @@ else{
     document.getElementById("how_much_points").value = billInfo._doc.how_much_points || "";
     document.getElementById("how_much_amount").value = billInfo._doc.how_much_amount || "";
 }
+document.addEventListener('DOMContentLoaded', () => {
+  const primaryColorInput = document.querySelector('input[name="primary-color"]');
+  const secondaryColorInput = document.querySelector('input[name="secondary-color"]');
+  const tertiaryColorInput = document.querySelector('input[name="tertiary-color"]');
+  const commonColorInput = document.querySelector('input[name="common-color"]');
+  const commonHoverColorInpput = document.querySelector('input[name="common-hover-color"]');
+  const saveColorsBtn = document.getElementById('saveColorsBtn');
+
+  // Function to update CSS variables
+  const updateColor = (variable, value) => {
+    document.documentElement.style.setProperty(variable, value);
+  };
+
+  // Event listeners for color inputs
+  primaryColorInput.addEventListener('input', (event) => {
+    updateColor('--primary-color', event.target.value);
+  });
+
+  secondaryColorInput.addEventListener('input', (event) => {
+    updateColor('--secondary-color', event.target.value);
+  });
+
+  tertiaryColorInput.addEventListener('input', (event) => {
+    updateColor('--tertiary-color', event.target.value);
+  });
+
+  commonColorInput.addEventListener('input', (event) => {
+    updateColor('--common-color', event.target.value);
+  });
+
+  commonHoverColorInpput.addEventListener('input', (event) => {
+    updateColor('--common-hover-color', event.target.value);
+  });
+
+  // Save colors to local storage
+  saveColorsBtn.addEventListener('click', () => {
+    localStorage.setItem('primary-color', primaryColorInput.value);
+    localStorage.setItem('secondary-color', secondaryColorInput.value);
+    localStorage.setItem('tertiary-color', tertiaryColorInput.value);
+    localStorage.setItem('common-color', commonColorInput.value);
+    localStorage.setItem('common-hover-color', commonHoverColorInpput.value);
+    // Show success message
+    Swal.fire({
+      text: 'Colors saved successfully!',
+      icon: 'success',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  });
+
+  // Load saved colors from local storage
+  const loadSavedColors = () => {
+    const savedPrimaryColor = localStorage.getItem('primary-color');
+    const savedSecondaryColor = localStorage.getItem('secondary-color');
+    const savedTertiaryColor = localStorage.getItem('tertiary-color');
+    const savedCommonColor = localStorage.getItem('common-color');
+    const savedCommonHoverColor = localStorage.getItem('common-hover-color');
+
+    if (savedPrimaryColor) {
+      primaryColorInput.value = savedPrimaryColor;
+      updateColor('--primary-color', savedPrimaryColor);
+      updateColor('--input-color', savedPrimaryColor);
+    }
+
+    if (savedSecondaryColor) {
+      secondaryColorInput.value = savedSecondaryColor;
+      updateColor('--secondary-color', savedSecondaryColor);
+    }
+
+    if (savedTertiaryColor) {
+      tertiaryColorInput.value = savedTertiaryColor;
+      updateColor('--tertiary-color', savedTertiaryColor);
+    }
+
+    if (savedCommonColor) {
+      commonColorInput.value = savedCommonColor;
+      updateColor('--common-color', savedCommonColor);
+    }
+
+    if (savedCommonHoverColor) {
+      commonHoverColorInpput.value = savedCommonHoverColor;
+      updateColor('--common-hover-color', savedCommonHoverColor);
+    }
+  };
+
+  // Load colors when the document is loaded
+  loadSavedColors();
+});
+
+
+
 
 saveBtn.addEventListener("click", () => {
     const customer_id = JSON.parse(localStorage.getItem("billInfo"))._doc.customer_id;
