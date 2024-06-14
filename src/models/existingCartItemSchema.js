@@ -17,10 +17,6 @@ const existingCartItemSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  is_synced:{
-      type: Boolean,
-      default: false
-   },
 
 });
 

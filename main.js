@@ -446,7 +446,6 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
     if (existingItem) {
       if (existingItem.is_printed !== true) {
         existingItem.quantity += newItem.quantity;
-        existingItem.is_synced = false;
         await existingItem.save();
         const updatedCartItems = await ExistingCartItem.find({
           table_no: newItem.tableNo,
@@ -466,7 +465,6 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
           quantity: newItem.quantity,
           price: newItem.price,
           is_printed: false,
-          is_synced: false,
         });
         await cartItem.save();
         const updatedCartItems = await ExistingCartItem.find({
@@ -487,7 +485,6 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
         item_image: newItem.image,
         quantity: newItem.quantity,
         price: newItem.price,
-        is_synced: false,
       });
       await cartItem.save();
     }
@@ -717,7 +714,7 @@ ipcMain.on("update-bill-quantity", async (event, toUpdateData) => {
     }
 
     existingBill.round_off = roundOffValue
-
+    existingBill.is_synced = false
     await existingBill.save();
 
     const data = await Bill.findOne({ bill_no: existingBill.bill_no });
@@ -775,7 +772,6 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
       quantity: toUpdateData.newQuantity,
       sp_info: toUpdateData.specialInfo,
       is_printed: false,
-      is_synced: false
     });
     await cartItem.save();
     // }
@@ -918,7 +914,7 @@ ipcMain.on("delete-whole-billItem", async (event, productId, locationName, table
     }
 
     bill.round_off = roundOffValue
-
+    bill.is_synced = false
     await bill.save();
 
     const serializedData = JSON.parse(JSON.stringify(bill));
@@ -969,6 +965,7 @@ ipcMain.on("edit-item", async (event, itemId, itemData) => {
         rate_six: itemData.rate_six,
         category_no: itemData.categoryNo,
         status: itemData.isActive,
+        is_synced: false,
       }
     );
     event.reply("edit-item-success", data);
@@ -1012,6 +1009,7 @@ ipcMain.on("edit-category", async (event, categoryId, categoryData) => {
         category_name: categoryData.categoryName,
         description: categoryData.description,
         status: categoryData.isActive,
+        is_synced : false,
       }
     );
     event.reply("edit-category-success", data);
@@ -1058,6 +1056,7 @@ ipcMain.on("edit-location", async (event, locationId, locationData) => {
         location_price: locationData.rate,
         is_taxable: locationData.isTaxable,
         status: locationData.isActive,
+        is_synced : false,
       }
     );
     const locationsData = await Location.find({}).sort({ location_no: 1 });
@@ -1110,6 +1109,7 @@ ipcMain.on("edit-user", async (event, userId, userData) => {
         last_name: userData.lastName,
         user_role: userData.Role,
         status: userData.isActive,
+        is_synced : false,
       }
     );
     event.reply("edit-user-success", data);
@@ -1165,7 +1165,7 @@ ipcMain.on("edit-table", async (event, serialNo, tableData) => {
     tableToUpdate.table_no = newTableNo;
     tableToUpdate.location_no = tableData.locationNo;
     tableToUpdate.status = tableData.isActive;
-
+    tableToUpdate.is_synced = false;
     const updatedTable = await tableToUpdate.save();
 
     event.reply("table-data", updatedTable);
@@ -1206,7 +1206,8 @@ ipcMain.on("new-bill-book", async (event, BillBookData) => {
           await BillBook.updateOne(
             { bill_book: billBook.bill_book },
             {
-              is_active: false
+              is_active: false,
+              is_synced: false
             }
           );
         }
@@ -1227,7 +1228,8 @@ ipcMain.on("edit-bill-book", async (event, billBookId, billBookData) => {
     await BillBook.updateOne(
       { bill_book: Number(billBookId) },
       {
-        is_active: billBookData.isActive
+        is_active: billBookData.isActive,
+        is_synced:false,
       }
     );
 
@@ -1294,7 +1296,6 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
     event.reply("merge-tables-error", "Error merging tables");
   }
 });
-
 
 // transfer tables
 ipcMain.on("transfer-table", async (event, toTransferTabledata) => {
@@ -1398,6 +1399,7 @@ ipcMain.on("save-bill", async (event, billData) => {
 // updaed bill infor
 ipcMain.on("updated-bill-info", async (event, toUpdateData) => {
   try {
+    toUpdateData.is_synced = false
     const data = await Bill.findOneAndUpdate({
       bill_no: toUpdateData.bill_no,
     }, toUpdateData)
@@ -1900,7 +1902,6 @@ ipcMain.on("change-kot-status", async (event, dataToShare) => {
       location_name: dataToShare.location_name,
     }, {
       is_printed: true,
-      is_added_new_item: false
     })
     const data = await ExistingCartItem.find({
       table_no: dataToShare.table_no,
@@ -1993,7 +1994,7 @@ ipcMain.on("set-paymode", async (event, allBills, payMode) => {
         billInfo.other_pay = true;
         billInfo.is_locked = true;
       }
-
+      billInfo.is_synced = false;
       await billInfo.save();
     }
 
@@ -2028,6 +2029,7 @@ ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
         billDetail.is_locked = true;
       }
 
+      billDetail.is_synced = false;
       await billDetail.save();
 
       event.reply("set-paymode-success", "Payment mode set successfully");
@@ -2040,7 +2042,7 @@ ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
   }
 });
 
-
+// get special info
 ipcMain.on("get-special-info", async (event) => {
   try {
     const data = await SpInfo.find();
@@ -2051,6 +2053,7 @@ ipcMain.on("get-special-info", async (event) => {
   }
 })
 
+// bulk insert
 ipcMain.on('bulk-insert-item', async (event, data) => {
   try {
     const maxItem = await Item.findOne({}, { item_no: 1 }).sort({
@@ -2110,6 +2113,7 @@ ipcMain.on("update-bill-discount", async (event, billNo, discountPerc, taxPerc) 
     bill.sgst_tax = sgstAmount.toFixed(2);
     bill.cgst_tax = cgstAmount.toFixed(2);
     bill.final_amount = finalAmount.toFixed(2);
+    bill.is_synced = false;
     await bill.save();
 
     const data = await Bill.findOne({ bill_no: billNo, item_details: { $exists: true, $ne: [] } });
@@ -2163,6 +2167,7 @@ ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, ta
     bill.sgst_tax = sgstAmount.toFixed(2);
     bill.cgst_tax = cgstAmount.toFixed(2);
     bill.final_amount = finalAmount.toFixed(2);
+    bill.is_synced = false;
     await bill.save();
 
     const data = await Bill.findOne({ bill_no: billNo, item_details: { $exists: true, $ne: [] } });
@@ -2177,6 +2182,7 @@ ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, ta
   }
 });
 
+// update-bill-discount
 ipcMain.on("update-bill-discount-vat", async (event, billNo, discountPerc, vatPerc) => {
   try {
     const bill = await Bill.findOne({ bill_no: billNo });
@@ -2209,8 +2215,10 @@ ipcMain.on("update-bill-discount-vat", async (event, billNo, discountPerc, vatPe
   }
 });
 
+// save-bill-info
 ipcMain.on("save-bill-info", async (event, customer_id, data) => {
   try {
+    data.is_synced = false
     await BillInfo.findOneAndUpdate({
       customer_id: customer_id
     }, data);
@@ -2222,6 +2230,7 @@ ipcMain.on("save-bill-info", async (event, customer_id, data) => {
   }
 })
 
+// get-bill-info
 ipcMain.on("get-bill-info", async (event) => {
   try {
     const data = await BillInfo.findOne();
@@ -2232,7 +2241,7 @@ ipcMain.on("get-bill-info", async (event) => {
   }
 })
 
-// save-loyalt
+// save-loyalty
 ipcMain.on("save-loyalty", async (event, data) => {
   try {
     const userData = await Loyalty.findOne({
@@ -2352,6 +2361,7 @@ ipcMain.on("edit-Stock", async (event, itemId, itemData) => {
       event.reply("edit-Stock-error", "No data provided");
       return
     }
+    itemData.is_synced = false
     await Stock.findOneAndUpdate({ item_no: itemId }, itemData)
     event.reply("fetch-Stock-data", itemData);
   } catch (error) {
@@ -2417,23 +2427,22 @@ ipcMain.on("deduct-qty", async (event, data) => {
       for (let subItem of rawMaterial.sub_item_details) {
         const itemDetail = data.find(item => item.item_name === rawMaterial.item_name);
         if (itemDetail) {
-          const quantityMultiplier = itemDetail.quantity; // Get the quantity multiplier from the data
-          const quantityMinus = (subItem.quantity * quantityMultiplier) / 1000; // Multiply subItem.quantity by the quantity multiplier
+          const quantityMultiplier = itemDetail.quantity; 
+          const quantityMinus = (subItem.quantity * quantityMultiplier) / 1000; 
           const tobeMinusQty = stockData.find(item => item.item_name === subItem.item_name)?.quantity;
 
           if (tobeMinusQty !== undefined) {
-            const updatedQuantity = (tobeMinusQty - quantityMinus).toFixed(2); // Deduct the calculated quantity
+            const updatedQuantity = (tobeMinusQty - quantityMinus).toFixed(2); 
             const stockItem = stockData.find(item => item.item_name === subItem.item_name);
             if (stockItem) {
-              stockItem.quantity = updatedQuantity < 0 ? 0 : updatedQuantity; // Prevent negative quantities
-              // Ensure mrp and quantity are valid numbers before calculating total
+              stockItem.quantity = updatedQuantity < 0 ? 0 : updatedQuantity; 
               const mrp = parseFloat(stockItem.mrp);
               const quantity = parseFloat(stockItem.quantity);
               if (isNaN(mrp) || isNaN(quantity)) {
                 console.error("Invalid number for mrp or quantity", { mrp, quantity });
                 continue;
               }
-              stockItem.total = (mrp * quantity).toFixed(2); // Using mrp for total calculation
+              stockItem.total = (mrp * quantity).toFixed(2);
 
               if (isNaN(stockItem.total)) {
                 console.error("Error: Calculated total is NaN for stock item:", stockItem);
@@ -2471,6 +2480,7 @@ ipcMain.on("deduct-qty", async (event, data) => {
     const subItems = receipeData.sub_item_details;
     subItems.splice(itemIndex, 1);
     receipeData.sub_item_details = subItems;
+    receipeData.is_synced = false;
     await receipeData.save();
 
     const data = await Receipe.find();
@@ -2510,21 +2520,18 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
           item_name: subItemData.item_name,
           quantity: subItemData.quantity
         });
-        recipeData.is_synced = false;
       } 
       else {
         // Update existing sub-item's quantity
         if (subItemData.quantity !== null || subItemData.item_name !== '') {
           recipeData.sub_item_details[subItemIndex].quantity = subItemData.quantity;
-          recipeData.is_synced = false;
         } else {
           // Remove sub-item if quantity is null
           recipeData.sub_item_details.splice(subItemIndex, 1);
-          recipeData.is_synced = false;
         }
       }
     });
-
+    recipeData.is_synced = false
     await recipeData.save();
 
     const data = await Receipe.find();
@@ -2646,6 +2653,7 @@ ipcMain.on("new-user-right", async (event, data) => {
 // edit-user-rights
 ipcMain.on("edit-user-rights", async (event, userID, usedData) => {
   try {
+    usedData.is_synced = false
     if (!usedData) {
       event.reply("edit-user-rights-error", "No data provided");
       return

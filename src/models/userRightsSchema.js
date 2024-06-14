@@ -74,9 +74,9 @@ const userRightsSchema = new mongoose.Schema({
     default : false
   },
   is_synced:{
-      type: Boolean,
-      default: false
-   },
+    type: Boolean,
+    default: false
+ },
 });
 
 const UserRights = mongoose.model("UserRights", userRightsSchema);

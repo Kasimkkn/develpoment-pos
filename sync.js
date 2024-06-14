@@ -1,10 +1,8 @@
-import mongoose from 'mongoose';
 import Category from "./src/models/categorySchema.js";
 import Item from "./src/models/ItemSchema.js";
 import Location from "./src/models/locationSchema.js";
 import User from "./src/models/userSchema.js";
 import LocationInfo from "./src/models/locationInfoSchema.js";
-import ExistingCartItem from "./src/models/existingCartItemSchema.js";
 import Bill from "./src/models/billSchema.js";
 import BillBook from "./src/models/billBookSchema.js";
 import Preference from "./src/models/preferenceSchema.js";
@@ -20,24 +18,37 @@ import UserRights from "./src/models/userRightsSchema.js";
 
 export async function pushToCloud(cloudConnection, collectionName, Modal, document) {
   try {
-    const CloudModel = cloudConnection.model(collectionName , Modal.schema);
+    const CloudModel = cloudConnection.model(collectionName, Modal.schema);
     if (!CloudModel) {
       throw new Error(`Model not found for collection: ${collectionName}`);
     }
-    // change the filed is_synced to true before saving to cloud
+
+    const existingDoc = await CloudModel.findById(document._id).exec();
+
+    // Change the field is_synced to true before saving to cloud
     document.is_synced = true;
-    const cloudDoc = new CloudModel(document.toObject());
-    await cloudDoc.save();
+
+    if (existingDoc) {
+      // If the document exists in the cloud, update it
+      await CloudModel.findByIdAndUpdate(document._id, document.toObject(), { new: true });
+      console.log(`Updated document ${document._id} for model ${collectionName}`);
+    } else {
+      // If the document does not exist, create a new one
+      const cloudDoc = new CloudModel(document.toObject());
+      await cloudDoc.save();
+      console.log(`Saved new document ${document._id} for model ${collectionName}`);
+    }
   } catch (error) {
     console.error(`Error saving document to cloud for model ${collectionName}:`, error);
     throw error; // Rethrow error to handle in syncData
   }
 }
+
 export async function syncData(cloudConnection) {
   try {
     const models = [
-      Bill, Category, Item, BillBook, BillInfo, ExistingCartItem, Location, LocationInfo,
-      User, UserRights,Preference, Transaction, SpInfo, RejectedItem,
+      Bill, Category, Item, BillBook, BillInfo, Location, LocationInfo,
+      User, UserRights, Preference, Transaction, SpInfo, RejectedItem,
       Loyalty, Stock, Receipe, Purchase
     ];
 
@@ -50,11 +61,10 @@ export async function syncData(cloudConnection) {
 
       for (const doc of documentsToSync) {
         try {
-          await pushToCloud(cloudConnection, Model.modelName, Model ,  doc);
-          console.log(`Synced document ${doc._id} for model ${Model.modelName}`);
-          await Model.updateMany({ _id: doc._id }, { is_synced: true }); // Update is_synced flag
+          await pushToCloud(cloudConnection, Model.modelName, Model, doc);
+          await Model.updateOne({ _id: doc._id }, { is_synced: true }); // Update is_synced flag
         } catch (error) {
-          console.error(`Error syncing document ${doc._id} for model ${Model.modelName}: ${error}`);
+          console.error(`Error syncing document ${doc._id} for model ${Model.modelName}:`, error);
         }
       }
     }
