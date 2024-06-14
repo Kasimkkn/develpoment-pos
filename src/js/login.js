@@ -1,15 +1,15 @@
 const { ipcRenderer } = require("electron");
-const Swal = require('sweetalert2')
+const Swal = require('sweetalert2');
 
 const loginBtn = document.getElementById('loginBtn');
 const loggedInUser = localStorage.getItem('loggedInUser');
 const userPreference = localStorage.getItem('userPreferences');
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (loggedInUser && userPreference) {
      window.location.href = "index.html";
   }
   else{
-    // stay here    
+    ipcRenderer.send('create-only-first-user');
   }
 })
 

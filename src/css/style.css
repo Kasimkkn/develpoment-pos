@@ -86,15 +86,13 @@ select{
 
 input:focus {
   outline: none !important;
-  border:none !important;
+  border: none !important;
 }
 input:active {
   outline: none !important;
-  border:none !important;
 }
 input:hover {
   outline: none !important;
-  border:none !important;
 }
 
 #keyboard {

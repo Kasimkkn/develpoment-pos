@@ -301,8 +301,61 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     console.error('Error printing cancel KOT:', error);
   }
 });
-
-
+// 
+ipcMain.on('create-only-first-user' , async (event) => {
+  try {
+    const getUsers = await User.find();
+    if(getUsers.length == 0){
+    const user = new User({
+      user_no: 1,
+      user_id: "admin@123",
+      password: "admin@123",
+      first_name: "admin",
+      last_name: "new",
+      address: "somewhere  on earth",
+      mobile_no: 1112223334,
+      GST_no: "29AE932UD9892JC02",
+      tax_perc: 5,
+      creation_date: Date.now(),
+      user_role: "admin",
+      status: true,
+      __v: 0
+    });
+    user.save().then(() => {
+      const userRight = new UserRights({
+        user_no: 1,
+        first_name: "admin",
+        master_option: true,
+        edit_bills: true,
+        reports: true,
+        item_wise_report: true,
+        category_wise_report: true,
+        item_wise_monthly_report: true,
+        table_wise_report: true,
+        unpaid_bills: true,
+        payment_wise_report: true,
+        location_wise_report: true,
+        daily_sales: true,
+        monthly_sales: true,
+        stocks: true,
+        stock_details: true,
+        purchase_details: true,
+        receipe_details: true,
+        is_synced: true,
+      })
+      userRight.save().then(() => {
+        console.log("User created successfully");
+      }).catch((error) => {
+        console.error("Error creating user right:", error);
+      })
+    }).catch((error) => {
+      console.error("Error creating user:", error);
+    })    
+  }
+  } catch (error) {
+    console.error("Error creating user:", error);
+  }
+})
 // check login user
 ipcMain.on("login", async (event, userId, password) => {
   try {
