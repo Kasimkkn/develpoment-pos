@@ -48,8 +48,8 @@ async function createWindow() {
 
   win.loadFile('src/login.html');
 
-  const url = process.env.MONGO_URI;
-  await connectDB(url)
+  // const url = process.env.MONGO_URI;
+  await connectDB("mongodb://localhost:27017/pos-restuarant")
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
   });
