@@ -1,5 +1,5 @@
 import { config } from "dotenv"
-import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
+import { app, BrowserWindow, dialog, globalShortcut, ipcMain, screen } from "electron";
 import { connectDB } from "./src/config/dbConfig.js";
 import { connectToCloudDB } from "./src/config/dbConfig.js";
 import isOnline from 'is-online'
@@ -22,13 +22,16 @@ import Stock from "./src/models/stockSchema.js";
 import Receipe from "./src/models/receipeSchema.js";
 import Purchase from "./src/models/purchaseSchema.js";
 import UserRights from "./src/models/userRightsSchema.js";
+import events from 'events'
+events.EventEmitter.defaultMaxListeners = 100;
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
+
 config({
-  path: "./.env",
+  path: ".env",
 })
 
 
-const createWindow = () => {
+async function createWindow() {
   const mainScreen = screen.getPrimaryDisplay();
   const dimensions = mainScreen.size;
 
@@ -43,27 +46,23 @@ const createWindow = () => {
 
   win.setMenuBarVisibility(false);
 
-  win.loadFile("src/login.html");
+  win.loadFile('src/login.html');
 
+  const url = process.env.MONGO_URI;
+  await connectDB(url)
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
   });
   globalShortcut.register('F1', () => {
     win.webContents.send('print-bill');
-  })
+  });
   globalShortcut.register('F2', () => {
     win.webContents.send('print-kot');
-  })
+  });
   globalShortcut.register('F3', () => {
     win.webContents.send('open-customer-modal');
-  })
-};
-
-
-
-const url = process.env.MONGO_URI;
-const urlCloud = process.env.MONGO_URI_CLOUD;
-connectDB(url);
+  });
+}
 
 ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount) => {
   try {
@@ -2720,6 +2719,8 @@ ipcMain.on("edit-user-rights", async (event, userID, usedData) => {
   }
 })
 
+let cloudConnection;
+
 ipcMain.on('sync-data', async (event) => {
   if (await isOnline()) {
     try {
@@ -2735,14 +2736,13 @@ ipcMain.on('sync-data', async (event) => {
   }
 });
 
-import events from 'events'
-events.EventEmitter.defaultMaxListeners = Infinity;
 
-let cloudConnection;
 
+
+const urlCloud = process.env.MONGO_URI_CLOUD
 app.whenReady().then(async () => {
-  cloudConnection = await connectToCloudDB(urlCloud);
-  createWindow();
+createWindow();
+cloudConnection = await connectToCloudDB(urlCloud);
 });
 
 app.on('window-all-closed', () => {
