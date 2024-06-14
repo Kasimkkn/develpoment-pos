@@ -442,41 +442,38 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
       table_no: newItem.tableNo,
       location_name: newItem.locationName,
       item_no: newItem.id,
-    })
+    });
+
     if (existingItem) {
-      if (existingItem.is_printed !== true) {
+      if (!existingItem.is_printed) {
         existingItem.quantity += newItem.quantity;
         await existingItem.save();
-        const updatedCartItems = await ExistingCartItem.find({
-          table_no: newItem.tableNo,
-          location_name: newItem.locationName,
-        });
-        const allCartItems = await ExistingCartItem.find();
-        event.reply("cartItems-data", updatedCartItems);
-        event.reply("existing-cartItems-data", allCartItems);
-      }
-      else {
-        const cartItem = new ExistingCartItem({
+      } else {
+        const anotherItem = await ExistingCartItem.findOne({
           table_no: newItem.tableNo,
           location_name: newItem.locationName,
           item_no: newItem.id,
-          item_name: newItem.name,
-          item_image: newItem.image,
-          quantity: newItem.quantity,
-          price: newItem.price,
           is_printed: false,
         });
-        await cartItem.save();
-        const updatedCartItems = await ExistingCartItem.find({
-          table_no: newItem.tableNo,
-          location_name: newItem.locationName,
-        });
-        const allCartItems = await ExistingCartItem.find();
-        event.reply("cartItems-data", updatedCartItems);
-        event.reply("existing-cartItems-data", allCartItems);
+
+        if (anotherItem) {
+          anotherItem.quantity += newItem.quantity;
+          await anotherItem.save();
+        } else {
+          const cartItem = new ExistingCartItem({
+            table_no: newItem.tableNo,
+            location_name: newItem.locationName,
+            item_no: newItem.id,
+            item_name: newItem.name,
+            item_image: newItem.image,
+            quantity: newItem.quantity,
+            price: newItem.price,
+            is_printed: false,
+          });
+          await cartItem.save();
+        }
       }
-    }
-    else {
+    } else {
       const cartItem = new ExistingCartItem({
         table_no: newItem.tableNo,
         location_name: newItem.locationName,
@@ -485,14 +482,17 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
         item_image: newItem.image,
         quantity: newItem.quantity,
         price: newItem.price,
+        is_printed: false,
       });
       await cartItem.save();
     }
+
     const updatedCartItems = await ExistingCartItem.find({
       table_no: newItem.tableNo,
       location_name: newItem.locationName,
     });
     const allCartItems = await ExistingCartItem.find();
+
     event.reply("cartItems-data", updatedCartItems);
     event.reply("existing-cartItems-data", allCartItems);
 
@@ -814,7 +814,14 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
   try {
 
     const parsedItem = JSON.parse(item);
-    if (parsedItem.is_printed == true) {
+    await ExistingCartItem.deleteOne({
+      table_no: tableNo,
+      location_name: locationName,
+      item_no: parsedItem.item_no,
+      quantity: parsedItem.quantity
+    });
+
+    if (parsedItem.is_printed) {
       await RejectedItem.create({
         table_no: tableNo,
         location_name: locationName,
@@ -831,14 +838,6 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
       });
     }
 
-
-    await ExistingCartItem.deleteOne({
-      table_no: tableNo,
-      location_name: locationName,
-      item_no: parsedItem.item_no,
-      quantity: parsedItem.quantity
-    });
-
     const data = await ExistingCartItem.find({
       table_no: tableNo,
       location_name: locationName,
@@ -851,6 +850,7 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
   }
 });
 
+// delete whote bill Items
 ipcMain.on("delete-whole-billItem", async (event, productId, locationName, tableNo, billNo) => {
   try {
     let bill = await Bill.findOne({
