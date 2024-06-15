@@ -211,12 +211,12 @@
             </svg>
           </div>
           <input  id="table_search_item" type="text"
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-primary border-primary focus:outline-none"
+            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary focus:outline-none"
             placeholder="Search for items" />
         </div>
         <div class="relative">
           <select id="productDropdown"
-            class="inline-flex items-center text-black bg-primary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
+            class="inline-flex items-center text-black bg-secondary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
             <option value="" selected disabled>Select Product</option>
           </select>
         </div>
@@ -254,7 +254,7 @@
           ">
         <div class="relative w-full max-w-2xl max-h-full">
           <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow">
+          <div class="relative bg-secondary rounded-lg shadow">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t">
               <h3 class="text-xl font-semibold text-black ">
@@ -277,7 +277,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <div class="flex items-center justify-center">
                     <label for="item_image"
-                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-primary hover:bg-tertiary">
+                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white">
                       <div class="flex flex-col items-center justify-center pt-5 pb-6 overflow-hidden">
                         
                         <svg id="update_image_icon" class="w-8 h-8 mb-4 text-black " aria-hidden="true"
@@ -300,14 +300,14 @@
                   <label for="item_name" class="block mb-2 text-sm font-medium text-black ">Item
                     Name</label>
                   <input  name="item_name" id="item_name" autofocus max="30" maxlength="30" min="3"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. Chicken Curry" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="rate_one"
                     class="block mb-2 text-sm font-medium text-black ">Rate One</label>
                   <input type="tel" name="rate_one" id="rate_one" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 200" required />
                 </div>
 
@@ -315,7 +315,7 @@
                   <label for="rate_two" class="block mb-2 text-sm font-medium text-black ">Rate Two
                     </label>
                   <input type="tel" name="rate_two" id="rate_two" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
@@ -323,21 +323,21 @@
                   <label for="rate_three" class="block mb-2 text-sm font-medium text-black ">Rate Three
                     </label>
                   <input type="tel" name="rate_three" id="rate_three" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="rate_four" class="block mb-2 text-sm font-medium text-black ">Rate Four</label>
                   <input type="tel" name="rate_four" id="rate_four" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="rate_five" class="block mb-2 text-sm font-medium text-black ">Rate Five
                     </label>
                   <input type="tel" name="rate_five" id="rate_five" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
@@ -345,19 +345,19 @@
                   <label for="rate_six" class="block mb-2 text-sm font-medium text-black ">Rate Six
                     </label>
                   <input type="tel" name="rate_six" id="rate_six" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="category" class="block mb-2 text-sm font-medium text-black ">Select Category</label>
                   <select id="category"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"></select>
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"></select>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="status" class="block mb-2 text-sm font-medium text-black ">Select Status</label>
                   <select id="status"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>
@@ -385,7 +385,7 @@
           ">
         <div class="relative w-full max-w-2xl max-h-full">
           <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow">
+          <div class="relative bg-secondary rounded-lg shadow">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t">
               <h3 class="text-xl font-semibold text-black ">
@@ -408,7 +408,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <div class="flex items-center justify-center">
                     <label for="new_item_image"
-                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-primary hover:bg-tertiary">
+                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white">
                       <div class="flex flex-col items-center justify-center pt-5 pb-6 overflow-hidden">
 
                         <svg id="image_preview_icon" class="w-8 h-8 mb-4 text-black" aria-hidden="true"
@@ -429,7 +429,7 @@
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="bulkUploadInput"
-                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-primary hover:bg-tertiary">
+                      class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-white">
                       <div class="flex flex-col items-center justify-center pt-5 pb-6 overflow-hidden">
 
                         <svg id="image_preview_icon" class="w-8 h-8 mb-4 text-black" aria-hidden="true"
@@ -450,28 +450,28 @@
                   <label for="new_item_no" class="block mb-2 text-sm font-medium text-black ">Item
                     No</label>
                   <input  name="new_item_no" id="new_item_no" max="30" maxlength="30" min="3" autofocus
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 10 , 212" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_item_name" class="block mb-2 text-sm font-medium text-black ">Item
                     Name</label>
                   <input  name="new_item_name" id="new_item_name" max="30" maxlength="30" min="3" autofocus
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. Chicken Curry" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_rate_one"
                     class="block mb-2 text-sm font-medium text-black ">Rate One</label>
                   <input type="tel" name="new_rate_one" id="new_rate_one" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 200" required />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_rate_two" class="block mb-2 text-sm font-medium text-black ">Rate Two</label>
                   <input type="tel" name="new_rate_two" id="new_rate_two" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
@@ -479,7 +479,7 @@
                   <label for="new_rate_three"
                     class="block mb-2 text-sm font-medium text-black ">Rate Three</label>
                   <input type="tel" name="new_rate_three" id="new_rate_three" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
@@ -488,7 +488,7 @@
                     class="block mb-2 text-sm font-medium text-black ">Rate Four
                     </label>
                   <input type="tel" name="new_rate_four" id="new_rate_four" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
@@ -496,7 +496,7 @@
                     class="block mb-2 text-sm font-medium text-black ">Rate Five
                     </label>
                   <input type="tel" name="new_rate_five" id="new_rate_five" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
 
@@ -504,27 +504,27 @@
                   <label for="new_rate_six"
                     class="block mb-2 text-sm font-medium text-black ">Rate Six</label>
                   <input type="tel" name="new_rate_six" id="new_rate_six" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 250" required />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_tax" class="block mb-2 text-sm font-medium text-black ">
                     Tax</label>
                   <input type="tel" name="new_tax" id="new_tax" min="0" max="5" maxlength="5"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
                     placeholder="e.g. 25" required />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_category" class="block mb-2 text-sm font-medium text-black">Select Category</label>
                   <select id="new_category"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"></select>
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"></select>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_status" class="block mb-2 text-sm font-medium text-black">Select Status</label>
                   <select id="new_status"
-                    class="shadow-sm bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>

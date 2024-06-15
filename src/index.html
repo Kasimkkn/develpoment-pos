@@ -230,7 +230,7 @@
         <div class="flex items-start flex-col gap-2">
           <div class="flex gap-2 w-full items-center">
             <input id="searchInput" autofocus type="text"
-              class="flex h-10 w-80 rounded-md border border-primary bg-primary px-3 py-2 text-sm focus:outline-none"
+              class="flex h-10 w-80 rounded-md border border-primary bg-white px-3 py-2 text-sm focus:outline-none"
               placeholder="Search dishes....." />
 
             <button id="dropdownRightEndButton" data-dropdown-toggle="dropdownRightEnd"
@@ -346,7 +346,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-xl font-semibold text-black">Select Quantity</h3>
@@ -395,7 +395,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-xl font-semibold text-black">
@@ -448,7 +448,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-xl font-semibold text-black">
@@ -501,7 +501,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-lg font-semibold text-black">Add Information</h3>
@@ -523,9 +523,9 @@
         <div class="p-4 md:p-5">
           <div class="p-2">
             <label for="customerPhoneNO" class="block mb-2 text-sm font-medium text-black">Customer Phone No</label>
-            <input id="customerPhoneNO" type="tel" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10"
+            <input id="customerPhoneNO" type="number" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10" autocomplete="off"
               maxlength="10" list="customerPhoneList"
-              class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
               <datalist id="customerPhoneList"></datalist>
 
             </div>
@@ -533,7 +533,7 @@
             <label for="customerName" class="block mb-2 text-sm font-medium text-black">Customer Name</label>
             <input id="customerName" type="text" name="customerName" placeholder="e.g. John Doe" autofocus max="25"
               maxlength="25" list="customerNameList"
-              class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
               <datalist id="customerNameList"></datalist>
             </div>
           
@@ -541,25 +541,25 @@
             <label for="customerGSTNo" class="block mb-2 text-sm font-medium text-black">Customer GST No</label>
             <input id="customerGSTNo" type="text" name="customerGSTNo" placeholder="e.g. 123ABC4567890" max="15"
               maxlength="15"
-              class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
           </div>
           <div class="flex gap-1 w-full">
             <div class="p-2" style="flex: 0 0 25%">
               <label for="discountPerc" class="block mb-2 text-sm font-medium text-black">Discount %</label>
               <input id="discountPerc" type="tel" name="discountPerc" placeholder="e.g. 5,10"
                 oninput="validateDiscount(this)" max="100" maxlength="3"
-                class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
             </div>
             <div class="p-2" style="flex: 0 0 30%">
               <label for="discountMoney" class="block mb-2 text-sm font-medium text-black">Discount Am</label>
               <input id="discountMoney" type="tel" name="discountMoney" placeholder="e.g. 5,10" max="100" maxlength="3"
-                class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
             </div>
             <div class="p-2" style="flex: 0 0 45%">
               <label for="discountReason" class="block mb-2 text-sm font-medium text-black">Discount Reason</label>
               <input id="discountReason" type="text" name="discountReason" placeholder="e.g. Relatives, etc."
                 maxlength="20"
-                class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
             </div>
           </div>
           <div class="p-2">
@@ -578,7 +578,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-max max-h-full ">
       <!-- Modal content -->
-      <div class="relative rounded-lg bg-white shadow">
+      <div class="relative rounded-lg bg-secondary shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-lg font-semibold text-black">Customer Loyalty</h3>
@@ -597,12 +597,12 @@
           <div class="flex justify-between px-2 gap-3 items-start p-2 w-full">
             <div class="flex" style="width: 18rem;">
               <span style="border-right: none;"
-                class="inline-flex items-center px-3 text-sm bg-primary border border-e-0 border-primary rounded-s-md">
-                <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
+                class="inline-flex items-center px-3 text-sm bg-primary text-white border border-e-0 border-primary rounded-s-md">
+                <img src="../assets/phone.png" class="w-4 h-4 text-white" alt="tel">
 
               </span>
               <input id="customerPhone" min="10" max="10" maxlength="10" type="tel"
-                class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+                class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
                 placeholder="+91 1234567890" list="loyaltyCustomerPhoneList">
                 <datalist id="loyaltyCustomerPhoneList"></datalist>
 
@@ -610,11 +610,11 @@
 
             <div class="flex" style="width: 18rem;">
               <span style="border-right: none;"
-                class="inline-flex items-center px-3 text-sm bg-primary border border-e-0 border-primary rounded-s-md">
+                class="inline-flex items-center px-3 text-sm bg-common text-white border border-e-0 border-primary rounded-s-md">
                 Available Points
               </span>
               <label id="customerPoints"
-                class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5">0</label>
+                class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5">0</label>
             </div>
 
           </div>
@@ -623,7 +623,7 @@
               You Can Redeem :
             </span>
             <input id="redeemAmount" type="tel" min="0"
-              class="rounded-lg bg-primary border focus:border-primary border-primary block flex-1 w-20 text-sm p-2"
+              class="rounded-lg bg-white border focus:border-primary border-primary block flex-1 w-20 text-sm p-2"
               placeholder="100">
           </div>
 
@@ -637,7 +637,7 @@
             </button>
             <div class="flex items-end">
               <input type="tel" id="otpInput" maxlength="4" min="4"
-                class="rounded-lg bg-primary border focus:border-primary border-primary block flex-1 max-w-20 text-sm p-2">
+                class="rounded-lg bg-white border focus:border-primary border-primary block flex-1 max-w-20 text-sm p-2">
               <input type="hidden" name="otpValue" id="otpValue">
             </div>
           </div>
@@ -670,7 +670,7 @@
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 max-h-full" style="width: 65vw">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
           <h3 class="text-lg font-semibold text-black">Todys Sales</h3>

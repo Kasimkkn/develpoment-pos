@@ -203,30 +203,30 @@
     </div>
   </aside>
 
-  <main class="w-full h-full flex justify-center items-center flex-col pt-5">
+  <main class="w-full flex justify-center items-center flex-col pt-5 bg-secondary overflow-hidden" style="height: 100vh;">
 
     <div class="flex gap-4 w-full items-center" style="padding-left: 2.5rem;" id="color-picker">
 
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center p-2 bg-white rounded-lg">
         <label for="common-color">Common</label>
         <input type="color" id="common-color" name="common-color" value="#104373">
       </div>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
         <label for="common-hover-color">Hover</label>
         <input type="color" id="common-hover-color" name="common-hover-color" value="#104373">
       </div>
 
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
         <label for="primary-color">Primary</label>
         <input type="color" id="primary-color" name="primary-color" value="#D3D3D3">
       </div>
 
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
         <label for="secondary-color">Secondary</label>
         <input type="color" id="secondary-color" name="secondary-color" value="#F5F5DC">
       </div>
 
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
         <label for="secondary-color">Tertiary</label>
         <input type="color" id="secondary-color" name="tertiary-color" value="#62CBE7">
       </div>
@@ -252,11 +252,11 @@
           <label for="customer_Id" class="capitalize block mb-2 text-sm">Customer Id</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
             </span>
             <input id="customer_Id" type="tel" name="customer_Id" max="10" maxlength="10"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="2001">
           </div>
         </div>
@@ -264,7 +264,7 @@
           <label for="customer_Restuarant" class="capitalize block mb-2 text-sm">Customer Restuarant</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <svg class="w-4 h-4 text-black " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 viewBox="0 0 20 20">
                 <path
@@ -272,7 +272,7 @@
               </svg>
             </span>
             <input id="customer_Restuarant"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="Darshan Inn">
           </div>
         </div>
@@ -280,7 +280,7 @@
           <label for="customer_name" class="capitalize block mb-2 text-sm">Customer Name</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <svg class="w-4 h-4 text-black " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 viewBox="0 0 20 20">
                 <path
@@ -288,7 +288,7 @@
               </svg>
             </span>
             <input id="customer_name"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="Jhon Wick">
           </div>
         </div>
@@ -296,12 +296,12 @@
           <label for="customer_no" class="capitalize block mb-2 text-sm">Customer No</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="customer_no" max="10" maxlength="10" min="10"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="911">
           </div>
         </div>
@@ -311,7 +311,7 @@
           <label for="bill_footer" class="capitalize block mb-2 text-sm">Bill Footer</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <svg class="w-4 h-4 text-black " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 viewBox="0 0 20 20">
                 <path
@@ -319,7 +319,7 @@
               </svg>
             </span>
             <input id="bill_footer"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="Thanks For Visiting">
           </div>
         </div>
@@ -327,12 +327,12 @@
           <label for="hsn_code" class="capitalize block mb-2 text-sm">HSN Code</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="hsn_code" min="6" max="6" maxlength="6"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="0901.11">
           </div>
         </div>
@@ -340,12 +340,12 @@
           <label for="gstin_no" class="capitalize block mb-2 text-sm">GSTIN</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="gstin_no" min="15" max="15" maxlength="15"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="22AAAAA0000A1Z5">
           </div>
         </div>
@@ -353,12 +353,12 @@
           <label for="fssai_code" class="capitalize block mb-2 text-sm">FSSAI</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="fssai_code" min="14" max="14" maxlength="14"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="22AAAAA0000A1Z5">
           </div>
         </div>
@@ -367,12 +367,12 @@
           <label for="loyalty_amount" class="capitalize block mb-2 text-sm">Loyalty Amount</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="loyalty_amount" min="14" max="14" maxlength="14"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="100">
           </div>
         </div>
@@ -380,12 +380,12 @@
           <label for="loyalty_points" class="capitalize block mb-2 text-sm">Loyalty Points</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="loyalty_points" min="14" max="14" maxlength="14"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="10">
           </div>
 
@@ -394,12 +394,12 @@
           <label for="how_much_points" class="capitalize block mb-2 text-sm">How Much Points</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="how_much_points" min="14" max="14" maxlength="14"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="100">
           </div>
         </div>
@@ -407,12 +407,12 @@
           <label for="how_much_amount" class="capitalize block mb-2 text-sm">How Much amount</label>
           <div class="flex">
             <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
-              style="border:1px solid black;border-right: none;">
+              style="border:1px solid var(--common-color);border-right: none;">
               <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
 
             </span>
             <input id="how_much_amount" min="14" max="14" maxlength="14"
-              class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+              class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
               placeholder="10">
           </div>
         </div>

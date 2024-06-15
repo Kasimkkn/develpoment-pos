@@ -99,7 +99,14 @@ const updateCartSummary = (cartItems, billData) => {
   // }
 
   const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
-  const userGst = userPreferences ? userPreferences._doc.gst_percentage : 0;
+  let userGst;
+  if (userPreferences._doc.is_gstAvailable && userTaxPercentage > 0) {
+    userGst = userPreferences._doc.gst_percentage;
+  } 
+  else if (userPreferences._doc.is_ValueAddedTaxAvailable && userPreferences._doc.vat_percentage > 0) {
+    userGst = userPreferences._doc.vat_percentage;
+  }
+
   const totalTaxAmount = netAmount * ((userGst > 0 ? userGst : 0) / 100);
   netAmount += totalTaxAmount;
 
@@ -361,8 +368,8 @@ async function printBill() {
   if (userPref._doc.is_gstAvailable && userTaxPercentage > 0) {
     sgstAmount = userTaxPercentage / 2 * 100;
     cgstAmount = userTaxPercentage / 2 * 100;
-  } else if (userPref._doc.is_ValueAddedTaxAvailable && userTaxPercentage > 0) {
-    vat_Amount = userTaxPercentage / 100;
+  } else if (userPref._doc.is_ValueAddedTaxAvailable && userPref._doc.vat_percentage > 0) {
+    vat_Amount = userTaxPercentage;
   }
 
   let productsInfo = "";
@@ -496,7 +503,7 @@ async function printBill() {
 
         ${vat_Amount > 0
       ? `<div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-              <div>VAT ${vat_Amount}%:</div>
+              <div>VAT :</div>
               <div style="text-align: right;"> ${(totalTaxAmount).toFixed(2)}</div>
             </div>`
       : ""

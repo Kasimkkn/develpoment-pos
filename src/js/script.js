@@ -62,7 +62,9 @@ function renderCustomerInfoSugestion(inputText) {
       const option = document.createElement("option");
       option.value = Number(loyalty._doc.customer_no);
       customerNoDatalist.appendChild(option);
-      loyaltyCustomerPhoneList.appendChild(option);
+      // clone the data and then apnned it to the datalist
+      loyaltyCustomerPhoneList.appendChild(option.cloneNode(true));
+
     }
     if(loyaltyName.includes(inputText)) {
       const option = document.createElement("option");

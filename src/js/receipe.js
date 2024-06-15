@@ -51,12 +51,12 @@ function openEditModal(receipeId) {
         subItemElement.innerHTML = `
             <div class="col-span-6 sm:col-span-3">
                 <label for="edit_sub_item_name_${index}" class="block mb-2 text-sm font-medium text-black">Sub Item Name</label>
-                <input name="edit_sub_item_name_${index}" id="edit_sub_item_name_${index}" value="${subItem.item_name}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
+                <input name="edit_sub_item_name_${index}" id="edit_sub_item_name_${index}" value="${subItem.item_name}" class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
             </div>
             <div class="col-span-6 sm:col-span-3">
                 <label for="edit_sub_item_quantity_${index}" class="block mb-2 text-sm font-medium text-black">Quantity</label>
         <div class="flex items-center gap-2">
-                        <input name="edit_sub_item_quantity_${index}" id="edit_sub_item_quantity_${index}" value="${subItem.quantity}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
+                        <input name="edit_sub_item_quantity_${index}" id="edit_sub_item_quantity_${index}" value="${subItem.quantity}" class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true" />
                    <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteEditReceipe(${receipeId},${index})">Delete</button>
         </div>
             </div>   
@@ -88,14 +88,14 @@ const addNewSubItemForEdit = () => {
     newSubItem.innerHTML = `
         <div class="col-span-6 sm:col-span-3">
             <label for="edit_sub_item_name_${newIndex}" class="block mb-2 text-sm font-medium text-black">Select Sub Item</label>
-            <select name="edit_sub_item_name_${newIndex}" id="edit_sub_item_name_${newIndex}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true">
+            <select name="edit_sub_item_name_${newIndex}" id="edit_sub_item_name_${newIndex}" class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" required="true">
                 ${apiStock.map(stock => `<option value="${stock._doc.item_no}">${stock._doc.item_name}</option>`).join('')}
             </select>
         </div>
         <div class="col-span-6 sm:col-span-3">
             <label for="edit_sub_item_quantity_${newIndex}" class="block mb-2 text-sm font-medium text-black">Quantity</label>
             <div class="flex items-center gap-2" >
-            <input name="edit_sub_item_quantity_${newIndex}" id="edit_sub_item_quantity_${newIndex}" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" placeholder="Enter Quantity" required="true" />
+            <input name="edit_sub_item_quantity_${newIndex}" id="edit_sub_item_quantity_${newIndex}" class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5" placeholder="Enter Quantity" required="true" />
             <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteSubItem(this)">Delete</button>
 
             </div>
@@ -173,13 +173,13 @@ const addNewSubItem = () => {
     newSubItem.innerHTML = `
         <div class="col-span-6 sm:col-span-3">
             <label for="new_sub_item_name_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Select Ingredients</label>
-            <select id="new_sub_item_name_${subItemCount}" class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg focus:ring-0 border-primary focus:outline-none peer new_sub_item_name">
+            <select id="new_sub_item_name_${subItemCount}" class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg focus:ring-0 border-primary focus:outline-none peer new_sub_item_name">
             </select>
         </div>
         <div class="col-span-6 sm:col-span-3">
             <label for="new_sub_item_quantity_${subItemCount}" class="block mb-2 text-sm font-medium text-black">Item Quantity</label>
             <div class="flex items-center gap-2">
-            <input name="new_sub_item_quantity_${subItemCount}" id="new_sub_item_quantity_${subItemCount}" max="1000" maxlength="1000" class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5 new_sub_item_quantity" placeholder="e.g. 100, 200" required="true" />
+            <input name="new_sub_item_quantity_${subItemCount}" id="new_sub_item_quantity_${subItemCount}" max="1000" maxlength="1000" class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5 new_sub_item_quantity" placeholder="e.g. 100, 200" required="true" />
             <button type="button" class="text-white beautyBtn focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center" onclick="deleteSubItem(this)">Delete</button>
             </div>
         </div>

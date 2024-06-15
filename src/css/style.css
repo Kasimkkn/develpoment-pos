@@ -62,7 +62,7 @@ input{
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
   outline: none !important;
-  background-color: var(--input-color) !important;
+  background-color: var(--input-color);
 
 }
 input[type="color"]{
@@ -80,7 +80,7 @@ select{
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
   border-radius: 10px;
-  background-color: var(--input-color) !important;
+  background-color: var(--input-color);
   padding: 0.625rem; 
 }
 
@@ -245,8 +245,8 @@ input:hover {
   background-color: var(--common-color); 
 }
 .checkbox-container input[type="checkbox"]:checked::after {
-  content: " ";
-  color: white;
+  content: "✓";
+  color: var(--common-color);
   font-weight: bold;
   font-size: 16px; 
   position: relative;

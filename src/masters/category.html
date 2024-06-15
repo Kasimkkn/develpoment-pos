@@ -224,13 +224,13 @@
             </svg>
           </div>
           <input id="table_search_item" type="text" max="10" maxlength="10"
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-primary border-primary focus:outline-none"
+            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary focus:outline-none"
             placeholder="Search for categories" />
         </div>
 
         <div class="relative">
           <select id="categoryDropdown"
-            class="inline-flex items-center text-black bg-primary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
+            class="inline-flex items-center text-black bg-secondary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
             <option value="" selected disabled>Select Category</option>
           </select>
         </div>
@@ -266,7 +266,7 @@
     ">
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-start justify-between p-4 border-b rounded-t">
           <h3 class="text-xl font-semibold text-black">
@@ -289,14 +289,14 @@
               <label for="category_name" class="block mb-2 text-sm font-medium text-black">Category
                 Name</label>
               <input name="category_name" id="category_name" max="20" maxlength="20"
-                class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5"
+                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5"
                 placeholder="e.g. Dinner, Breakfast" required="true" />
             </div>
 
             <div class="col-span-6 sm:col-span-3">
               <label for="status" class="block mb-2 text-sm font-medium text-black">Select Status</label>
               <select id="status"
-                class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                 <option value="true">Active</option>
                 <option value="false">Not Active</option>
               </select>
@@ -323,7 +323,7 @@
     ">
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow">
+      <div class="relative bg-secondary rounded-lg shadow">
         <!-- Modal header -->
         <div class="flex items-start justify-between p-4 border-b rounded-t">
           <h3 class="text-xl font-semibold text-black">
@@ -346,13 +346,13 @@
               <label for="new_category_name" class="block mb-2 text-sm font-medium text-black">Category
                 Name</label>
               <input name="new_category_name" id="new_category_name"
-                class="shadow-sm bg-primary border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5"
+                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary focus:outline-none block w-full p-2.5"
                 placeholder="e.g. Dinner , Chinese" required="true" />
             </div>
             <div class="col-span-6 sm:col-span-3">
               <label for="new_status" class="block mb-2 text-sm font-medium text-black">Select Status</label>
               <select id="new_status"
-                class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                 <option value="true">Active</option>
                 <option value="false">Not Active</option>
               </select>

@@ -1,5 +1,5 @@
 
-const  Swal  = require("sweetalert2");
+const Swal = require("sweetalert2");
 
 let apiUserRights = [];
 function closeModal() {
@@ -22,17 +22,18 @@ const renderUserRightsOptions = (user) => {
       const optionContainer = document.createElement("div");
       optionContainer.classList.add("flex", "items-center", "gap-3");
       const checkbox = document.createElement("input");
+      checkbox.classList.add("rounded");
       checkbox.type = "checkbox";
       checkbox.value = key;
       checkbox.id = key;
-      if(statusSymbol == "✅"){
+      if (statusSymbol == "✅") {
         checkbox.checked = true;
       }
       checkbox.name = "user_rights_options";
       optionContainer.appendChild(checkbox);
 
       const label = document.createElement("label");
-      label.textContent = displayName; 
+      label.textContent = displayName;
       label.setAttribute("for", key);
       optionContainer.appendChild(label);
 
@@ -63,10 +64,10 @@ const edituserRightsHandler = async () => {
   try {
     const userRightsOptions = Array.from(document.querySelectorAll('input[name="user_rights_options"]:checked')).map(checkbox => checkbox.value);
     const userData = {
-        ...userRightsOptions.reduce((acc, option) => {
-            acc[option] = true;
-            return acc;
-        }, {})
+      ...userRightsOptions.reduce((acc, option) => {
+        acc[option] = true;
+        return acc;
+      }, {})
     };
     ipcRenderer.send("edit-user-rights", userId, userData);
 
@@ -80,132 +81,127 @@ const edituserRightsHandler = async () => {
 };
 
 const renderUserDropown = (userData) => {
-    const userName = document.getElementById("new_first_name");
-    userName.innerHTML = "";
-    userData.forEach((user) => {
-        // const userAlreadyExisits = apiUserRights.find((u) => u._doc.user_no == user._doc.user_no);
-        // console.log(userAlreadyExisits)
-        // if(userAlreadyExisits){
-        //   console.log("User already exisits")
-        //   return
-        // }
-        const option = document.createElement("option");
-        option.value = `${user._doc.user_no} ${user._doc.first_name}`;
-        option.textContent = user._doc.first_name;
-        userName.appendChild(option);
-    })
+  const userName = document.getElementById("new_first_name");
+  userName.innerHTML = "";
+  userData.forEach((user) => {
+    const option = document.createElement("option");
+    option.value = `${user._doc.user_no} ${user._doc.first_name}`;
+    option.textContent = user._doc.first_name;
+    userName.appendChild(option);
+  })
 }
 
 ipcRenderer.send("fetch-user");
 
-ipcRenderer.on("user-data" , (event, data) => {
-   renderUserDropown(data)
-   renderDropdown(data);
+ipcRenderer.on("user-data", (event, data) => {
+  renderUserDropown(data)
+  renderDropdown(data);
 });
 
 const renderUserOptions = (userData) => {
-    const userOptions = document.getElementById("UserOptions");
-    userOptions.innerHTML = "";
+  const userOptions = document.getElementById("UserOptions");
+  userOptions.innerHTML = "";
 
-    if (!userData || userData.length === 0) {
-        console.error("No user data provided.");
-        return;
-    }
+  if (!userData || userData.length === 0) {
+    console.error("No user data provided.");
+    return;
+  }
 
-    const user = userData[0]._doc; 
-    const userRights = Object.keys(user).filter(key => typeof user[key] === 'boolean' && key !== 'user_no' && key !== 'first_name' && key !== 'is_synced');
+  const user = userData[0]._doc;
+  const userRights = Object.keys(user).filter(key => typeof user[key] === 'boolean' && key !== 'user_no' && key !== 'first_name' && key !== 'is_synced');
 
-    userRights.forEach(right => {
-        const optionContainer = document.createElement("div");
-        optionContainer.classList.add("flex", "items-center" , "gap-3");
+  userRights.forEach(right => {
+    const optionContainer = document.createElement("div");
+    optionContainer.classList.add("flex", "items-center", "gap-3");
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.value = right;
-        checkbox.id = right;
-        checkbox.name = "user_rights";
-        optionContainer.appendChild(checkbox);
+    const checkbox = document.createElement("input");
+    checkbox.classList.add("rounded");
+    checkbox.type = "checkbox";
+    checkbox.value = right;
+    checkbox.id = right;
+    checkbox.name = "user_rights";
+    optionContainer.appendChild(checkbox);
 
-        const label = document.createElement("label");
-        label.textContent = right.replace(/_/g, " "); // Convert underscore to space for display
-        label.setAttribute("for", right);
-        optionContainer.appendChild(label);
+    const label = document.createElement("label");
+    label.textContent = right.replace(/_/g, " "); // Convert underscore to space for display
+    label.setAttribute("for", right);
+    optionContainer.appendChild(label);
 
-        userOptions.appendChild(optionContainer);
-    });
+    userOptions.appendChild(optionContainer);
+  });
 };
 
 const userRightsModalOpen = (userNo) => {
-    const userRightsModal = document.getElementById("userRightsModal");
-    userRightsModal.classList.remove("hidden");
-    userRightsModal.classList.add("flex");
-    const userRightsModalBody = document.getElementById("userRightsModalBody");
-  
-    const user = apiUserRights.find((user) => user._doc.user_no == userNo);
-  
-    const userRightsModalTitle = document.getElementById("userRightsModalTitle");
-    userRightsModalTitle.innerHTML = `User Rights: ${user._doc.first_name} ${user._doc.last_name}`;
-    
-    const rightsHTML = Object.entries(user._doc).map(([key, value]) => {
-      if (typeof value === 'boolean' && key !== 'user_no' && key !== 'first_name' && key !== 'is_synced') {
-        const displayName = key.replace(/_/g, " "); 
-        const statusSymbol = value ? "✅" : "❌";
-        return `<span class="font-bold w-max flex items-center">${displayName}: ${statusSymbol}</span>`;
-      }
-      return ''; 
-    }).join("");
-  
-    userRightsModalBody.innerHTML = `${rightsHTML}`;
-  };
-    
-  const newUserRightsHandler = () => {
-    try {
-        const newUser = document.getElementById("new_first_name").value;
-        const newUserNo = newUser.split(" ")[0];
-        const newUserName = newUser.split(" ")[1];
+  const userRightsModal = document.getElementById("userRightsModal");
+  userRightsModal.classList.remove("hidden");
+  userRightsModal.classList.add("flex");
+  const userRightsModalBody = document.getElementById("userRightsModalBody");
 
-        const userRightsOptions = Array.from(document.querySelectorAll('input[name="user_rights"]:checked')).map(checkbox => checkbox.value);
-        
-        if (newUserNo === "" || userRightsOptions.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'All fields are required!',
-                timer: 1000
-            });
+  const user = apiUserRights.find((user) => user._doc.user_no == userNo);
 
-            return;
-        }
+  const userRightsModalTitle = document.getElementById("userRightsModalTitle");
+  userRightsModalTitle.innerHTML = `User Rights: ${user._doc.first_name} ${user._doc.last_name}`;
 
-        const userData = {
-            user_no: newUserNo,
-            first_name: newUserName,
-            ...userRightsOptions.reduce((acc, option) => {
-                acc[option] = true;
-                return acc;
-            }, {})
-        };
-
-        ipcRenderer.send("new-user-right", userData);
-
-        const newUserRightsModal = document.getElementById("newUserRightsModal");
-        newUserRightsModal.classList.add("hidden");
-        newUserRightsModal.classList.remove("flex");
-        window.location.reload(true);
-        fetchuser();
-    } catch (error) {
-        ipcRenderer.on("new-user-error", (event, error) => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error,
-                timer: 1000,
-            });
-            setTimeout(() => {
-                location.reload(true);
-            }, 1000);
-        });
+  const rightsHTML = Object.entries(user._doc).map(([key, value]) => {
+    if (typeof value === 'boolean' && key !== 'user_no' && key !== 'first_name' && key !== 'is_synced') {
+      const displayName = key.replace(/_/g, " ");
+      const statusSymbol = value ? "✅" : "❌";
+      return `<span class="font-bold w-max flex items-center">${displayName}: ${statusSymbol}</span>`;
     }
+    return '';
+  }).join("");
+
+  userRightsModalBody.innerHTML = `${rightsHTML}`;
+};
+
+const newUserRightsHandler = () => {
+  try {
+    const newUser = document.getElementById("new_first_name").value;
+    const newUserNo = newUser.split(" ")[0];
+    const newUserName = newUser.split(" ")[1];
+
+    const userRightsOptions = Array.from(document.querySelectorAll('input[name="user_rights"]:checked')).map(checkbox => checkbox.value);
+
+    if (newUserNo === "" || userRightsOptions.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'All fields are required!',
+        timer: 1000
+      });
+
+      return;
+    }
+
+    const userData = {
+      user_no: newUserNo,
+      first_name: newUserName,
+      ...userRightsOptions.reduce((acc, option) => {
+        acc[option] = true;
+        return acc;
+      }, {})
+    };
+
+    ipcRenderer.send("new-user-right", userData);
+
+    const newUserRightsModal = document.getElementById("newUserRightsModal");
+    newUserRightsModal.classList.add("hidden");
+    newUserRightsModal.classList.remove("flex");
+    window.location.reload(true);
+    fetchuser();
+  } catch (error) {
+    ipcRenderer.on("new-user-error", (event, error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error,
+        timer: 1000,
+      });
+      setTimeout(() => {
+        location.reload(true);
+      }, 1000);
+    });
+  }
 };
 
 

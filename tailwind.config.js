@@ -8,7 +8,8 @@ module.exports = {
         'secondary': 'var(--secondary-color)',
         'tertiary': 'var(--tertiary-color)',
         'common': 'var(--common-color)',
-        'common-hover': 'var(--common-hover-color)'
+        'common-hover': 'var(--common-hover-color)',
+        'input': 'var(--input-color)'
       }
     },
   },

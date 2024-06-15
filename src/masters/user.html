@@ -210,13 +210,13 @@
             </svg>
           </div>
           <input id="table_search_item" type="text" maxlength="20" max="10"
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-primary border-primary focus:outline-none"
+            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary focus:outline-none"
             placeholder="Search for users" />
         </div>
 
         <div class="relative">
           <select id="userFilterDropdown"
-            class="inline-flex items-center text-black bg-primary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
+            class="inline-flex items-center text-black bg-secondary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
             <option value="" selected disabled>Select user</option>
           </select>
         </div>
@@ -248,7 +248,7 @@
           ">
         <div class="relative w-full max-w-2xl max-h-full">
           <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow ">
+          <div class="relative bg-secondary rounded-lg shadow ">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t">
               <h3 class="text-xl font-semibold text-black ">
@@ -272,28 +272,28 @@
                   <label for="first_name" class="block mb-2 text-sm font-medium text-black ">First
                     Name</label>
                   <input name="first_name" id="first_name" max="15" maxlength="15"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New user , Common Hall" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="last_name" class="block mb-2 text-sm font-medium text-black ">Last
                     Name</label>
                   <input name="last_name" id="last_name" max="15" maxlength="15"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New user , Common Hall" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="user_id" class="block mb-2 text-sm font-medium text-black ">User
                     Id</label>
                   <input name="user_id" id="user_id" max="15" maxlength="15"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New user , Common Hall" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="password" class="block mb-2 text-sm font-medium text-black ">User
                     Password</label>
                   <input name="password" id="password" max="10" maxlength="10"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New user , Common Hall" required="" />
                 </div>
 
@@ -301,7 +301,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="user_role" class="block mb-2 text-sm font-medium text-black">Select role</label>
                   <select id="user_role"
-                    class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                    class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                     <option value="admin">Admin</option>
                     <option value="receptionist">Receptionist</option>
                     <option value="manager">Manager</option>
@@ -315,7 +315,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="status" class="block mb-2 text-sm font-medium text-black">Select Status</label>
                   <select id="status"
-                    class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                    class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>
@@ -343,7 +343,7 @@
           ">
         <div class="relative w-full max-w-2xl max-h-full">
           <!-- Modal content -->
-          <div class="relative bg-white rounded-lg shadow ">
+          <div class="relative bg-secondary rounded-lg shadow ">
             <!-- Modal header -->
             <div class="flex items-start justify-between p-4 border-b rounded-t">
               <h3 class="text-xl font-semibold text-black ">
@@ -367,28 +367,28 @@
                   <label for="new_first_name" class="block mb-2 text-sm font-medium text-black ">First
                     Name</label>
                   <input name="new_first_name" id="new_first_name" type="text" max="10" maxlength="10"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. kasim" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_last_name" class="block mb-2 text-sm font-medium text-black ">Last
                     Name</label>
                   <input name="new_last_name" id="new_last_name" type="text" max="10" maxlength="10"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. kadiwala" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_user_id" class="block mb-2 text-sm font-medium text-black ">User
                     Id</label>
                   <input name="new_user_id" id="new_user_id" type="text" max="10" maxlength="10"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. kasim@123" required="" />
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_user_password" class="block mb-2 text-sm font-medium text-black ">User
                     Password</label>
                   <input name="new_user_password" id="new_user_password" type="text" max="10" maxlength="10" min="6" 
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. kasim@123" required="" />
                 </div>
 
@@ -396,14 +396,14 @@
                   <label for="new_mobile_no" class="block mb-2 text-sm font-medium text-black ">User
                     Mobile-No</label>
                   <input name="new_mobile_no" id="new_mobile_no" type="tel" max="10" maxlength="10"
-                    class="bg-primary text-black text-sm rounded-lg  block w-full p-2.5  "
+                    class="bg-white text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. kasim@123" required="" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_user_role" class="block mb-2 text-sm font-medium text-black">Select Role</label>
                   <select id="new_user_role"
-                    class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                    class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                     <option value="admin">Admin</option>
                     <option value="receptionist">Receptionist</option>
                     <option value="manager">Manager</option>
@@ -417,7 +417,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label for="new_status" class="block mb-2 text-sm font-medium text-black">Select Status</label>
                   <select id="new_status"
-                    class="block py-2.5 w-full text-sm text-black bg-primary px-3 border-0 appearance-none rounded-lg border-primary focus:ring-0border-primary focus:outline-none peer">
+                    class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>

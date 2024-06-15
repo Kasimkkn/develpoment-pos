@@ -113,10 +113,6 @@
         </div>
       </form>
     </div>
-    <div id="keyboard" class="hidden fixed shadow-lg">
-    </div>
-      <div id="alphKeyboard" class="hidden fixed shadow-lg">
-    </div>
   </section>
 
   <script src="global.js"></script>
@@ -125,15 +121,6 @@
     const userDetails = JSON.parse(localStorage.getItem("loggedInUser"));
     const user_id = userDetails._doc.user_id;
 
-    // document.addEventListener("DOMContentLoaded", () => {
-    //   ipcRenderer.send("fetch-user-preference");
-    //   ipcRenderer.on("fetch-user-preference-data", (event, data) => {
-    //     if (data != null) {
-    //       localStorage.setItem("userPreferences", JSON.stringify(data));
-    //       window.location.href = "index.html";
-    //     }
-    //   });
-    // });
     let currentStep = 1;
 
     function previousStep() {
