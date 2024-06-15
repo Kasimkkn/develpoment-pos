@@ -13,7 +13,6 @@ const itemSchema = new mongoose.Schema({
     },
     item_image:{
         type: String,
-        required: true,
     },
     rate_one : {
         type: Number,

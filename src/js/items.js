@@ -6,12 +6,29 @@ const { Readable } = require("stream");
 
 let apiProduct = [];
 let apiCategory = [];
-function closeModal() {
-  const editModal = document.getElementById("editItemModal");
-  editModal.classList.add("hidden");
 
-  const newItemModal = document.getElementById("addNewItemModal");
-  newItemModal.classList.add("hidden");
+const $targetEl = document.getElementById('editItemModal');
+const $targetEl2 = document.getElementById('addNewItemModal');
+
+const options = {
+  placement: 'bottom-right',
+  backdrop: 'dynamic',
+  backdropClasses:
+    'bg-gray-900/50 fixed inset-0 z-40',
+  closable: true,
+};
+
+const editItemModal = new Modal($targetEl, options);
+const addNewItemModal = new Modal($targetEl2, options);
+
+function closeModal() {
+  // const editModal = document.getElementById("editItemModal");
+  // editModal.classList.add("hidden");
+  addNewItemModal.hide()
+
+  // const newItemModal = document.getElementById("addNewItemModal");
+  // newItemModal.classList.add("hidden");
+  editItemModal.hide()
 }
 
 function openEditModal(itemId) {
@@ -62,7 +79,7 @@ updaeFileInput.addEventListener("change", () => {
 
 const editItemHandler = async () => {
   const itemId = document.getElementById('editItemModal').dataset.itemId;
-  const imageFile = document.getElementById("item_image").files[0];
+  // const imageFile = document.getElementById("item_image").files[0];
 
   try {
     let itemData = {
@@ -77,24 +94,21 @@ const editItemHandler = async () => {
       isActive: document.getElementById("status").value
     };
 
-    if (imageFile) {
-      const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
-      const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
-      if (existingProduct) {
-        const existingImagePath = existingProduct._doc.item_image;
-        fs.unlinkSync(existingImagePath);
-      }
+    // if (imageFile) {
+    //   const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
+    //   const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
+    //   if (existingProduct) {
+    //     const existingImagePath = existingProduct._doc.item_image;
+    //     fs.unlinkSync(existingImagePath);
+    //   }
 
-      fs.copyFileSync(imageFile.path, uploadPath);
-      itemData.itemImage = uploadPath;
-    }
+    //   fs.copyFileSync(imageFile.path, uploadPath);
+    //   itemData.itemImage = uploadPath;
+    // }
 
     ipcRenderer.send("edit-item", itemId, itemData);
-
-    const editModal = document.getElementById("editItemModal");
-    editModal.classList.add("hidden");
-    editModal.classList.remove("flex");
-    location.reload(true);
+    closeModal();
+    // location.reload(true);
     fetchProduct();
 
   } catch (error) {
@@ -125,18 +139,18 @@ fileInput.addEventListener("change", () => {
 
 const newItemHandler = () => {
 
-  const imageFile = document.getElementById("new_item_image").files[0];
+  // const imageFile = document.getElementById("new_item_image").files[0];
 
-  if (!imageFile) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Please select an image!',
-      timer: 1000,
-    })
-  }
-  const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
-  fs.copyFileSync(imageFile.path, uploadPath);
+  // if (!imageFile) {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Oops...',
+  //     text: 'Please select an image!',
+  //     timer: 1000,
+  //   })
+  // }
+  // const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
+  // fs.copyFileSync(imageFile.path, uploadPath);
   try {
     const newItemNoInput = document.getElementById("new_item_no").value
     const newItemNameInput = document.getElementById("new_item_name").value;
@@ -162,7 +176,7 @@ const newItemHandler = () => {
       const itemData = {
         item_no: newItemNoInput,
         itemName: newItemNameInput,
-        itemImage: uploadPath,
+        // itemImage: uploadPath,
         rate_one: newRateOne,
         rate_two: newRateTwo,
         rate_three: newRateTree,
@@ -175,10 +189,8 @@ const newItemHandler = () => {
       }
 
       ipcRenderer.send("new-item", itemData)
-      const addNewItemModal = document.getElementById("addNewItemModal");
-      addNewItemModal.classList.add("hidden");
-      addNewItemModal.classList.remove("flex");
-      location.reload(true);
+      closeModal();
+      // location.reload(true);
       fetchProduct();
     }
   } catch (error) {

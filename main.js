@@ -994,7 +994,8 @@ ipcMain.on("new-item", async (event, itemData) => {
       status: itemData.isActive,
     });
 
-    event.reply("new-item-success", data);
+    const allData = await Item.find({});
+    event.reply("products-data", allData);
   } catch (error) {
     console.error("Error creating new item:", error);
     event.reply("new-item-error", "Error creating new item");
@@ -1020,7 +1021,8 @@ ipcMain.on("edit-item", async (event, itemId, itemData) => {
         is_synced: false,
       }
     );
-    event.reply("edit-item-success", data);
+    const allData = await Item.find({});
+    event.reply("products-data", allData);
   } catch (error) {
     console.error("Error updating item:", error);
     event.reply("edit-item-error", "Error updating item");
