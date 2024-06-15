@@ -47,8 +47,7 @@ const rendermonthlySales = (data) => {
   monthlySalesTable.clear();
 
   let totalAmount = 0;
-  let totalCgst = 0;
-  let totalSgst = 0;
+  let totalTax = 0;
   let totalRound = 0;
   let totalDiscountPerc = 0;
   let totalDiscount = 0;
@@ -66,14 +65,13 @@ const rendermonthlySales = (data) => {
         sale.total_amount.toFixed(2),
         `${sale.discount_perc ? (sale.total_amount * (sale.discount_perc / 100)).toFixed(2)  : '0.00'}`,
         `${sale.discount_rupees ? sale.discount_rupees.toFixed(2) : '0.00'}`,
-        sale.cgst_tax.toFixed(2),
-        sale.sgst_tax.toFixed(2),
+        `${sale.total_tax ? sale.total_tax.toFixed(2) : '0.00'}`,
         `${sale.round_off}`,
         sale.final_amount.toFixed(2),
-        sale.cash_pay ? sale.final_amount.toFixed(2) : '',
-        sale.card_pay ? sale.final_amount.toFixed(2) : '',
-        sale.upi_pay ? sale.final_amount.toFixed(2) : '',
-        sale.other_pay ? sale.final_amount.toFixed(2) : '',
+        sale.cash_pay ? sale.final_amount.toFixed(2) : '0.00',
+        sale.card_pay ? sale.final_amount.toFixed(2) : '0.00',
+        sale.upi_pay ? sale.final_amount.toFixed(2) : '0.00',
+        sale.other_pay ? sale.final_amount.toFixed(2) : '0.00',
       ])
       .draw(false);
 
@@ -84,8 +82,7 @@ const rendermonthlySales = (data) => {
       }
 
       totalAmount += parseFloat(sale.total_amount);
-      totalCgst += parseFloat(sale.cgst_tax);
-      totalSgst += parseFloat(sale.sgst_tax);
+      totalTax += parseFloat(sale.total_tax);
       totalDiscountPerc += sale.discount_perc ? parseFloat(sale.total_amount * sale.discount_perc / 100) : 0;
       totalDiscount += sale.discount_rupees ? parseFloat(sale.discount_rupees) : 0;
       totalFinal += parseFloat(sale.final_amount);
@@ -105,8 +102,7 @@ const rendermonthlySales = (data) => {
       totalAmount.toFixed(2),
       totalDiscountPerc.toFixed(2),
       totalDiscount.toFixed(2),
-      totalCgst.toFixed(2),
-      totalSgst.toFixed(2),
+      totalTax.toFixed(2),
       totalRound.toFixed(2),
       totalFinal.toFixed(2),
       cashPayment.toFixed(2),
