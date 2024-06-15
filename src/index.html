@@ -524,15 +524,18 @@
           <div class="p-2">
             <label for="customerPhoneNO" class="block mb-2 text-sm font-medium text-black">Customer Phone No</label>
             <input id="customerPhoneNO" type="tel" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10"
-              maxlength="10"
+              maxlength="10" list="customerPhoneList"
               class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
-          </div>
+              <datalist id="customerPhoneList"></datalist>
+
+            </div>
           <div class="p-2">
             <label for="customerName" class="block mb-2 text-sm font-medium text-black">Customer Name</label>
             <input id="customerName" type="text" name="customerName" placeholder="e.g. John Doe" autofocus max="25"
-              maxlength="25"
+              maxlength="25" list="customerNameList"
               class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
-          </div>
+              <datalist id="customerNameList"></datalist>
+            </div>
           
           <div class="p-2">
             <label for="customerGSTNo" class="block mb-2 text-sm font-medium text-black">Customer GST No</label>
@@ -600,7 +603,9 @@
               </span>
               <input id="customerPhone" min="10" max="10" maxlength="10" type="tel"
                 class="rounded-none rounded-e-lg bg-primary border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
-                placeholder="+91 1234567890">
+                placeholder="+91 1234567890" list="loyaltyCustomerPhoneList">
+                <datalist id="loyaltyCustomerPhoneList"></datalist>
+
             </div>
 
             <div class="flex" style="width: 18rem;">

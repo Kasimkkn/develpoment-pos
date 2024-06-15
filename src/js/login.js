@@ -1,6 +1,3 @@
-const { ipcRenderer } = require("electron");
-const Swal = require('sweetalert2');
-
 const loginBtn = document.getElementById('loginBtn');
 const loggedInUser = localStorage.getItem('loggedInUser');
 const userPreference = localStorage.getItem('userPreferences');

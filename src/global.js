@@ -1,14 +1,23 @@
 const { ipcRenderer } = require("electron");
 const path = require('path');
 const fs = require('fs');
-console.log("hello")
 
+const btnToSetDefault = document.getElementById("btnToSetDefault");
+if(btnToSetDefault) {
+ btnToSetDefault.addEventListener("click", () => {
+    localStorage.removeItem('primary-color');
+    localStorage.removeItem('secondary-color');
+    localStorage.removeItem('tertiary-color');
+    localStorage.removeItem('common-color');
+    localStorage.removeItem('common-hover-color');    
+    location.reload(); 
+ })
+}
 
 // Function to update CSS variables
 const updateColor = (variable, value) => {
     document.documentElement.style.setProperty(variable, value);
   };
-  
   // Function to load saved colors from localStorage
   const loadSavedColors = () => {
     const savedPrimaryColor = localStorage.getItem('primary-color');
@@ -37,13 +46,10 @@ const updateColor = (variable, value) => {
       updateColor('--common-hover-color', savedCommonHoverColor);
     }
   };
-  
   // Call loadSavedColors() when the page loads
   document.addEventListener('DOMContentLoaded', () => {
     loadSavedColors();
   });
-  
-
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM content loaded");
     const loggedInUser = localStorage.getItem('loggedInUser');
@@ -70,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = loginPath;
     }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const keyboard = document.getElementById('keyboard');
     const alphKeyboard = document.getElementById('alphKeyboard');

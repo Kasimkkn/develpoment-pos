@@ -406,7 +406,7 @@ function closeModal() {
 
 
 const specialInfo = document.getElementById("specialInfo");
-const datalist = document.getElementById("specialInfoSuggestions");
+const spInfoDatalist = document.getElementById("specialInfoSuggestions");
 
 specialInfo.addEventListener("input", (event) => {
   const inputText = event.target.value.trim().toLowerCase();
@@ -432,14 +432,14 @@ function printCancelKot(locationName,tableNo,cancelItem) {
 
 function renderFilteredSuggestions(inputText) {
   // Clear previous options
-  datalist.innerHTML = "";
+  spInfoDatalist.innerHTML = "";
 
   spInfList.forEach(spInf => {
     const spInfText = spInf._doc.sp_info.toLowerCase();
     if (spInfText.includes(inputText)) {
       const option = document.createElement("option");
       option.value = spInf._doc.sp_info;
-      datalist.appendChild(option);
+      spInfoDatalist.appendChild(option);
     }
   });
 }

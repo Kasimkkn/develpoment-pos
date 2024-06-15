@@ -3,11 +3,18 @@ const table_no = document.getElementById("tableNo").textContent.split("Table No:
 const location_name = document.getElementById("locationName").textContent;
 
 let KotcartItems = [];
+let loyaltyData = [];
 ipcRenderer.send("fetch-cartItems", table_no, location_name);
 
 ipcRenderer.on("cartItems-data", (event, receivedCartItems) => {
   KotcartItems = receivedCartItems;
 });
+
+ipcRenderer.send("fetch-loyalty")
+
+ipcRenderer.on("loyalty-data", (event, data) => {
+  loyaltyData = data
+})
 
 const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
 
@@ -17,7 +24,12 @@ ipcRenderer.on("bill-no-data", (event, data) => {
   bill_no = data;
 })
 
-const loyalCustomerPhone = document.getElementById("customerPhone");
+const loyalCustomerPhone = document.getElementById("customerPhoneNO");
+const loyaltyCustomerNO = document.getElementById("customerPhone");
+const loyalCustomerName = document.getElementById("customerName");
+const customerNoDatalist = document.getElementById("customerPhoneList");
+const customerNameDatalist = document.getElementById("customerNameList");
+const loyaltyCustomerPhoneList = document.getElementById("loyaltyCustomerPhoneList");
 
 async function sendWhatsAppMessage(phone, message) {
   const url = 'https://messagesapi.co.in/chat/sendmessage';
@@ -39,13 +51,41 @@ async function sendWhatsAppMessage(phone, message) {
   }
 }
 
-function updateLoyaltyPoints() {
-  if (loyalCustomerPhone.value.length === 10) {
-    ipcRenderer.send("get-loyalty-points", loyalCustomerPhone.value);
-  }
+function renderCustomerInfoSugestion(inputText) {
+  customerNoDatalist.innerHTML = "";
+  customerNameDatalist.innerHTML = "";
+  loyaltyCustomerPhoneList.innerHTML = "";
+  loyaltyData.forEach(loyalty => {
+    const loyaltyNO = String(loyalty._doc.customer_no).toLowerCase();
+    const loyaltyName = loyalty._doc.customer_name.toLowerCase();
+    if (loyaltyNO.includes(inputText)) {
+      const option = document.createElement("option");
+      option.value = Number(loyalty._doc.customer_no);
+      customerNoDatalist.appendChild(option);
+      loyaltyCustomerPhoneList.appendChild(option);
+    }
+    if(loyaltyName.includes(inputText)) {
+      const option = document.createElement("option");
+      option.value = loyalty._doc.customer_name;
+      customerNameDatalist.appendChild(option);
+    }
+  });
 }
 
-loyalCustomerPhone.addEventListener("input", updateLoyaltyPoints);
+loyalCustomerPhone.addEventListener("input", (event) => {
+  const inputText = event.target.value.trim().toLowerCase();
+  renderCustomerInfoSugestion(inputText);
+});
+
+loyalCustomerName.addEventListener("input", (event) => {
+  const inputText = event.target.value.trim().toLowerCase();
+  renderCustomerInfoSugestion(inputText);
+});
+
+loyaltyCustomerNO.addEventListener("input", (event) => {
+  const inputText = event.target.value.trim().toLowerCase();
+  renderCustomerInfoSugestion(inputText);
+});
 
 let loyalCustomerData = {};
 
