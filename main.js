@@ -48,7 +48,7 @@ async function createWindow() {
 
   win.loadFile('src/login.html');
 
-  // const url = process.env.MONGO_URI;
+  const url = process.env.MONGO_URI;
   await connectDB("mongodb://localhost:27017/pos-restuarant")
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
@@ -2329,7 +2329,7 @@ ipcMain.on("save-loyalty", async (event, data) => {
 ipcMain.on("get-loyalty-points", async (event, customer_no) => {
   try {
     const data = await Loyalty.findOne({
-      customer_no: customer_no
+      customer_no: Number(customer_no)
     })
 
     if (data) {
@@ -2745,7 +2745,7 @@ ipcMain.on('sync-data', async (event) => {
 const urlCloud = process.env.MONGO_URI_CLOUD
 app.whenReady().then(async () => {
 createWindow();
-cloudConnection = await connectToCloudDB(urlCloud);
+// cloudConnection = await connectToCloudDB(urlCloud);
 });
 
 app.on('window-all-closed', () => {

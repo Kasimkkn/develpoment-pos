@@ -324,15 +324,12 @@ const handleCategoryClick = (categoryNo) => {
   const buttonClicked = document.getElementById(categoryNo);
 
   if (buttonClicked) {
-    buttonClicked.classList.add("bg-common");
-    buttonClicked.classList.remove("bg-white");
-    buttonClicked.classList.add("text-white");
+
+    buttonClicked.classList.add("beautyBtn");
     const allCategoryButtons = document.querySelectorAll("#category-list button");
     allCategoryButtons.forEach((button) => {
       if (button !== buttonClicked) {
-        button.classList.add("bg-white");
-        button.classList.remove("text-white");
-        button.classList.add("text-black");
+        button.classList.remove("beautyBtn");
       }
     });
   }
@@ -354,7 +351,7 @@ const populateCateogories = (categories) => {
   const allCategoryOption = document.createElement("button");
   allCategoryOption.id = "all";
   allCategoryOption.textContent = "ALL";
-  allCategoryOption.className = "flex items-center justify-center rounded-md border bg-common text-white border-primary p-2 text-xs";
+  allCategoryOption.className = "flex items-center justify-center rounded-md border beautyBtn border-primary p-2 text-xs bg-white";
   allCategoryOption.addEventListener("click", () => {
     handleCategoryClick("all");
   })

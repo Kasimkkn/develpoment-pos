@@ -2,6 +2,9 @@ const { ipcRenderer } = require("electron");
 const path = require('path');
 const fs = require('fs');
 
+
+
+
 const btnToSetDefault = document.getElementById("btnToSetDefault");
 if(btnToSetDefault) {
  btnToSetDefault.addEventListener("click", () => {
@@ -231,12 +234,13 @@ function validateDiscount(input) {
 }
 
 const syncDataOnline = document.getElementById("syncDataOnline");
-if (syncDataOnline) {
-    syncDataOnline.addEventListener("click", () => {
-        console.log("clicked")
-        ipcRenderer.send("sync-data");
-    });
-}
+syncDataOnline.style.display = "none";
+// if (syncDataOnline) {
+//     syncDataOnline.addEventListener("click", () => {
+//         console.log("clicked")
+//         ipcRenderer.send("sync-data");
+//     });
+// }
 
 const languageSelector = document.getElementById("language-selector");
 

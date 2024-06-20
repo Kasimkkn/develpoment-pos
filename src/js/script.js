@@ -55,10 +55,12 @@ function renderCustomerInfoSugestion(inputText) {
   customerNoDatalist.innerHTML = "";
   customerNameDatalist.innerHTML = "";
   loyaltyCustomerPhoneList.innerHTML = "";
+
   loyaltyData.forEach(loyalty => {
     const loyaltyNO = String(loyalty._doc.customer_no).toLowerCase();
     const loyaltyName = loyalty._doc.customer_name.toLowerCase();
     if (loyaltyNO.includes(inputText)) {
+
       const option = document.createElement("option");
       option.value = Number(loyalty._doc.customer_no);
       customerNoDatalist.appendChild(option);
@@ -74,7 +76,16 @@ function renderCustomerInfoSugestion(inputText) {
   });
 }
 
+function updateLoyaltyPoints() {
+  if (loyalCustomerPhone.value.length == 10) {
+    console.log("updateLoyaltyPoints")
+    
+  }
+}
+
+
 loyalCustomerPhone.addEventListener("input", (event) => {
+  console.log(event.target.value)
   const inputText = event.target.value.trim().toLowerCase();
   renderCustomerInfoSugestion(inputText);
 });
@@ -87,6 +98,9 @@ loyalCustomerName.addEventListener("input", (event) => {
 loyaltyCustomerNO.addEventListener("input", (event) => {
   const inputText = event.target.value.trim().toLowerCase();
   renderCustomerInfoSugestion(inputText);
+  if(inputText.length == 10) {
+    ipcRenderer.send("get-loyalty-points", inputText);
+  } 
 });
 
 let loyalCustomerData = {};
@@ -98,9 +112,12 @@ ipcRenderer.once("fetch-loyalty-points-success", (event, data) => {
 })
 
 
+
+
 const otpInput = document.getElementById("otpInput");
 const otpValue = document.getElementById("otpValue");
 const redeemAmount = document.getElementById("redeemAmount");
+
 document.getElementById("send-otp").addEventListener("click", () => {
   if(loyalCustomerPhone.value.length < 10 || otpInput.value != '' || redeemAmount.value == 0) {
     Swal.fire({
@@ -476,8 +493,8 @@ function printKOT() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const initializeCustomerInfoModal = () => {
-    const $targetEl = document.getElementById("customerInfoModal");
+  const initializeCustomerInfoModal = (id) => {
+    const $targetEl = document.getElementById(id);
     const options = {
       placement: "center",
       backdrop: "dynamic",
@@ -489,9 +506,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return modal;
   };
 
-  const customerInfoModal = initializeCustomerInfoModal();
+  const customerInfoModal = initializeCustomerInfoModal("customerInfoModal");
+  const loyaltyPointsModal = initializeCustomerInfoModal("customerLoyaltyModal");
   function customerBill() {
     customerInfoModal.show();
+  }
+  function applyLoyaltyPoints() {
+    loyaltyPointsModal.show()
   }
   let totalTimeKotIsPrinted = 0;
   document.getElementById("print-KOt-btn").addEventListener("click", function () {
@@ -524,6 +545,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("print-bill-btn").addEventListener("click", () => {
     if (KotcartItems.length > 0) {
       printBill();
+    }
+  });
+
+  document.getElementById("customerLoyaltyBtn").addEventListener("click", () => {
+    if (KotcartItems.length > 0) {
+      applyLoyaltyPoints();
+    }
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Cart is empty',
+        timer: 800
+      })
     }
   });
 });
