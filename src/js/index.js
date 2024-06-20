@@ -25,7 +25,6 @@ ipcRenderer.on("open-customer-modal" , () => {
       }
 })
 
-
 ipcRenderer.on("location-and-tables-data", (event, locationData, tableData) => {
   apiLocation = locationData;
   apiTable = tableData;
@@ -71,12 +70,11 @@ mergeTableButton.addEventListener("click", () => {
         table._doc.table_no === secondTableNO &&
         table._doc.location_name === secondTableLocation
     );
-
+    console.log(firstTableData, secondTableData);
     const mergedDataIntoFirstTable = mergeTablesData(
       firstTableData,
       secondTableData
     );
-
     ipcRenderer.send("merge-tables", mergedDataIntoFirstTable, secondTableData);
     ipcRenderer.on("merge-tables-success", (event, data) => {
       activeTables = data;
@@ -107,10 +105,11 @@ function mergeTablesData(firstTableData, secondTableData) {
         item_image: firstItem._doc.item_image,
         quantity: firstItem._doc.quantity,
         price: firstItem._doc.price,
-        is_printed:firstItem._doc.is_printed
+        is_printed: firstItem._doc.is_printed
       });
     }
   });
+
   secondTableData.forEach((secondItem) => {
     const existingItem = mergedData.find(
       (item) => item.item_name === secondItem._doc.item_name
@@ -120,6 +119,8 @@ function mergeTablesData(firstTableData, secondTableData) {
       existingItem.quantity += secondItem._doc.quantity;
     } else {
       mergedData.push({
+        table_no: firstTableData[0]._doc.table_no, // Use table_no from firstItem
+        location_name: firstTableData[0]._doc.location_name, // Use location_name from firstItem
         item_no: secondItem._doc.item_no,
         item_name: secondItem._doc.item_name,
         item_image: secondItem._doc.item_image,
@@ -156,7 +157,6 @@ transferTableButton.addEventListener("click", (event) => {
     });
   }
   else {
-    if (toTransferTableLocation === activeTableLocation) {
       const toTransferTableData = {
         toTransferTableNo: toTransferTableNO,
         toTransferTableLocation: toTransferTableLocation,
@@ -169,27 +169,17 @@ transferTableButton.addEventListener("click", (event) => {
         location.reload();
         renderLocationBlocks();
       })
-    }
-    else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Please select same location",
-        timer: 800,
-      });
-    }
   }
 })
 
 const renderLocationBlocks = () => {
-
   const locationTablesContainer = document.getElementById("locationTables");
   locationTablesContainer.innerHTML = "";
 
   apiLocation.forEach((location) => {
     if(!location._doc.status) return;
     const locationSection = document.createElement("section");
-    locationSection.classList.add(  "mt-4",)
+    locationSection.classList.add("mt-4");
     const locationTitle = document.createElement("h5");
     locationTitle.classList.add("font-medium", "text-black");
     locationTitle.style.fontSize = "15px";
@@ -214,39 +204,25 @@ const renderLocationBlocks = () => {
         tableLink.classList.add("flex", "justify-center", "items-center", "h-14", "w-16", "p-4",
           "bg-white", "rounded-lg", "shadow", "hover:shadow-2xl", "hover:border-slate-300", "hover:cursor-pointer");
 
-          if (isActive) {
-            tableLink.classList.add("beautyBtn");
-            tableLink.classList.add("text-white");
-            tableLink.classList.add("bg-common");
-            const option = document.createElement("option");
-            option.value = `${location._doc.location_name} ${table._doc.table_no}`;
-            option.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
-            firstTableDropdown.appendChild(option.cloneNode(true));
-            secondTableDropdown.appendChild(option.cloneNode(true));
-            activeTableDropdwon.appendChild(option.cloneNode(true));
+        if (isActive) {
+          tableLink.classList.add("beautyBtn");
+          tableLink.classList.add("text-white");
+          tableLink.classList.add("bg-common");
+          const option = document.createElement("option");
+          option.value = `${location._doc.location_name} ${table._doc.table_no}`;
+          option.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
+          firstTableDropdown.appendChild(option.cloneNode(true));
+          secondTableDropdown.appendChild(option.cloneNode(true));
+          activeTableDropdwon.appendChild(option.cloneNode(true));
 
-            activeTableDropdwon.addEventListener("change", function() {
-              const selectedLocation = this.value.split(' ')[0];
-              Array.from(toTransferTableDropdown.options).forEach(option => {
-                const locationName = option.value.split(' ')[0];
-                if (locationName === selectedLocation || option.value === "") {
-                  option.style.display = "block";
-                } else {
-                  option.style.display = "none";
-                }
-                if (option.value === this.value) {
-                  option.style.display = "none";
-                }
-              });
-            });
-          }
-          if (!isActive) {
-            const allTablesOption = document.createElement("option");
-            allTablesOption.value = `${location._doc.location_name} ${table._doc.table_no}`;
-            allTablesOption.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
-            toTransferTableDropdown.appendChild(allTablesOption.cloneNode(true));
-          }
-          
+        }
+
+        if (!isActive) {
+          const allTablesOption = document.createElement("option");
+          allTablesOption.value = `${location._doc.location_name} ${table._doc.table_no}`;
+          allTablesOption.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
+          toTransferTableDropdown.appendChild(allTablesOption.cloneNode(true));
+        }
 
         const tableSpan = document.createElement("span");
         tableSpan.classList.add("text-lg", "font-medium");
@@ -259,25 +235,32 @@ const renderLocationBlocks = () => {
     locationSection.appendChild(locationTables);
     locationTablesContainer.appendChild(locationSection);
   });
+
   firstTableDropdown.addEventListener("change", function() {
-    const selectedLocation = this.value.split(' ')[0];
-    Array.from(secondTableDropdown.options).forEach(option => {
-      const locationName = option.value.split(' ')[0];
-      if (locationName === selectedLocation || option.value === ""  ) {
-        option.style.display = "block";
-      } else {
-        option.style.display = "none";
-      }
-      if (option.value === this.value) {
-        option.style.display = "none";
-      }
-    });
+    filterSecondTableDropdownOptions(this.value);
   });
 };
+
+const filterSecondTableDropdownOptions = (selectedValue) => {
+  const selectedTableNo = selectedValue.split(' ')[1];
+  Array.from(secondTableDropdown.options).forEach(option => {
+    const [locationName, tableNo] = option.value.split(' ');
+    if (tableNo !== selectedTableNo) {
+      option.style.display = "block";
+    } else {
+      option.style.display = "none";
+    }
+    if (option.value === selectedValue) {
+      option.style.display = "none";
+    }
+  });
+};
+
 
 const fetchLocationAndTables = () => {
   ipcRenderer.send("fetch-location-and-tables");
 };
+
 document.addEventListener("DOMContentLoaded", () => {
   fetchLocationAndTables();
 });

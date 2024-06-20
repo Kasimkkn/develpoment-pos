@@ -1310,6 +1310,7 @@ ipcMain.on("edit-bill-book", async (event, billBookId, billBookData) => {
 // merge-tables
 ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
   try {
+    console.log("merge-tables", newData);
     const table_no = newData[0].table_no;
     const location_name = newData[0].location_name;
     for (const item of newData) {
@@ -1322,7 +1323,8 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
       if (existingItem) {
         existingItem.quantity = item.quantity;
         await existingItem.save();
-      } else {
+      } 
+      else {
         await ExistingCartItem.create({
           table_no,
           location_name,
@@ -1343,6 +1345,7 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
       table_no: secondTableID,
       location_name: secondTableLocation,
     })
+    console.log("deleted")
     const data = await ExistingCartItem.find({});
     event.reply("merge-tables-success", data);
   } catch (error) {
