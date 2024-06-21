@@ -230,12 +230,12 @@ function validateDiscount(input) {
 }
 
 const syncDataOnline = document.getElementById("syncDataOnline");
-syncDataOnline.style.display = "none";
-// if (syncDataOnline) {
-//     syncDataOnline.addEventListener("click", () => {
-//         ipcRenderer.send("sync-data");
-//     });
-// }
+// syncDataOnline.style.display = "none";
+if (syncDataOnline) {
+    syncDataOnline.addEventListener("click", () => {
+        ipcRenderer.send("sync-data");
+    });
+}
 
 const languageSelector = document.getElementById("language-selector");
 

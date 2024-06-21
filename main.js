@@ -1,5 +1,5 @@
 import { config } from "dotenv"
-import { app, BrowserWindow, dialog, globalShortcut, ipcMain, screen } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, screen } from "electron";
 import { connectDB } from "./src/config/dbConfig.js";
 import { connectToCloudDB } from "./src/config/dbConfig.js";
 import isOnline from 'is-online'
@@ -3031,7 +3031,7 @@ ipcMain.on('sync-data', async (event) => {
 const urlCloud = process.env.MONGO_URI_CLOUD
 app.whenReady().then(async () => {
 createWindow();
-// cloudConnection = await connectToCloudDB(urlCloud);
+cloudConnection = await connectToCloudDB(urlCloud);
 });
 
 app.on('window-all-closed', () => {
