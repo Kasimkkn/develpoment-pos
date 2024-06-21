@@ -2008,7 +2008,7 @@ ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {
 // fetch bill details by billNO
 ipcMain.on("fetch-bill-by-billNo", async (event, billNo) => {
   try {
-    const data = await Bill.findOne({ bill_no: billNo, item_details: { $exists: true, $ne: [] } });
+    const data = await Bill.findOne({ bill_no: billNo });
     if (!data) {
       event.reply("bill-fetch-error", "Bill not found");
     }
@@ -2581,6 +2581,7 @@ ipcMain.on("new-receipe", async (event, data) => {
 // deduct-qty
 ipcMain.on("deduct-qty", async (event, data) => {
   try {
+    console.log("hello")
     if (!data || !Array.isArray(data) || data.length === 0) {
       event.reply("deduct-qty-error", "No data provided or data is not in the correct format");
       return;

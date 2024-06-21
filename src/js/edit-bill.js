@@ -16,11 +16,12 @@ ipcRenderer.on("bill-fetch-error", (event, error) => {
 })
 
 ipcRenderer.on("edit-bill-details-data", (event, data) => {
+  billData = data;
+  console.log(billData)
   document.getElementById("locationName").innerHTML = data.location_name;
   document.getElementById("tableNo").innerHTML = `Table No: ${data.table_no}`;
   tableNo = data.table_no;
   locationName = data.location_name;
-  billData = data;
   document.getElementById("discountPercUpdate").value = data.discount_perc;
   document.getElementById("discountAmountUpdate").value = data.discount_rupees;
   cartItems = billData.item_details;
@@ -30,8 +31,6 @@ ipcRenderer.on("edit-bill-details-data", (event, data) => {
 
 const userPref = JSON.parse(localStorage.getItem("userPreferences"));
 const userCurrency = userPref ? userPref._doc.currency_name : "₹";
-
-let netAmount;
 
 ipcRenderer.send("fetch-products");
 ipcRenderer.send("fetch-location");
@@ -294,7 +293,8 @@ const populateProducts = (products, locationName) => {
   });
 };
 
-async function printBill() {
+function printBill(whichBtn , billData) {
+  console.log("clicke by" , whichBtn)
   const bill_no = billNo;
   const billInfoStr = JSON.parse(localStorage.getItem("billInfo"));
   const table_no =  billData.table_no
@@ -392,21 +392,39 @@ async function printBill() {
     round_off: roundOffValue,
   }
 
-  try {
-    ipcRenderer.send("updated-bill-info", updatedbillData);
-    ipcRenderer.send("fetch-bill-by-billNo", billNo);
 
-    // Send the data to the printer
+  if(whichBtn == 1){
+    console.log("clicked by 1" , whichBtn)
+    try {
     ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
-
-  } catch (err) {
-    console.log(err)
+    }
+    catch(err){
+      console.log(err)
+    }
   }
-
+  if(whichBtn == 2){
+    console.log("clicke by 2" , whichBtn)
+    try{
+      ipcRenderer.send("updated-bill-info", updatedbillData);
+      ipcRenderer.send("fetch-bill-by-billNo", billNo);
+      ipcRenderer.send("deduct-qty", itemDetails);
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
 }
 
 const dublicateBillBtn = document.getElementById("duplicate-bill-btn");
-dublicateBillBtn.addEventListener("click", printBill)
+dublicateBillBtn.addEventListener("click", ()=>{
+  printBill(1,billData)
+})
+
+
+const saveBillBtn = document.getElementById("save-bill-btn")
+saveBillBtn.addEventListener("click" , ()=>{
+  printBill(2,billData)
+})
 
 const updateDiscountBtn = document.getElementById("updateDiscountBtn");
 updateDiscountBtn.addEventListener("click", () => {
