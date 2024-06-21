@@ -356,7 +356,6 @@ bulkInput.addEventListener('change', () => {
 
 
 document.getElementById('bulkUploadButton').addEventListener('click', () => {
-  console.log("heelo")
   const fileInput = document.getElementById('bulkUploadInput');
   const file = fileInput.files[0];
 

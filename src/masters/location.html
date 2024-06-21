@@ -13,7 +13,7 @@
 <body>>
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
-    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-gray-200">
+    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary  ">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd"
@@ -212,12 +212,12 @@
             </svg>
           </div>
           <input  id="table_search_item" type="text"
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary focus:outline-none"
+            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary "
             placeholder="Search for locations" />
         </div>
         
         <div class="relative">
-          <select id="locationDropdown" class="inline-flex items-center text-black bg-secondary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
+          <select id="locationDropdown" class="inline-flex items-center text-black bg-secondary border-primary  font-medium rounded-lg text-sm px-3 py-1.5">
             <option value="" selected disabled>Select Location</option>
           </select>
         </div>
@@ -274,13 +274,13 @@
                 <div class="col-span-6 sm:col-span-3">
     
                   <input  name="location_name" id="location_name" autofocus
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New Location , Common Hall" required="" />
                 </div>
                 
                 <div class="col-span-6 sm:col-span-3">
                   <select id="location_price"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="one">Rate One</option>
                     <option value="two">Rate Two</option>
                     <option value="three">Rate Three</option>
@@ -291,14 +291,14 @@
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <select id="taxable"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="true">Tax</option>
                     <option value="false">No Tax</option>
                   </select>
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <select id="status"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>
@@ -309,7 +309,7 @@
             <div
               class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b justify-between">
               <button type="submit" onclick="editLocationHandler()"
-                class="text-white beautyBtn  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
+                class="text-white beautyBtn    font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
                 Edit
               </button>
             </div>
@@ -348,13 +348,13 @@
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
                   <input  name="new_location_name" id="new_location_name"  autofocus
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5"
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5"
                     placeholder="e.g. New Location , Common Hall" required="" />
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                   <select id="new_location_price"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="one">Rate One</option>
                     <option value="two">Rate Two</option>
                     <option value="three">Rate Three</option>
@@ -365,14 +365,14 @@
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <select id="new_taxable"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="true">Tax</option>
                     <option value="false">No Tax</option>
                   </select>
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                   <select id="new_status"
-                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5">
+                    class="shadow-sm bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5">
                     <option value="true">Active</option>
                     <option value="false">Not Active</option>
                   </select>
@@ -383,7 +383,7 @@
             <div
               class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b justify-between">
               <button type="submit" onclick="newLocationHandler()"
-                class="text-white beautyBtn  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
+                class="text-white beautyBtn    font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
                 Save
               </button>
             </div>

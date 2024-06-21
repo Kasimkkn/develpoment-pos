@@ -175,7 +175,6 @@ const handleDecrement = (productId, event) => {
     (item) => item._doc.item_no === productId
   )
   if (product) {
-    console.log(product)
     if (product._doc.quantity == 0) {
       removeItemFromCart(locationName, tableNo, product);
       return
@@ -305,8 +304,8 @@ const populateProducts = (products, locationName) => {
           </div>
 
     `;
-    productElement.addEventListener('click', () => {
-      handleIncrement(product._doc.item_no, price);
+    productElement.addEventListener('click', (event) => {
+      handleIncrement(product._doc.item_no, price , event);
     })
     productList.appendChild(productElement);
   });
@@ -444,28 +443,10 @@ function renderFilteredSuggestions(inputText) {
 
 ipcRenderer.send("fetch-cartItems", tableNo, locationName);
 
-ipcRenderer.send("fetch-products");
-
-ipcRenderer.send("fetch-location");
 
 ipcRenderer.on("cartItems-data", (event, receivedCartItems) => {
   cartItems = receivedCartItems;
   updateCartUI();
-});
-
-ipcRenderer.on("location-data", (event, data) => {
-  Locations = data;
-  populateProducts(apiProduct, locationName);
-});
-
-ipcRenderer.once("fetch-error", (event, error) => {
-  console.log(error + "error fetching products");
-});
-
-ipcRenderer.on("products-data", (event, products) => {
-  apiProduct = products;
-  populateProducts(apiProduct, locationName);
-  populateCateogories(apiCategory);
 });
 
 document.getElementById("add-quantity-btn").addEventListener("click", () => {
@@ -490,3 +471,14 @@ document.getElementById("add-quantity-btn").addEventListener("click", () => {
 });
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  const productData = JSON.parse(localStorage.getItem("products"));
+  const locationData = JSON.parse(localStorage.getItem("locations"));
+
+  if (productData && locationData) {
+    Locations = locationData;
+    apiProduct = productData;
+    populateProducts(apiProduct, locationName);
+    populateCateogories(apiCategory);
+  }
+})

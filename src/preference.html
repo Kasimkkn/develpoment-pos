@@ -17,7 +17,7 @@
       <!-- Step 1: Country and Currency Name -->
       <div id="step1" class="flex flex-col gap-4 w-96">
         <h2 class="text-xl font-bold text-common">Select Currency</h2>
-        <select name="currencyName" id="currencyName" class="w-full px-4 py-3 text-common rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none">
+        <select name="currencyName" id="currencyName" class="w-full px-4 py-3 text-common rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary ">
           <option value="INR">India (₹) - INR</option>
           <option value="AUD">Australia (A$) - AUD</option>
           <option value="CAD">Canada (C$) - CAD</option>
@@ -76,11 +76,11 @@
         </label>
         <div id="gstInputs" style="display: none">
           <input id="gstTaxRate" placeholder="GST Tax Rate" type="tel" maxlength="3" max="100"
-            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none text-common" />
+            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary  text-common" />
         </div>
         <div id="valueAddedInputs" style="display: none">
           <input id="valueAddedTaxRate" placeholder="Tax Rate" type="tel" maxlength="3" max="100"
-            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary focus:outline-none text-common" />
+            class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary  text-common" />
         </div>
         <div class="flex justify-between gap-1">
           <button onclick="previousStep(2)" class="button">Previous</button>

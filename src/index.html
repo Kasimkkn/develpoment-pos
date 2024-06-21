@@ -230,12 +230,12 @@
         <div class="flex items-start flex-col gap-2">
           <div class="flex gap-2 w-full items-center">
             <input id="searchInput" autofocus type="text"
-              class="flex h-10 w-80 rounded-md border border-primary bg-white px-3 py-2 text-sm focus:outline-none"
+              class="flex h-10 w-80 rounded-md border border-primary bg-white px-3 py-2 text-sm "
               placeholder="Search dishes....." />
 
             <button id="dropdownRightEndButton" data-dropdown-toggle="dropdownRightEnd"
               data-dropdown-placement="right-end"
-              class="inline-flex items-center p-2 text-sm font-medium text-center beautyBtn rounded-lg hover:bg-white focus:outline-none"
+              class="inline-flex items-center p-2 text-sm font-medium text-center beautyBtn rounded-lg hover:bg-white "
               type="button">
               <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 viewBox="0 0 4 15">
@@ -367,14 +367,14 @@
               <label for="newQuantity" class="block mb-2 text-sm font-medium text-black">Quantity</label>
               <input type="tel" id="newQuantity" name="newQuantity" placeholder="e.g. 5,10" autofocus value="1" min="1"
                 max="10" maxlength="3" onfocus="handleInputFocus(this)"
-                class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-primary border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
             </div>
 
             <div>
               <label for="specialInfo" class="block mb-2 text-sm font-medium text-black">Special Info</label>
               <input id="specialInfo" name="specialInfo" type="text" placeholder="e.g. spice, sweet" autocomplete="on"
                 max="15" maxlength="15" list="specialInfoSuggestions"
-                class="bg-primary border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-primary border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
               <datalist id="specialInfoSuggestions"></datalist>
 
             </div>
@@ -417,7 +417,7 @@
             <div>
               <label for="firstTable" class="block mb-2 text-sm font-medium text-black">First Table</label>
               <select id="firstTable"
-                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md  appearance-none focus:outline-none focus:ring-0  peer">
+                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md  appearance-none    peer">
                 <option value="0" selected>select first table</option>
               </select>
             </div>
@@ -425,7 +425,7 @@
             <div>
               <label for="secondTable" class="block mb-2 text-sm font-medium text-black">Second table</label>
               <select id="secondTable"
-                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md  appearance-none focus:outline-none focus:ring-0  peer">
+                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md  appearance-none    peer">
                 <option value="0" selected class="p-2">
                   select second table
                 </option>
@@ -470,7 +470,7 @@
             <div>
               <label for="activeTable" class="block mb-2 text-sm font-medium text-black">Active Table</label>
               <select id="activeTable"
-                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md  appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md ">
                 <option value="0" selected>Select Active table</option>
               </select>
             </div>
@@ -478,7 +478,7 @@
             <div>
               <label for="toTransferTable" class="block mb-2 text-sm font-medium text-black">To Transfer</label>
               <select id="toTransferTable"
-                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                class="block py-2.5 px-3 w-full text-sm text-black bg-secondary border-primary rounded-md">
                 <option value="0" selected class="p-2">
                   ToTransfer table
                 </option>
@@ -525,7 +525,7 @@
             <label for="customerPhoneNO" class="block mb-2 text-sm font-medium text-black">Customer Phone No</label>
             <input id="customerPhoneNO" type="number" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10" autocomplete="off"
               maxlength="10" list="customerPhoneList"
-              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
               <datalist id="customerPhoneList"></datalist>
 
             </div>
@@ -533,7 +533,7 @@
             <label for="customerName" class="block mb-2 text-sm font-medium text-black">Customer Name</label>
             <input id="customerName" type="text" name="customerName" placeholder="e.g. John Doe" autofocus max="25"
               maxlength="25" list="customerNameList"
-              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
               <datalist id="customerNameList"></datalist>
             </div>
           
@@ -541,25 +541,25 @@
             <label for="customerGSTNo" class="block mb-2 text-sm font-medium text-black">Customer GST No</label>
             <input id="customerGSTNo" type="text" name="customerGSTNo" placeholder="e.g. 123ABC4567890" max="15"
               maxlength="15"
-              class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+              class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
           </div>
           <div class="flex gap-1 w-full">
             <div class="p-2" style="flex: 0 0 25%">
               <label for="discountPerc" class="block mb-2 text-sm font-medium text-black">Discount %</label>
               <input id="discountPerc" type="tel" name="discountPerc" placeholder="e.g. 5,10"
                 oninput="validateDiscount(this)" max="100" maxlength="3"
-                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
             </div>
             <div class="p-2" style="flex: 0 0 30%">
               <label for="discountMoney" class="block mb-2 text-sm font-medium text-black">Discount Am</label>
               <input id="discountMoney" type="tel" name="discountMoney" placeholder="e.g. 5,10" max="100" maxlength="3"
-                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
             </div>
             <div class="p-2" style="flex: 0 0 45%">
               <label for="discountReason" class="block mb-2 text-sm font-medium text-black">Discount Reason</label>
               <input id="discountReason" type="text" name="discountReason" placeholder="e.g. Relatives, etc."
                 maxlength="20"
-                class="bg-white border border-gray-300 text-black text-sm rounded-lg focus:border-primary block w-full p-2.5" />
+                class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
             </div>
           </div>
           <div class="p-2">
@@ -602,7 +602,7 @@
 
               </span>
               <input id="customerPhone" min="10" max="10" maxlength="10" type="tel"
-                class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
+                class="rounded-none rounded-e-lg bg-white border  border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
                 placeholder="+91 1234567890" list="loyaltyCustomerPhoneList">
                 <datalist id="loyaltyCustomerPhoneList"></datalist>
 
@@ -614,7 +614,7 @@
                 Available Points
               </span>
               <label id="customerPoints"
-                class="rounded-none rounded-e-lg bg-white border focus:border-primary border-primary block flex-1 min-w-0 w-full text-sm p-2.5">0</label>
+                class="rounded-none rounded-e-lg bg-white border  border-primary block flex-1 min-w-0 w-full text-sm p-2.5">0</label>
             </div>
 
           </div>
@@ -623,7 +623,7 @@
               You Can Redeem :
             </span>
             <input id="redeemAmount" type="tel" min="0"
-              class="rounded-lg bg-white border focus:border-primary border-primary block flex-1 w-20 text-sm p-2"
+              class="rounded-lg bg-white border  border-primary block flex-1 w-20 text-sm p-2"
               placeholder="100">
           </div>
 
@@ -637,7 +637,7 @@
             </button>
             <div class="flex items-end">
               <input type="tel" id="otpInput" maxlength="4" min="4"
-                class="rounded-lg bg-white border focus:border-primary border-primary block flex-1 max-w-20 text-sm p-2">
+                class="rounded-lg bg-white border  border-primary block flex-1 max-w-20 text-sm p-2">
               <input type="hidden" name="otpValue" id="otpValue">
             </div>
           </div>
@@ -732,18 +732,13 @@
   <script src="global.js"></script>
   
   <script>
-    //  load global js file here
     const script = document.createElement('script');
     script.src = 'global.js';
-    script.onload = () => {
-      console.log('global.js loaded successfully');
-    };
     script.onerror = () => {
       console.error('Error loading global.js');
     };
     document.head.appendChild(script);
 
-    console.log("Inline script test");
 </script>
 
   <script>

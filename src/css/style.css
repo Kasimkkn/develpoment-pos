@@ -219,6 +219,15 @@ input:hover {
   overflow: overlay;
 }
 
+datalist option{
+  color: var(--common-color);
+  background-color: var(--input-color);
+  border: 1px solid var(--common-color);
+  border-radius: 5px;
+  padding: 0.4rem 0.6rem;
+}
+
+
 .right_side_section {
   flex: 0 0 22%;
   max-width: 22%;
@@ -344,9 +353,4 @@ div.dt-container div.dt-layout-row{
 }
 main {
   padding-left: 16rem;
-}
-@media not all and (min-width: 640px) {
-  main {
-    padding: 0;
-  }
 }

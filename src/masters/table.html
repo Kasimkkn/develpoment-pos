@@ -13,7 +13,7 @@
 <body>>
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
-    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-gray-20">
+    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd"
@@ -211,13 +211,13 @@
             </svg>
           </div>
           <input  id="table_search_item" type="text" 
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary focus:outline-none"
+            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary "
             placeholder="Search for tables" />
         </div>
 
         <div class="relative">
           <select id="tableDropdown"
-            class="inline-flex items-center text-black bg-secondary border-primary focus:outline-none font-medium rounded-lg text-sm px-3 py-1.5">
+            class="inline-flex items-center text-black bg-secondary border-primary  font-medium rounded-lg text-sm px-3 py-1.5">
             <option value="" selected disabled>Select location</option>
           </select>
         </div>
@@ -296,7 +296,7 @@
             <div
               class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b  justify-between">
               <button type="submit" onclick="edittableHandler()"
-                class="text-white beautyBtn  focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
+                class="text-white beautyBtn     font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
                 Edit
               </button>
             </div>
@@ -360,7 +360,7 @@
             <div
               class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b  justify-between">
               <button type="submit" onclick="newtableHandler()"
-                class="text-white beautyBtn  focus:ring-4 focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
+                class="text-white beautyBtn     font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
                 Save
               </button>
             </div>

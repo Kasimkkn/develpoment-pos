@@ -26,12 +26,6 @@ export const connectDB = async (url) => {
     dialog.showMessageBox({
       message: `Failed to connect to MongoDB: ${error.message}`,
     })
-    // alert("Failed to connect to MongoDB :" , error.message);
-    // const fallbackUrl =
-    //   "mongodb+srv://kasimkkn15:kasim123@pos-restaurant.qae3jgl.mongodb.net/pos-restuarant?retryWrites=true&w=majority&appName=pos-restaurant";
-    // console.log("Trying fallback URL:", fallbackUrl);
-    // await mongoose.connect(fallbackUrl);
-    // console.log("Connected to MongoDB using fallback URL");
   }
 };
 

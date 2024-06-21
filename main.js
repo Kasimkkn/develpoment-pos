@@ -407,7 +407,6 @@ ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, toda
     printer.alignCenter();
     printer.println(billFooter);
     printer.cut();
-    console.log("hello")
     if (await printer.isPrinterConnected()) {
       await printer.execute();
       console.log("Duplicate bill printed successfully");
@@ -1464,7 +1463,6 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
       table_no: secondTableID,
       location_name: secondTableLocation,
     })
-    console.log("deleted")
     const data = await ExistingCartItem.find({});
     event.reply("merge-tables-success", data);
   } catch (error) {
@@ -1476,7 +1474,6 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
 // transfer tables
 ipcMain.on("transfer-table", async (event, toTransferTabledata) => {
   try {
-    console.log(toTransferTabledata)
     const { activeTableNo, activeTableLocation, toTransferTableNo, toTransferTableLocation } = toTransferTabledata;
 
     const allData = await ExistingCartItem.find({
@@ -2147,7 +2144,6 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
 ipcMain.on("set-paymode", async (event, allBills, payMode) => {
   try {
     for (const billNo of allBills) {
-      console.log(billNo)
       const billInfo = await Bill.findOne({ bill_no: billNo });
 
       if (!billInfo) {
@@ -2306,7 +2302,6 @@ ipcMain.on("update-bill-discount", async (event, billNo, discountPerc, taxPerc) 
 // update-bill-discount-rupee
 ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, taxPerc) => {
   try {
-    console.log("ji")
     const bill = await Bill.findOne({ bill_no: billNo });
     if (!bill) {
       throw new Error(`Bill with number ${billNo} not found.`);
@@ -2314,13 +2309,10 @@ ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, ta
     const totalAmount = bill.total_amount;
     const discountAmount = discountRupee;
     const netAmountAfterDiscount = totalAmount - discountAmount;
-    console.log(netAmountAfterDiscount)
     const taxAmount = netAmountAfterDiscount * ((taxPerc / 2) / 100);
-    console.log(taxAmount)
     const sgstAmount = taxAmount;
     const cgstAmount = taxAmount;
     const finalAmount = netAmountAfterDiscount + sgstAmount + cgstAmount;
-    console.log(finalAmount)
     const decimalPart = Number(String(finalAmount.toFixed(2)).split(".")[1]);
 
     let roundOffValue
@@ -2335,8 +2327,6 @@ ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, ta
       roundOffValue = '0.00'
     }
 
-    console.log(roundOffValue)
-    // Update bill fields
     bill.round_off = roundOffValue
     bill.discount_rupees = discountRupee;
     bill.sgst_tax = sgstAmount.toFixed(2);
@@ -2581,7 +2571,6 @@ ipcMain.on("new-receipe", async (event, data) => {
 // deduct-qty
 ipcMain.on("deduct-qty", async (event, data) => {
   try {
-    console.log("hello")
     if (!data || !Array.isArray(data) || data.length === 0) {
       event.reply("deduct-qty-error", "No data provided or data is not in the correct format");
       return;
@@ -2690,7 +2679,6 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
       const subItemIndex = recipeData.sub_item_details.findIndex(subItem =>
         subItem.item_name.toLowerCase() === normalizedItemName
       );
-      console.log("subItemIndex "+subItemIndex)
       if (subItemIndex === -1) {
         recipeData.sub_item_details.push({
           item_name: subItemData.item_name,
@@ -2848,7 +2836,6 @@ let cloudConnection;
 ipcMain.on('sync-data', async (event) => {
   if (await isOnline()) {
     try {
-      console.log("hello")
       await syncData(cloudConnection);
       event.reply('sync-data-success');
     } catch (error) {

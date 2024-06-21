@@ -36,14 +36,22 @@ loginBtn.addEventListener('click', async () => {
       loginBtn.textContent = 'Login';
       try {
           localStorage.setItem('loggedInUser', JSON.stringify(user));
-      
-          ipcRenderer.send("fetch-user-preference");
           ipcRenderer.send("fetch-categories");
+          ipcRenderer.send("fetch-products")
+          ipcRenderer.send("fetch-location-and-tables")
+          ipcRenderer.send("fetch-user-preference");
           ipcRenderer.send("get-bill-info");
           ipcRenderer.send("fetch-user-rights-by-user-no" , user._doc.user_no);
+
           const fetchCategories = new Promise((resolve) => {
             ipcRenderer.once("categories-data", (event, categories) => resolve(categories));
           });
+          const fetchProducts = new Promise((resolve) => {
+            ipcRenderer.once("products-data", (event, products) => resolve(products));
+          })
+          const fetchLocationAndTables = new Promise((resolve) => {
+            ipcRenderer.once("location-and-tables-data", (event, locationData, tableData) => resolve([locationData, tableData]));
+          })
           const fetchBillInfo = new Promise((resolve) => {
             ipcRenderer.once("fetch-bill-info-success", (event, data) => resolve(data));
           });
@@ -53,9 +61,12 @@ loginBtn.addEventListener('click', async () => {
           const fetchUserRights = new Promise((resolve) => {
             ipcRenderer.once("fetch-user-rights-data", (event, data) => resolve(data));
           })
-          const [categories, billInfo, userPreferences , userRights] = await Promise.all([fetchCategories, fetchBillInfo, fetchUserPreference , fetchUserRights]);
+          const [categories, products, [locations, tables], billInfo, userPreferences , userRights] = await Promise.all([fetchCategories, fetchProducts, fetchLocationAndTables ,fetchBillInfo, fetchUserPreference , fetchUserRights]);
     
           localStorage.setItem("categories", JSON.stringify(categories));
+          localStorage.setItem("products", JSON.stringify(products));
+          localStorage.setItem("locations", JSON.stringify(locations));
+          localStorage.setItem("tables", JSON.stringify(tables));
           localStorage.setItem("billInfo", JSON.stringify(billInfo));
           localStorage.setItem("userRights", JSON.stringify(userRights));
           if (!userPreferences) {

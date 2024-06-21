@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeInput = null;
     let alphaActiveInput = null;
 
+    // Function to create and append numerical keys
     const createKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'keys flex flex-wrap justify-around';
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         activeInput.value += keyValue;
                     }
-                    activeInput.focus();
+                    activeInput.focus(); // Set focus on the input field
                     activeInput.dispatchEvent(new Event('input'));
                     activeInput.dispatchEvent(new Event('change'));
                 }
@@ -114,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         keyboard.appendChild(keysContainer);
     };
 
+    // Function to create and append alphabetical keys
     const createAlphabeticalKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'alphakeys flex flex-wrap justify-around';
@@ -148,53 +150,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateKeyboardPosition = (input) => {
         const rect = input.getBoundingClientRect();
         const keyboardWidth = keyboard.offsetWidth;
-        const keyboardHeight = keyboard.offsetHeight;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-        
-        let left = rect.left;
-        let top = rect.bottom;
-        
-        if (rect.left + keyboardWidth > windowWidth) {
-            left = windowWidth - keyboardWidth;
+        const spaceLeft = rect.left;
+        if (spaceLeft >= keyboardWidth) {
+            keyboard.style.left = `${rect.left - keyboardWidth - 45}px`;
+            keyboard.style.top = `${rect.top - 120}px`;
+        } else {
+            keyboard.style.left = `${rect.left}px`;
+            keyboard.style.top = `${rect.bottom}px`;
         }
-
-        if (rect.bottom + keyboardHeight > windowHeight) {
-            top = rect.top - keyboardHeight;
-        }
-
-        if (top < 0) {
-            top = rect.bottom;
-        }
-
-        keyboard.style.left = `${left}px`;
-        keyboard.style.top = `${top}px`;
     };
 
     const updateAlphaKeyboardPosition = (input) => {
         const rect = input.getBoundingClientRect();
         const keyboardWidth = alphKeyboard.offsetWidth;
-        const keyboardHeight = alphKeyboard.offsetHeight;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-        let left = rect.left;
-        let top = rect.bottom;
-
-        if (rect.left + keyboardWidth > windowWidth) {
-            left = windowWidth - keyboardWidth;
+        const spaceLeft = rect.left;
+        if (spaceLeft >= keyboardWidth) {
+            alphKeyboard.style.left = `${rect.left - keyboardWidth - 45}px`;
+            alphKeyboard.style.top = `${rect.top - 120}px`;
+        } else {
+            alphKeyboard.style.left = `${rect.left}px`;
+            alphKeyboard.style.top = `${rect.bottom + 20}px`;
         }
-
-        if (rect.bottom + keyboardHeight > windowHeight) {
-            top = rect.top - keyboardHeight;
-        }
-
-        if (top < 0) {
-            top = rect.bottom;
-        }
-
-        alphKeyboard.style.left = `${left}px`;
-        alphKeyboard.style.top = `${top}px`;
     };
 
     document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
@@ -228,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-
 const logoutButton = document.getElementById("logoutButton");
 if (logoutButton) {
     logoutButton.addEventListener("click", () => {
@@ -258,7 +233,6 @@ const syncDataOnline = document.getElementById("syncDataOnline");
 syncDataOnline.style.display = "none";
 // if (syncDataOnline) {
 //     syncDataOnline.addEventListener("click", () => {
-//         console.log("clicked")
 //         ipcRenderer.send("sync-data");
 //     });
 // }

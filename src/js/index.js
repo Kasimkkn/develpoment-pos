@@ -25,11 +25,11 @@ ipcRenderer.on("open-customer-modal" , () => {
       }
 })
 
-ipcRenderer.on("location-and-tables-data", (event, locationData, tableData) => {
-  apiLocation = locationData;
-  apiTable = tableData;
-  renderLocationBlocks();
-});
+// ipcRenderer.on("location-and-tables-data", (event, locationData, tableData) => {
+//   apiLocation = locationData;
+//   apiTable = tableData;
+//   renderLocationBlocks();
+// });
 
 ipcRenderer.send("fetch-existing-cartItems");
 
@@ -257,10 +257,13 @@ const filterSecondTableDropdownOptions = (selectedValue) => {
 };
 
 
-const fetchLocationAndTables = () => {
-  ipcRenderer.send("fetch-location-and-tables");
-};
-
 document.addEventListener("DOMContentLoaded", () => {
-  fetchLocationAndTables();
+  const locationData = JSON.parse(localStorage.getItem("locations"));
+  const tableData = JSON.parse(localStorage.getItem("tables"));
+
+  if (locationData && tableData) {
+    apiLocation = locationData;
+    apiTable = tableData;
+    renderLocationBlocks();
+  }
 });

@@ -25,15 +25,12 @@ export async function pushToCloud(cloudConnection, collectionName, Modal, docume
 
     const existingDoc = await CloudModel.findById(document._id).exec();
 
-    // Change the field is_synced to true before saving to cloud
     document.is_synced = true;
 
     if (existingDoc) {
-      // If the document exists in the cloud, update it
       await CloudModel.findByIdAndUpdate(document._id, document.toObject(), { new: true });
       console.log(`Updated document ${document._id} for model ${collectionName}`);
     } else {
-      // If the document does not exist, create a new one
       const cloudDoc = new CloudModel(document.toObject());
       await cloudDoc.save();
       console.log(`Saved new document ${document._id} for model ${collectionName}`);
