@@ -54,14 +54,14 @@ const updateCartUI = () => {
         </div>
     <div class="flex flex-col gap-2 items-start w-40 max-lg:w-32">
       <div class="flex gap-1 justify-between items-center text-sm">
-      <p class="text-sm flex gap-2">${item._doc.item_name.split(" ").slice(0, 2).join(" ")}</p>
+      <p class="text-sm flex gap-2">${item._doc.item_name.split(" ").slice(0, 1).join(" ")}</p>
       ${sp_info !== "none" ? `(${sp_info})` : ``}
       <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item._doc.item_no}" class="beautyBtn text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
       </div>
       <div class="text-xs flex gap-2 items-center">
       <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item._doc.item_no}','${item._doc.price}', event)">+</button>
       ${item._doc.quantity} 
-      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleDecrement(${item._doc.item_no}, event)">-</button>
+      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleDecrement(${item._doc.item_no}, '${sp_info}',event)">-</button>
       
       </div>
     </div>
@@ -169,10 +169,10 @@ const handleIncrement = (productId, price, event) => {
   }
 };
 
-const handleDecrement = (productId, event) => {
+const handleDecrement = (productId, sp_info,event) => {
   event.preventDefault();
   const product = cartItems.find(
-    (item) => item._doc.item_no === productId
+    (item) => item._doc.item_no === productId && item._doc.sp_info === sp_info
   )
   if (product) {
     if (product._doc.quantity == 0) {
@@ -182,7 +182,7 @@ const handleDecrement = (productId, event) => {
     const toUpdateData = {
       tableNo: tableNo,
       locationName: locationName,
-      itemId: productId,
+      item: product,
       newQuantity: product._doc.quantity === 1 ? 0 : product._doc.quantity - 1,
     };
     ipcRenderer.send("update-cartItem-quantity", toUpdateData);

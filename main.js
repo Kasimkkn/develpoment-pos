@@ -761,12 +761,12 @@ ipcMain.on("edit-bills-add-new-Item", async (event, newItem) => {
 ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
 
   try {
-    const { tableNo, locationName, itemId, newQuantity } = toUpdateData;
-
+    const { tableNo, locationName, item, newQuantity } = toUpdateData;
     const existingItem = await ExistingCartItem.findOne({
       table_no: tableNo,
       location_name: locationName,
-      item_no: itemId,
+      item_no: item._doc.item_no,
+      sp_info : item._doc.sp_info
     });
     if (newQuantity === 0) {
       await existingItem.deleteOne();
