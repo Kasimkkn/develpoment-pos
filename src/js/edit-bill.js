@@ -102,10 +102,13 @@ const updateCartSummary = (cartItems) => {
     discountAmount = billData.discount_rupees;
     netAmount -= discountAmount;
   }
-  // if (billData.discount_perc && billData.discount_perc > 0) {
-  //   discountAmount = totalAmount * (billData.discount_perc / 100);
-  //   netAmount -= discountAmount;
-  // }
+
+  let userTaxPercentage = 0;
+  if (userPref._doc.is_gstAvailable) {
+    userTaxPercentage = userPref._doc.gst_percentage;
+  } else if (userPref._doc.is_ValueAddedTaxAvailable) {
+    userTaxPercentage = userPref._doc.vat_percentage;
+  }
 
   const userPreferences = JSON.parse(localStorage.getItem("userPreferences"));
   let userGst;

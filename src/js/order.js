@@ -100,9 +100,8 @@ const updateCartSummary = (cartItems) => {
   const taxAmount = totalAmount * userTaxPerc;
   const netAmount = totalAmount + taxAmount;
 
-  document.getElementById(
-    "total-items"
-  ).textContent = `Total (${totalItems} Items)`;
+  document.getElementById("total-items").textContent = `Total (${totalItems} Items)`;
+  
   document.getElementById("total-amount").textContent = `${userCurrency} ${totalAmount.toFixed(
     2
   )}`;
