@@ -2,14 +2,15 @@ const Swal = require('sweetalert2');
 
 let apiStock = [];
 let apiPurchase = [];
-
-// Function to close modals
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  modal.classList.add("hidden");
+let apiSupplier = [];
+function closeModal() {
+  const editSupplierModal = document.getElementById("editStockModal");
+  editSupplierModal.classList.add("hidden");
+  const addNewPurchaseModal = document.getElementById("addNewPurchaseModal");
+  addNewPurchaseModal.classList.add("hidden");
+  addNewPurchaseModal.classList.remove("flex");
 }
 
-// Function to open edit modal
 function openEditModal(stockId) {
   const stock = apiStock.find(stock => stock._doc.item_no === stockId);
 
@@ -39,38 +40,46 @@ const editPurchaseHandler = async () => {
       min_stock: Number(document.getElementById("item_min").value),
     };
     ipcRenderer.send("edit-Stock", stockId, purchaseData);
-
-    closeModal("editStockModal");
+    closeModal();
+    location.reload(true);
     fetchPurchase();
-    window.location.reload();
   } catch (error) {
     console.error('Error editing item:', error);
   }
 };
 
 // Function to render dropdown for stock
-const renderStockDropdown = (stockList) => {
-  const newItemDropdown = document.getElementById("new_item_name");
-  newItemDropdown.innerHTML = "";
+const renderStockDropdown = (stockList , supplierList) => {
+  const newItemDropdown = document.getElementById("item_name_list");
+  const supplierDropdwon = document.getElementById("supplier_name_list");
 
+  newItemDropdown.innerHTML = "";
   stockList.forEach((stock) => {
     const option = document.createElement("option");
-    option.value = `${stock._doc.item_no} ${stock._doc.item_name}`;
     option.textContent = stock._doc.item_name;
     newItemDropdown.appendChild(option);
   });
+
+  supplierDropdwon.innerHTML = "";
+  supplierList.forEach((supplier) => {
+    const option = document.createElement("option");
+    option.textContent = supplier._doc.supplier_name;
+    supplierDropdwon.appendChild(option);
+  });
 };
+
+
+
 
 // Function to handle new purchase
 const newPurchaseHandler = () => {
   try {
     const newItem = document.getElementById("new_item_name").value;
-    const newItemNo = newItem.split(" ")[0];
-    const newItemName = newItem.split(" ").slice(1).join(" ");
     const newStockQty = document.getElementById("new_item_quantity").value;
     const newStockMRP = document.getElementById("new_item_mrp").value;
+    const supplier_name = document.getElementById("supplier_name").value;
     
-    if (newItem === "" || newStockQty === "" || newStockMRP === "") {
+    if (newItem === "" || newStockQty === "" || newStockMRP === "" || supplier_name === "") {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -81,17 +90,17 @@ const newPurchaseHandler = () => {
     }
 
     const purchaseData = {
-      item_no: newItemNo,
-      item_name: newItemName,
+      item_name: newItem,
       quantity: newStockQty,
       mrp: newStockMRP,
+      supplier_name: supplier_name,
       total: newStockQty * newStockMRP,
     };
 
     ipcRenderer.send("new-Purchase", purchaseData);
-    closeModal("addNewPurchaseModal");
+    closeModal();
+    location.reload(true);
     fetchPurchase();
-    window.location.reload();
   } catch (error) {
     console.error("Error inserting", error);
   }
@@ -108,6 +117,9 @@ const renderPurchase = (purchaseList) => {
     tr.innerHTML = `
       <td class="px-6 py-4">
         <div class="max-md:text-xs">${purchase._doc.purchase_no}</div>
+      </td>
+      <td class="px-6 py-4">
+        <div class="max-md:text-xs">${purchase._doc.supplier_name}</div>
       </td>
       <td class="px-6 py-4">
         <div class="max-md:text-xs">${new Date(purchase._doc.date).toLocaleDateString('en-GB')}</div>
@@ -146,17 +158,22 @@ const fetchPurchase = () => {
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
   ipcRenderer.send("fetch-Stock");
+  ipcRenderer.send("fetch-supplier");
+  ipcRenderer.send("fetch-purchase");
   fetchPurchase();
 });
 
 // IPC event listeners
 ipcRenderer.on("fetch-Stock-data", (event, stock) => {
   apiStock = stock;
-  renderStockDropdown(apiStock);
+});
+
+ipcRenderer.on("supplier-data", (event, supplier) => {
+  apiSupplier = supplier;
+  renderStockDropdown(apiStock, apiSupplier);
 });
 
 ipcRenderer.on("fetch-purchase-data", (event, purchase) => {
- 
   apiPurchase = purchase;
   renderPurchase(apiPurchase);
 });

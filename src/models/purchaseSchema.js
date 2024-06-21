@@ -9,6 +9,10 @@ const purchaseSchema = new mongoose.Schema({
         mrp:Number,
         total:Number,   
      },
+     supplier_name:{
+        type: String,
+        required: true
+    },
     date:{
         type: Date,
         required: true

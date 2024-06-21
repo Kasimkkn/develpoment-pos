@@ -2780,19 +2780,22 @@ ipcMain.on("new-Purchase", async (event, data) => {
       event.reply("new-Purchase-error", "No data provided");
       return
     }
-    // add quantity and mrp inot Stock collection
     const stockData = await Stock.find({
       item_name: data.item_name,
-      item_no: Number(data.item_no)
+      // item_no: Number(data.item_no)
     })
-    if (stockData.length > 0 || stockData !== undefined) {
+    if (stockData.length) {
       const stockItem = stockData[0]
+      console.log("stockItem", stockItem)
       stockItem.quantity = (Number(stockItem.quantity) + Number(data.quantity)).toFixed(2)
       stockItem.mrp = Number(data.mrp)
       stockItem.total = (stockItem.mrp * stockItem.quantity).toFixed(2)
       stockItem.addded_at = Date.now()
       stockItem.is_synced = false
       await stockItem.save()
+      
+      data.item_no = stockItem.item_no
+      data.is_synced = false
       let purchaseData = {
         purchase_no: 0,
         item_details: data,
@@ -2804,22 +2807,48 @@ ipcMain.on("new-Purchase", async (event, data) => {
         purchaseNo = lastItemNo.purchase_no + 1;
       }
       purchaseData.purchase_no = purchaseNo
-      await Purchase.create(purchaseData)
+      await Purchase.create({
+        purchase_no: purchaseNo,
+        item_details: data,
+        date: Date.now(),
+        supplier_name: data.supplier_name,
+        is_synced: false,
+        is_selected: false
+      })
     }
     else {
-      await Stock.create(data)
-      let purchaseData = {
-        purchase_no: 0,
-        item_details: data,
-        date: Date.now
-      }
-      const lastItemNo = await Purchase.findOne().sort({ purchase_no: -1 });
-      let purchaseNo = 1
+      // get next item_no
+      const lastItemNo = await Stock.findOne().sort({ item_no: -1 });
+      let itemNo = 1
       if (lastItemNo) {
-        purchaseNo = lastItemNo.purchase_no + 1;
+        itemNo = lastItemNo.item_no + 1;
       }
-      purchaseData.purchase_no = purchaseNo
-      await Purchase.create(purchaseData)
+      await Stock.create({
+        item_no : itemNo,
+        item_name: data.item_name,
+        quantity: data.quantity,
+        mrp: data.mrp,
+        min_stock : 10,
+        total: (data.mrp * data.quantity).toFixed(2),
+        addded_at: Date.now(),
+        is_synced: false
+      })
+
+      // get next purchase_no
+      const lastPurchaseNo = await Purchase.findOne().sort({ purchase_no: -1 });
+      let purchaseNo = 1
+      if (lastPurchaseNo) {
+        purchaseNo = lastPurchaseNo.purchase_no + 1;
+      }
+      data.item_no = itemNo
+      await Purchase.create({
+        purchase_no: purchaseNo,
+        item_details: data,
+        date: Date.now(),
+        supplier_name: data.supplier_name,
+        is_synced: false,
+        is_selected: false
+      })
     }
 
     const newData = await Purchase.find()
