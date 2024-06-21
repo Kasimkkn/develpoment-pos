@@ -287,17 +287,6 @@ function printBill() {
       });
     }
   });
-
-  itemDetails.forEach((item) => {
-    productsInfo += `
-      <tr>
-        <td align="left">${item.item_name}</td>
-        <td align="center">${item.quantity}</td>
-        <td align="center">${parseFloat(item.price).toFixed(2)}</td>
-        <td align="center">${parseFloat(item.totalAmount).toFixed(2)}</td>
-      </tr>
-    `;
-  });
   
   let discountAmount = 0;
   if(discountPerc > 0){

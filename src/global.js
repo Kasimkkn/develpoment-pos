@@ -49,12 +49,8 @@ const updateColor = (variable, value) => {
       updateColor('--common-hover-color', savedCommonHoverColor);
     }
   };
-  // Call loadSavedColors() when the page loads
-  document.addEventListener('DOMContentLoaded', () => {
-    loadSavedColors();
-  });
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM content loaded");
+    loadSavedColors();
     const loggedInUser = localStorage.getItem('loggedInUser');
     const userPreference = localStorage.getItem('userPreferences');
     const userRights = JSON.parse(localStorage.getItem('userRights'));
@@ -86,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeInput = null;
     let alphaActiveInput = null;
 
-    // Function to create and append numerical keys
     const createKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'keys flex flex-wrap justify-around';
@@ -109,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         activeInput.value += keyValue;
                     }
-                    activeInput.focus(); // Set focus on the input field
+                    activeInput.focus();
                     activeInput.dispatchEvent(new Event('input'));
                     activeInput.dispatchEvent(new Event('change'));
                 }
@@ -119,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
         keyboard.appendChild(keysContainer);
     };
 
-    // Function to create and append alphabetical keys
     const createAlphabeticalKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'alphakeys flex flex-wrap justify-around';
@@ -154,27 +148,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateKeyboardPosition = (input) => {
         const rect = input.getBoundingClientRect();
         const keyboardWidth = keyboard.offsetWidth;
-        const spaceLeft = rect.left;
-        if (spaceLeft >= keyboardWidth) {
-            keyboard.style.left = `${rect.left - keyboardWidth - 45}px`;
-            keyboard.style.top = `${rect.top - 120}px`;
-        } else {
-            keyboard.style.left = `${rect.left}px`;
-            keyboard.style.top = `${rect.bottom}px`;
+        const keyboardHeight = keyboard.offsetHeight;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        let left = rect.left;
+        let top = rect.bottom;
+        
+        if (rect.left + keyboardWidth > windowWidth) {
+            left = windowWidth - keyboardWidth;
         }
+
+        if (rect.bottom + keyboardHeight > windowHeight) {
+            top = rect.top - keyboardHeight;
+        }
+
+        if (top < 0) {
+            top = rect.bottom;
+        }
+
+        keyboard.style.left = `${left}px`;
+        keyboard.style.top = `${top}px`;
     };
 
     const updateAlphaKeyboardPosition = (input) => {
         const rect = input.getBoundingClientRect();
         const keyboardWidth = alphKeyboard.offsetWidth;
-        const spaceLeft = rect.left;
-        if (spaceLeft >= keyboardWidth) {
-            alphKeyboard.style.left = `${rect.left - keyboardWidth - 45}px`;
-            alphKeyboard.style.top = `${rect.top - 120}px`;
-        } else {
-            alphKeyboard.style.left = `${rect.left}px`;
-            alphKeyboard.style.top = `${rect.bottom + 20}px`;
+        const keyboardHeight = alphKeyboard.offsetHeight;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        let left = rect.left;
+        let top = rect.bottom;
+
+        if (rect.left + keyboardWidth > windowWidth) {
+            left = windowWidth - keyboardWidth;
         }
+
+        if (rect.bottom + keyboardHeight > windowHeight) {
+            top = rect.top - keyboardHeight;
+        }
+
+        if (top < 0) {
+            top = rect.bottom;
+        }
+
+        alphKeyboard.style.left = `${left}px`;
+        alphKeyboard.style.top = `${top}px`;
     };
 
     document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
@@ -207,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
 
 const logoutButton = document.getElementById("logoutButton");
 if (logoutButton) {

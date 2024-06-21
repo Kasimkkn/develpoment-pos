@@ -17,7 +17,7 @@
 
     <main class="edit_main_section bg-secondary" style="padding-left: 0 !important">
       <div class="flex flex-col space-y-3 w-full py-2 px-4">
-        <div class="flex items-center justify-between gap-5" style="padding-left: 1rem; padding-right: 1rem">
+        <div class="flex items-center gap-3 w-full justify-between" style="padding-right: 1rem !important;">
           <div class="flex gap-3 items-center">
             <a href="index.html" class="text-common text-2xl">
               <svg id="Layer_2" width="40" height="40" fill="var(--common-color)" enable-background="new 0 0 512 512" viewBox="0 0 512 512"
@@ -34,36 +34,30 @@
                 </g>
               </svg>
             </a>
-            <h1 class="text-2xl font-bold text-common">Cart Products</h1>
+            <input id="searchInput" maxlength="10" type="text" name="searchInput" 
+            class="flex h-10 rounded-md border w-full  border-primary bg-white px-3 py-2 text-sm focus:outline-none"
+            placeholder="Search dishes...." />
           </div>
           <div class="flex gap-3 items-center">
             <div class="flex items-center">
-              <label for="discountPercUpdate" style="width: 50%;">Discount %</label>
+              <label for="discountPercUpdate" class="mx-4">%</label>
             <input style="width: 100%;" id="discountPercUpdate" maxlength="3" type="tel" min="0" max="100"  name="discountPercUpdate" 
             class="flex h-10 rounded-md border border-primary bg-white px-3 py-2 text-sm focus:outline-none"
             placeholder="Discount Percentage ...." oninput="validateDiscount(this)" />
             </div>
             <div class="flex items-center">
-              <label for="discountAmountUpdate" style="width: 50%;">Discount Am</label>
+              <label for="discountAmountUpdate" class="mx-4">Am</label>
             <input style="width: 100%;" id="discountAmountUpdate" maxlength="5" type="tel" min="0" max="100"  name="discountAmountUpdate" 
             class="flex h-10 rounded-md border border-primary bg-white px-3 py-2 text-sm focus:outline-none"
             placeholder="Discount Amount ...." />
             </div>
             <button id="updateDiscountBtn"
-            class="inline-flex items-center justify-between rounded-md text-sm h-10 px-4 py-2 w-max mb-2 bg-common text-white"
+            class="inline-flex items-center justify-between rounded-md text-sm h-10 px-4 py-2 w-max bg-common text-white"
             >Update</button>
-          </div>
+           </div> 
         </div>
         <div class="flex flex-col gap-5" style="max-width: 1100px;">
-          <div class="flex gap-2 p-2 rounded-lg bg-tertiary" style="max-width: 100%; overflow-x: scroll;"
-            id="product-list"></div>
-          <div class="flex gap-5 w-full justify-between items-center">
-            <h2 class="text-2xl font-bold text-common self-center">Search Products</h2>
-            <input style="width: 35%;" id="searchInput" maxlength="10" type="text" name="searchInput" 
-              class="flex h-10 rounded-md border border-primary bg-white px-3 py-2 text-sm focus:outline-none"
-              placeholder="Search dishes...." />
-          </div>
-          <div id="search-product-list" style="max-height: 54vh; max-width: 100%;overflow-y: scroll;"
+          <div id="search-product-list" style="max-height: 91vh; max-width: 100%;overflow-y: scroll;"
             class="bg-tertiary flex gap-3 flex-wrap p-2 rounded-lg"></div>
         </div>
 
@@ -133,6 +127,10 @@
           <button id="duplicate-bill-btn"
             class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common text-white">
             Dublicate Bill
+          </button>
+          <button id="save-bill-btn"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common text-white">
+            Save Bill
           </button>
         </div>
       </div>

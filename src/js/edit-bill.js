@@ -25,7 +25,6 @@ ipcRenderer.on("edit-bill-details-data", (event, data) => {
   document.getElementById("discountAmountUpdate").value = data.discount_rupees;
   cartItems = billData.item_details;
   updateCartUI();
-  renderBIllItems(cartItems);
   populateProducts(apiProduct, locationName);
 })
 
@@ -41,7 +40,7 @@ ipcRenderer.on("products-data", (event, products) => {
   populateProducts(products, locationName);
 });
 
-ipcRenderer.on("location-data", (event, data) => { 
+ipcRenderer.on("location-data", (event, data) => {
   Locations = data;
   populateProducts(apiProduct, locationName);
 });
@@ -50,46 +49,71 @@ ipcRenderer.on("location-data", (event, data) => {
 const updateCartUI = () => {
   const cartElement = document.getElementById("cart");
   cartElement.innerHTML = "";
-
   cartItems.forEach((item) => {
+    const sp_info = item.sp_info ? item.sp_info : "none";
     const itemElement = document.createElement("div");
-    itemElement.classList = "flex gap-3 items-center justify-between py-2 px-3 rounded-lg bg-white";
+    itemElement.classList = "flex items-center justify-between py-2 px-3 rounded-lg";
+    if (item.is_printed) {
+      itemElement.classList.add("bg-secondary");
+    }
+    else {
+      itemElement.classList.add("bg-white");
+    }
     itemElement.innerHTML = `
+    <input type="hidden" value="${item.item_no}" id="itemNo"/>
     <div class="flex items-center justify-center p-2">
-          <span class="w-14 h-14 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+          <span class="w-14 h-14 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
             <p class="text-2xl">${item.item_no}</p>
           </span>
         </div>
-    <div class="ml-4 flex flex-col gap-2 items-start w-40 max-lg:w-32">
-      <p class="text-sm">${item.item_name.toLowerCase()}</p>
-      <span class="text-xs">${item.quantity} x ${item.price}</span>
+    <div class="flex flex-col gap-2 items-start w-40 max-lg:w-32">
+      <div class="flex gap-1 justify-between items-center text-sm">
+      <p class="text-sm flex gap-2">${item.item_name.split(" ").slice(0, 2).join(" ")}</p>
+      ${sp_info !== "none" ? `(${sp_info})` : ``}
+      <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item.item_no}" class="beautyBtn text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
+      </div>
+      <div class="text-xs flex gap-2 items-center">
+      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item.item_no}','${item.price}', event)">+</button>
+      ${item.quantity} 
+      <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleDecrement(${item.item_no}, event)">-</button>
+      
+      </div>
     </div>
     <div class="flex flex-col gap-2 justify-center items-center">
       <p class="text-xs">${(item.price * item.quantity).toFixed(2)}</p>
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" id="delete" class="hover:cursor-pointer"
-        onclick="removeItemFromCart('${item.item_no}', '${locationName}', '${tableNo}','${billNo}')">
-        <path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"></path>
+      onclick='removeItemFromCart("${locationName}", "${tableNo}", ${JSON.stringify(item)})'>
+      <path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"></path>
       </svg>
     </div>
+    <input type="hidden" value="${item.sp_info}" />
   `;
 
     cartElement.appendChild(itemElement);
   });
-  updateCartSummary(cartItems, billData);
+  cartElement.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-modal-toggle="quantityAddModal"]');
+    if (button) {
+      document.getElementById("newQuantity").value = 1;
+      const itemId = button.id.replace('quantity-', '');
+      openQuantityModal(itemId);
+    }
+  });
+  updateCartSummary(cartItems);
 };
 
-const updateCartSummary = (cartItems, billData) => {
+const updateCartSummary = (cartItems) => {
   const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
   const totalAmount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   let discountAmount = 0;
   let netAmount = totalAmount;
 
-  if(billData.discount_perc > 0){
+  if (billData.discount_perc > 0) {
     discountAmount = totalAmount * (billData.discount_perc / 100);
     netAmount -= discountAmount;
   }
-  else if(billData.discount_rupees > 0){
+  else if (billData.discount_rupees > 0) {
     discountAmount = billData.discount_rupees;
     netAmount -= discountAmount;
   }
@@ -102,7 +126,7 @@ const updateCartSummary = (cartItems, billData) => {
   let userGst;
   if (userPreferences._doc.is_gstAvailable && userTaxPercentage > 0) {
     userGst = userPreferences._doc.gst_percentage;
-  } 
+  }
   else if (userPreferences._doc.is_ValueAddedTaxAvailable && userPreferences._doc.vat_percentage > 0) {
     userGst = userPreferences._doc.vat_percentage;
   }
@@ -122,7 +146,7 @@ const updateCartSummary = (cartItems, billData) => {
   document.getElementById("net-amount").textContent = `${userCurrency} ${netAmount.toFixed(2)}`;
 };
 
-const addNewItemToCart = (product , price) => {
+const addNewItemToCart = (product, price) => {
 
   const newItem = {
     tableNo: tableNo,
@@ -164,74 +188,39 @@ const removeItemFromCart = (productId, locationName, tableNo, billNo) => {
   }
 };
 
-const handleNewItemToBill = (productId, price, event) => {
+const handleIncrement = (productId, price, event) => {
   event.preventDefault();
-  const quantityElement = document.getElementById(`quantity-${productId}`);
-  if (quantityElement) {
-    let quantity = parseInt(quantityElement.textContent);
-    const product = apiProduct.find(
-      (product) => product._doc.item_no == productId
-    );
-    if (product) {
-      addNewItemToCart(product , price);
-      quantity++;
-    quantityElement.textContent = quantity;
-    } else {
-      console.error(`Product with ID '${productId}' not found.`);
-    }
+  const product = apiProduct.find(
+    (product) => product._doc.item_no == productId
+  );
+  if (product) {
+    addNewItemToCart(product, price);
   } else {
     console.error(`Element with ID 'quantity-${productId}' not found.`);
   }
 };
 
+
 const handleDecrement = (productId, event) => {
   event.preventDefault();
-  
-  const quantityElement = document.getElementById(`quantity-${productId}`);
-  const decrmentBtn = document.getElementById(`decrement-${productId}`);
-
-  if (!quantityElement) {
-    console.error(`Element with ID 'quantity-${productId}' not found.`);
-    return;
-  }
-
-  let quantity = parseInt(quantityElement.textContent);
-
-  if (isNaN(quantity)) {
-    console.error(
-      `Invalid quantity for product ID '${productId}': '${quantityElement.textContent}'`
-    );
-    return;
-  }
-
-  if (quantity <= 1 && cartItems.length === 1) {
-    decrmentBtn.disabled = true;
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Cannot remove last item from cart',
-      timer: 1000
-    })
-    return;
-  }
-
-  const toUpdateData = {
-    tableNo: tableNo,
-    locationName: locationName,
-    itemId: productId,
-    newQuantity: quantity - 1,
-    bill_no: billNo
-  };
-
-  ipcRenderer.send("update-bill-quantity", toUpdateData);
-
-  quantityElement.textContent = quantity - 1;
-  const updatedQtyItem = cartItems.find(
+  const product = cartItems.find(
     (item) => item.item_no === productId
-  );
-  updatedQtyItem.quantity = quantity - 1;
-  updateCartUI();
+  )
+  if (product) {
+    if (product.quantity == 0) {
+      removeItemFromCart(locationName, tableNo, product);
+      return
+    }
+    const toUpdateData = {
+      tableNo: tableNo,
+      locationName: locationName,
+      itemId: productId,
+      newQuantity: product.quantity === 1 ? 0 : product.quantity - 1,
+      bill_no: billNo
+    };
+    ipcRenderer.send("update-bill-quantity", toUpdateData);
+    updateCartUI();
+  }
 };
 
 const searchInput = document.getElementById("searchInput");
@@ -257,7 +246,7 @@ const populateProducts = (products, locationName) => {
 
   products.forEach((product) => {
     const currentLocation = Locations.find(loc => loc._doc.location_name == locationName);
-    const locationPriceKey = currentLocation ?  "rate_"+ currentLocation._doc.location_price : "rate_one";
+    const locationPriceKey = currentLocation ? "rate_" + currentLocation._doc.location_price : "rate_one";
 
 
     let price;
@@ -284,74 +273,36 @@ const populateProducts = (products, locationName) => {
         price = product._doc.rate_one;
     }
     const productElement = document.createElement("div");
-    productElement.classList.add("product", "w-40", "bg-white", "shadow-md", "rounded-xl");
+    productElement.classList.add("product", "bg-white", "shadow-md", "rounded-xl");
+    productElement.style.width = "9rem";
     productElement.innerHTML = `
-      <a href="#">
-        <div class="flex items-center justify-center p-2">
-          <span class="w-16 h-16 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-2xl">${product._doc.item_no}</p>
-          </span>
-        </div>
-        <div class="px-4 pb-4 w-full product-info">
-         <div class="flex justify-between items-center">
-         <p class="text-sm font-normal w-16">${product._doc.item_name.split(" ").slice(0, 2).join(" ")}</p>
-         <p class="text-sm text-black cursor-auto my-3">${userCurrency} ${price}</p>
-         </div>
-          <div class="flex items-center justify-center w-full">
-            <div class="product-buttons flex gap-2 items-center justify-between">
-              <button class="text-lg text-white rounded-md beautyBtn w-10 h-10 " onclick="handleNewItemToBill('${product._doc.item_no}', '${price}', event)">+</button>
-              <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" class="bg-primary text-black rounded-md w-10 h-10" id="quantity-${product._doc.item_no}">${getCartItemQuantity(product._doc.item_no)}</button>
-              <button class="text-lg text-white rounded-md beautyBtn w-10 h-10 " id="decrement-${product._doc.item_no}" onclick="handleDecrement(${product._doc.item_no}, event)">-</button> 
+     <div class="flex items-center justify-between px-2 py-2 gap-2">
+          <span class="w-16 h-16 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
+            <p class="text-xl">${product._doc.item_no}</p>
+            </span>
+            <div class="flex flex-col gap-1 w-full">
+                        <p class="text-sm font-bold " style="text-transform: capitalize;">
+            ${product._doc.item_name.split(" ").slice(0, 2).join(" ")}</p> 
+            <p class="text-sm font-extralight">${userCurrency}${price}</p>
             </div>
           </div>
-        </div>
-      </a>
     `;
+    productElement.addEventListener('click', (event) => {
+      handleIncrement(product._doc.item_no, price, event);
+    })
     productList.appendChild(productElement);
   });
 };
 
-const renderBIllItems = (cartItems) => {
-  const billItemsList = document.getElementById("product-list");
-  billItemsList.innerHTML = "";
-
-  cartItems.forEach((item) => {
-    const productElement = document.createElement("div");
-    productElement.classList.add("product", "w-40", "bg-white", "shadow-md", "rounded-xl");
-    productElement.innerHTML = `
-      <a href="#">
-        <div class="flex items-center justify-center p-2">
-          <span class="w-16 h-16 border bg-primary rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-2xl">${item.item_no}</p>
-          </span>
-        </div>
-        <div class="px-4 pb-4 w-full product-info">
-         <div class="flex justify-between items-center">
-         <p class="text-sm font-normal w-16">${item.item_name.split(" ").slice(0, 2).join(" ")}</p>
-         <p class="text-sm text-black cursor-auto my-3">${userCurrency} ${item.price}</p>
-         </div>
-          <div class="flex items-center justify-center w-full">
-            <div class="product-buttons flex gap-2 items-center justify-between">
-              <button class="text-lg text-white rounded-md beautyBtn w-10 h-10 " onclick="handleNewItemToBill('${item.item_no}','${item.price}', event)">+</button>
-              <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" class="bg-primary text-black rounded-md w-10 h-10" id="quantity-${item.item_no}">${getCartItemQuantity(item.item_no)}</button>
-              <button class="text-lg text-white rounded-md beautyBtn w-10 h-10 " id="decrement-${item.item_no}" onclick="handleDecrement(${item.item_no}, event)">-</button> 
-            </div>
-          </div>
-        </div>
-      </a>
-    `;
-    billItemsList.appendChild(productElement);
-  })
-}
-
-
-
 async function printBill() {
+  const bill_no = billNo;
+  const billInfoStr = JSON.parse(localStorage.getItem("billInfo"));
+  const table_no =  billData.table_no
   let customerName = billData.customer_name ? billData.customer_name : "None";
   let customerGSTNo = billData.GST_no ? billData.GST_no : "None";
   let todaysDate = String(billData.created_at).split("T")[0];
   let discountPerc = billData.discount_perc ? billData.discount_perc : 0;
-
+  let discountMoney = billData.discount_rupees ? billData.discount_rupees : 0;
   let userTaxPercentage = 0;
 
   if (userPref._doc.is_gstAvailable) {
@@ -372,7 +323,8 @@ async function printBill() {
     vat_Amount = userTaxPercentage;
   }
 
-  let productsInfo = "";
+
+  let totalAmount = 0;
   let itemDetails = [];
 
   billData.item_details.forEach((item) => {
@@ -381,7 +333,8 @@ async function printBill() {
     const sp_info = item.sp_info ? item.sp_info : "none";
     const quantity = item.quantity;
     const price = item.price;
-
+    const totalAmountofItem = quantity * price;
+    totalAmount += totalAmountofItem;
     itemDetails.push({
       item_no: productNo,
       item_name: productName,
@@ -393,26 +346,20 @@ async function printBill() {
 
   });
 
-  let totalAmount = 0;
-  itemDetails.map((item) => {
-    productsInfo += `
-      <tr>
-        <td align="left">${item.item_name} ${item.sp_info !== "none" ? " (" + item.sp_info + ")" : ""}</td>
-        <td align="center">${item.quantity}</td>
-        <td align="center">${parseFloat(item.price).toFixed(2)}</td>
-        <td align="center">${parseFloat(item.totalAmount).toFixed(2)}</td>
-      </tr>
-    `
-    totalAmount += item.totalAmount;
-  })
 
-  const discountAmount = (discountPerc / 100) * totalAmount;
+  let discountAmount = 0;
+  if(discountPerc > 0){
+    discountAmount = (discountPerc / 100) * totalAmount;
+  }
+  if(discountMoney > 0){
+    discountAmount = discountMoney;
+  }
 
   let netAmountWithDiscount = totalAmount - discountAmount;
-
   let totalTaxAmount = 0;
+  
   if (sgstAmount > 0 || cgstAmount > 0) {
-    const gstAmount = netAmountWithDiscount * (userTaxPercentage);
+    const gstAmount = netAmountWithDiscount * (userTaxPercentage / 100);
     totalTaxAmount = gstAmount;
     netAmountWithDiscount += gstAmount;
   } else if (vat_Amount > 0) {
@@ -421,137 +368,40 @@ async function printBill() {
     netAmountWithDiscount += vatAmount;
   }
 
-
   const roundedNetAmount = Math.round(netAmountWithDiscount);
   const decimalPart = Number(String(netAmountWithDiscount.toFixed(2)).split(".")[1]);
 
   let roundOffValue;
   if (decimalPart < 50) {
-    roundOffValue = `-${(100 - decimalPart)}`;
-  } else {
-    roundOffValue = `${decimalPart}`;
+    roundOffValue = `-0.${(100 - decimalPart)}`;
+  } 
+  else {
+    roundOffValue = `0.${decimalPart}`;
   }
 
-  const billContent = `
-    <div style="padding: 5px; max-width: 270px; border: 1px solid #ccc;">
-    <h1 style="font-size: 16px; text-align: center;"></h1>
-    <p style="font-size: 13px; text-align: center;">
-      MS ALI ROAD, GRANT ROAD EAST, MUMBAI<br>
-      Ph. 9892446322
-    </p>
-    
-    <div style="display: flex;">
-      <div style="border: 1px solid #ccc; align-items: center; display: flex; justify-content: center; width: 100%; padding: 3px;">TAX INVOICE</div>
-    </div>
-    
-      <div style="padding: 1px 1px; display: flex;flex-direction: column;">
-      ${customerName !== "None" ? `<p style="margin:0">Bill To: <span style="font-weight:600">${customerName}</span></p>` : ''}
-        ${customerGSTNo !== "None" ? `<p style="margin:0">Gst: <span style="font-weight:600">${customerGSTNo}</span></p>` : ''}
-      </div>
-      
-      <div style="padding: 3px 1px; font-size: 15px; display: flex; justify-content: space-between;">
-        <p style="margin:0">Bill-No: <span style="font-weight:600">${billNo}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T.No: <span style="font-weight:600">${tableNo}</span></p>
-      </div>
-
-      <div style="border-bottom: 1px solid #ccc; padding: 3px 1px; font-size: 15px; display: flex; justify-content: space-between;">
-        <p style="margin:0">Date: <span style="font-weight:600">${todaysDate}</span></p>
-      </div>
-      
-      <table style="width: 100%; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;">
-      <thead>
-        <tr>
-          <th align="left" style="border-bottom: 1px solid #ccc;">Item</th>
-          <th style="border-bottom: 1px solid #ccc;">Qty</th>
-          <th style="border-bottom: 1px solid #ccc;">Rate</th>
-          <th style="border-bottom: 1px solid #ccc;">Amt</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${productsInfo}
-      </tbody>
-    </table>
-
-      <div style="border-top: 1px solid #ccc; padding: 10px 1px; margin-bottom: 10px; border-bottom: 1px solid #ccc;">
-        <div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-          <div>Total:</div>
-          <div style="text-align: right;"> ${totalAmount.toFixed(2)}</div>
-        </div>
-
-        ${discountPerc !== 0 && discountAmount > 0
-      ? `<div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-              <div>Discount ${discountPerc}%:</div>
-              <div style="text-align: right;"> ${discountAmount.toFixed(2)}</div>
-            </div>`
-      : ""
-    }
-        
-        ${cgstAmount > 0
-      ? `<div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-              <div>CGST ${cgstAmount}%:</div>
-              <div style="text-align: right;"> ${(totalTaxAmount / 2).toFixed(2)}</div>
-            </div>`
-      : ""
-    }
-
-        ${sgstAmount > 0
-      ? `<div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-              <div>SGST ${sgstAmount}%:</div>
-              <div style="text-align: right;"> ${(totalTaxAmount / 2).toFixed(2)}</div>
-            </div>`
-      : ""
-    }
-
-        ${vat_Amount > 0
-      ? `<div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-              <div>VAT :</div>
-              <div style="text-align: right;"> ${(totalTaxAmount).toFixed(2)}</div>
-            </div>`
-      : ""
-    }
-          <div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-          <div>Round Off:</div>
-          <div style="text-align: right;">${roundOffValue}</div>
-        </div>
-
-
-        <div style="display: flex; justify-content: flex-end; gap: 20px; margin-bottom: 5px;">
-          <div style="font-size: 19px;">Net :</div>
-          <div style="text-align: right; font-size: 19px;"> ${roundedNetAmount.toFixed(0)}</div>
-        </div>
-      </div>
-
-      <p style="margin: 10px auto; width: 155px;">THANKS FOR VISIT</p>
-    </div>`;
-
-  let round_off_value = 0
-  if (decimalPart < 50) {
-    const roundOffNum = 100 - decimalPart;
-    round_off_value = "-0." + roundOffNum.toFixed(0);
-  } else {
-    round_off_value = "0." + decimalPart.toFixed(0);
+  if (roundOffValue === '-0.100' || roundOffValue === '0.100') {
+    roundOffValue = '0.00';
   }
-
+  
+  console.log(netAmountWithDiscount, roundOffValue , totalAmount)
   let updatedbillData = {
     bill_no: billData.bill_no,
     item_details: billData.item_details,
     final_amount: Math.round(netAmountWithDiscount),
     total_amount: totalAmount.toFixed(2),
-    round_off: round_off_value,
+    round_off: roundOffValue,
   }
 
   try {
     ipcRenderer.send("updated-bill-info", updatedbillData);
     ipcRenderer.send("fetch-bill-by-billNo", billNo);
+
+    // Send the data to the printer
+    ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
+
   } catch (err) {
     console.log(err)
   }
-
-  const printWindow = window.open("", "_blank");
-  printWindow.document.write("<html><head><title>Bill</title></head><body>");
-  printWindow.document.write(billContent);
-  printWindow.document.write("</body></html>");
-  printWindow.document.close();
-  printWindow.print();
 
 }
 
@@ -570,7 +420,6 @@ updateDiscountBtn.addEventListener("click", () => {
     ipcRenderer.send("update-bill-discount", billNo, discountPerc, tax_perc, vat_tax);
   }
   if (discountRupees > 0) {
-    console.log("jii")
     ipcRenderer.send("update-bill-discount-rupee", billNo, discountRupees, tax_perc);
   }
   if (tax_perc > 0) {

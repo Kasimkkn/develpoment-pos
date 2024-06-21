@@ -27,7 +27,7 @@ events.EventEmitter.defaultMaxListeners = 100;
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
 
 config({
-  path: ".env",
+  path: "./.env",
 })
 
 
@@ -49,7 +49,7 @@ async function createWindow() {
   win.loadFile('src/login.html');
 
   const url = process.env.MONGO_URI;
-  await connectDB("mongodb://localhost:27017/pos-restuarant")
+  await connectDB(url)
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
   });
@@ -300,7 +300,128 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     console.error('Error printing cancel KOT:', error);
   }
 });
-// 
+
+ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount) => {
+  try {
+    // Extract bill details
+    const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
+    const customerMobile = billInfoStr._doc.customer_mobile;
+    const gstinNo = billInfoStr._doc.GSTIN_no.toUpperCase();
+    const fssaiCode = billInfoStr._doc.FSSAI_code.toUpperCase();
+    const billFooter = billInfoStr._doc.bill_footer.toUpperCase();
+
+    // Format the date
+    const formattedDate = new Date(todaysDate).toLocaleDateString("en-GB");
+
+    // Initialize the printer
+    const printer = new ThermalPrinter({
+      type: PrinterTypes.EPSON,
+      interface: 'tcp://192.168.0.87:9100',
+      timeout: 5000,
+    });
+
+    // Begin printing the bill
+    printer.alignCenter();
+    printer.setTextDoubleHeight();
+    printer.println(restaurantName);
+    printer.setTextNormal();
+    printer.println(`MS ALI ROAD, GRANT ROAD EAST, MUMBAI`);
+    printer.println(`Ph. : ${customerMobile}`);
+    printer.println(`GSTIN: ${gstinNo}`);
+    printer.println(`FSSAI: ${fssaiCode}`);
+    printer.drawLine();
+
+    printer.alignLeft();
+    printer.println(`Date: ${formattedDate}`);
+    if (customerName) printer.println(`Bill To: ${customerName}`);
+    if (customerGSTNo) printer.println(`GST: ${customerGSTNo}`);
+
+    printer.println(`Bill-No: ${bill_no}  T.No: ${table_no}`);
+    printer.drawLine();
+
+    printer.tableCustom([
+      { text: 'Item', align: 'LEFT', width: 0.5 },
+      { text: 'Qty', align: 'CENTER', width: 0.15 },
+      { text: 'Rate', align: 'CENTER', width: 0.15 },
+      { text: 'Amt', align: 'RIGHT', width: 0.15 },
+    ]);
+
+    printer.drawLine();
+
+    // Loop through productsInfo array to print each product
+    productsInfo.forEach(product => {
+      printer.tableCustom([
+        { text: product.item_name, align: 'LEFT', width: 0.5 },
+        { text: product.quantity, align: 'CENTER', width: 0.15 },
+        { text: product.price, align: 'CENTER', width: 0.15 },
+        { text: product.totalAmount, align: 'RIGHT', width: 0.15 },
+      ]);
+    });
+
+    printer.drawLine();
+
+    printer.tableCustom([
+      { text: 'Total:', align: 'RIGHT', width: 0.75 },
+      { text: totalAmount.toFixed(2), align: 'RIGHT', width: 0.25 },
+    ]);
+
+    if (discountPerc !== 0 || (discountMoney !== 0 && discountAmount > 0)) {
+      printer.tableCustom([
+        { text: `Discount ${discountPerc ? discountPerc + "%" : ""}:`, align: 'RIGHT', width: 0.75 },
+        { text: Number(discountAmount).toFixed(2), align: 'RIGHT', width: 0.25 },
+      ]);
+    }
+
+    if (cgstAmount > 0) {
+      printer.tableCustom([
+        { text: `CGST ${cgstAmount}%:`, align: 'RIGHT', width: 0.75 },
+        { text: (totalTaxAmount / 2).toFixed(2), align: 'RIGHT', width: 0.25 },
+      ]);
+    }
+
+    if (sgstAmount > 0) {
+      printer.tableCustom([
+        { text: `SGST ${sgstAmount}%:`, align: 'RIGHT', width: 0.75 },
+        { text: (totalTaxAmount / 2).toFixed(2), align: 'RIGHT', width: 0.25 },
+      ]);
+    }
+
+    if (vat_Amount > 0) {
+      printer.tableCustom([
+        { text: `VAT ${vat_Amount}%:`, align: 'RIGHT', width: 0.75 },
+        { text: totalTaxAmount, align: 'RIGHT', width: 0.25 },
+      ]);
+    }
+
+    printer.tableCustom([
+      { text: 'Round Off:', align: 'RIGHT', width: 0.75 },
+      { text: roundOffValue, align: 'RIGHT', width: 0.25 },
+    ]);
+
+    printer.tableCustom([
+      { text: 'Net:', align: 'RIGHT', width: 0.75, style: 'B' },
+      { text: roundedNetAmount, align: 'RIGHT', width: 0.25, style: 'B' },
+    ]);
+
+    printer.drawLine();
+    printer.alignCenter();
+    printer.println(billFooter);
+    printer.cut();
+    console.log("hello")
+    if (await printer.isPrinterConnected()) {
+      await printer.execute();
+      console.log("Duplicate bill printed successfully");
+    }
+    else {
+      console.log("Printer not connected");
+    }
+
+    event.reply('duplicate-bill-saved');
+  } catch (error) {
+    console.error('Error printing duplicate bill:', error);
+  }
+});
+
 ipcMain.on('create-only-first-user' , async (event) => {
   try {
     const getUsers = await User.find();
@@ -641,7 +762,6 @@ ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
 
   try {
     const { tableNo, locationName, itemId, newQuantity } = toUpdateData;
-    console.log(newQuantity);
 
     const existingItem = await ExistingCartItem.findOne({
       table_no: tableNo,
@@ -688,7 +808,6 @@ ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
 ipcMain.on("update-bill-quantity", async (event, toUpdateData) => {
   try {
     const { tableNo, locationName, itemId, newQuantity, bill_no } = toUpdateData;
-
     const existingBill = await Bill.findOne({
       table_no: tableNo,
       location_name: locationName,
@@ -1460,7 +1579,8 @@ ipcMain.on("updated-bill-info", async (event, toUpdateData) => {
     const data = await Bill.findOneAndUpdate({
       bill_no: toUpdateData.bill_no,
     }, toUpdateData)
-    event.reply("updated-bill-info-success", data)
+
+    event.reply("updated-bill-info-success", "Bill info updated successfully")
   }
   catch (error) {
     console.log("error updating bill info", error)

@@ -306,7 +306,7 @@ const populateProducts = (products, locationName) => {
 
     `;
     productElement.addEventListener('click', () => {
-      handleIncrement(product._doc.item_no, price, event);
+      handleIncrement(product._doc.item_no, price);
     })
     productList.appendChild(productElement);
   });
