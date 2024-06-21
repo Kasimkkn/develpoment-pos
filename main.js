@@ -1747,6 +1747,100 @@ ipcMain.on("fetch-monthly-sales", async (event, fromDate, toDate) => {
   }
 });
 
+// Stock-in-hand
+ipcMain.on("fetch-stock-in-hand", async (event) => {
+  try {
+      const data = await Stock.find();
+      event.reply("stock-in-hand-data", data);
+  }
+  catch (error) {
+      console.log("error fetching stock in hand", error);
+      event.reply("fetch-stock-in-hand-error", "Error fetching stock in hand");
+  }
+})
+
+// monthly-purchase 
+ipcMain.on("fetch-monthly-purchase", async (event, fromDate, toDate) => {
+  try {
+    const selectedStartDate = new Date(fromDate);
+    const selectedEndDate = new Date(toDate);
+    const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
+    const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
+    
+    const data = await Purchase.find({ created_at: { $gte: startDate, $lte: endDate } });
+    event.reply("daily-purchase-data", data);
+  } catch (error) {
+    console.log("error fetching daily purchase", error);
+    event.reply("fetch-daily-purchase-error", "Error fetching daily purchase");
+  }
+});
+
+// item-wise-purchase
+ipcMain.on("fetch-item-wise-purchase", async (event, fromDate, toDate) => {
+  try {
+    const selectedStartDate = new Date(fromDate);
+    const selectedEndDate = new Date(toDate);
+    const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
+    const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
+    // using aggreation pipeline find out all the items that were purhcase on that date
+    const aggregationPipeline = [
+      {
+        $match: {
+          created_at: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$item_name",
+          count: { $sum: 1 },
+          total_final_amount: { $sum: "$final_amount" }
+        }
+      }
+    ]
+    const data = await Purchase.aggregate(aggregationPipeline);
+    event.reply("item-wise-purchase-data", data);
+  } catch (error) {
+    console.log("error fetching item wise purchase", error);
+    event.reply("fetch-item-wise-purchase-error", "Error fetching item wise purchase");
+  }
+});
+
+// supplier-wise-purchase
+ipcMain.on("fetch-supplier-wise-purchase", async (event, fromDate, toDate) => {
+  try {
+    const selectedStartDate = new Date(fromDate);
+    const selectedEndDate = new Date(toDate);
+    const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
+    const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
+    // using aggreation pipeline find out all the items that were purhcase on that date
+    const aggregationPipeline = [
+      {
+        $match: {
+          created_at: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$supplier_name",
+          count: { $sum: 1 },
+          total_final_amount: { $sum: "$final_amount" }
+        }
+      }
+    ]
+    const data = await Purchase.aggregate(aggregationPipeline);
+    event.reply("supplier-wise-purchase-data", data);
+  } catch (error) {
+    console.log("error fetching supplier wise purchase", error);
+    event.reply("fetch-supplier-wise-purchase-error", "Error fetching supplier wise purchase");
+  }
+});
+
 // Table-wise report
 ipcMain.on("fetch-tableWise-sales", async (event, fromDate, toDate) => {
   try {
