@@ -26,6 +26,7 @@ import events from 'events'
 events.EventEmitter.defaultMaxListeners = Infinity;
 
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
+import Supplier from "./src/models/supplierSchema.js";
 
 config({
   path: "./.env",
@@ -605,6 +606,59 @@ ipcMain.on("fetch-cartItems", async (event, tableNo, locationName) => {
   } catch (error) {
     console.error("Error fetching cartItems:", error);
     event.reply("fetch-error", "Error fetching cartItems");
+  }
+});
+
+// fetch-Supplier
+ipcMain.on("fetch-supplier", async (event) => {
+  try {
+    const data = await Supplier.find();
+    event.reply("supplier-data", data);
+  } catch (error) {
+    console.error("Error fetching supplier:", error);
+    event.reply("fetch-error", "Error fetching supplier");
+  }
+});
+// new-Supplier
+ipcMain.on("new-Supplier", async (event, supplier) => {
+  try {
+    const lastSupplier = await Supplier.findOne().sort({ supplier_no: -1 });
+    supplier.supplier_no = lastSupplier ? lastSupplier.supplier_no + 1 : 1;
+    await Supplier.create({
+      supplier_no: lastSupplier ? lastSupplier.supplier_no + 1 : 1,
+      supplier_name: supplier.supplier_name,
+      address: supplier.address,
+      mobile_no: Number(supplier.mobile_no),
+      status: supplier.status,
+      is_synced: false,
+    });
+    const data = await Supplier.find();
+    event.reply("supplier-data", data);
+  } catch (error) {
+    console.error("Error creating supplier:", error);
+  }
+});
+
+
+// edit-Supplier
+ipcMain.on("edit-supplier", async (event,SupplierId , supplier) => {
+  try {
+    const supplierData = await Supplier.findOne({ supplier_no: SupplierId });
+    if(!supplierData){
+      event.reply("supplier-error", "Supplier not found");
+      return;
+    }
+
+    supplierData.supplier_name = supplier.supplier_name;
+    supplierData.mobile_no = Number(supplier.mobile_no);
+    supplierData.status = supplier.status;
+    supplierData.is_synced = false;
+    await supplierData.save();
+    const data = await Supplier.find();
+    event.reply("supplier-data", data);
+
+  } catch (error) {
+    console.error("Error editing supplier:", error);
   }
 });
 
