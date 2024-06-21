@@ -32,19 +32,6 @@ ipcRenderer.on("edit-bill-details-data", (event, data) => {
 const userPref = JSON.parse(localStorage.getItem("userPreferences"));
 const userCurrency = userPref ? userPref._doc.currency_name : "₹";
 
-ipcRenderer.send("fetch-products");
-ipcRenderer.send("fetch-location");
-ipcRenderer.on("products-data", (event, products) => {
-  apiProduct = products;
-  populateProducts(products, locationName);
-});
-
-ipcRenderer.on("location-data", (event, data) => {
-  Locations = data;
-  populateProducts(apiProduct, locationName);
-});
-
-
 const updateCartUI = () => {
   const cartElement = document.getElementById("cart");
   cartElement.innerHTML = "";
@@ -69,7 +56,6 @@ const updateCartUI = () => {
       <div class="flex gap-1 justify-between items-center text-sm">
       <p class="text-sm flex gap-2">${item.item_name.split(" ").slice(0, 2).join(" ")}</p>
       ${sp_info !== "none" ? `(${sp_info})` : ``}
-      <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item.item_no}" class="beautyBtn text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
       </div>
       <div class="text-xs flex gap-2 items-center">
       <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item.item_no}','${item.price}', event)">+</button>
@@ -293,11 +279,11 @@ const populateProducts = (products, locationName) => {
   });
 };
 
-function printBill(whichBtn , billData) {
-  console.log("clicke by" , whichBtn)
+function printBill(whichBtn, billData) {
+  console.log("clicke by", whichBtn)
   const bill_no = billNo;
   const billInfoStr = JSON.parse(localStorage.getItem("billInfo"));
-  const table_no =  billData.table_no
+  const table_no = billData.table_no
   let customerName = billData.customer_name ? billData.customer_name : "None";
   let customerGSTNo = billData.GST_no ? billData.GST_no : "None";
   let todaysDate = String(billData.created_at).split("T")[0];
@@ -348,16 +334,16 @@ function printBill(whichBtn , billData) {
 
 
   let discountAmount = 0;
-  if(discountPerc > 0){
+  if (discountPerc > 0) {
     discountAmount = (discountPerc / 100) * totalAmount;
   }
-  if(discountMoney > 0){
+  if (discountMoney > 0) {
     discountAmount = discountMoney;
   }
 
   let netAmountWithDiscount = totalAmount - discountAmount;
   let totalTaxAmount = 0;
-  
+
   if (sgstAmount > 0 || cgstAmount > 0) {
     const gstAmount = netAmountWithDiscount * (userTaxPercentage / 100);
     totalTaxAmount = gstAmount;
@@ -374,7 +360,7 @@ function printBill(whichBtn , billData) {
   let roundOffValue;
   if (decimalPart < 50) {
     roundOffValue = `-0.${(100 - decimalPart)}`;
-  } 
+  }
   else {
     roundOffValue = `0.${decimalPart}`;
   }
@@ -382,8 +368,8 @@ function printBill(whichBtn , billData) {
   if (roundOffValue === '-0.100' || roundOffValue === '0.100') {
     roundOffValue = '0.00';
   }
-  
-  console.log(netAmountWithDiscount, roundOffValue , totalAmount)
+
+  console.log(netAmountWithDiscount, roundOffValue, totalAmount)
   let updatedbillData = {
     bill_no: billData.bill_no,
     item_details: billData.item_details,
@@ -393,37 +379,37 @@ function printBill(whichBtn , billData) {
   }
 
 
-  if(whichBtn == 1){
-    console.log("clicked by 1" , whichBtn)
+  if (whichBtn == 1) {
+    console.log("clicked by 1", whichBtn)
     try {
-    ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
+      ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
     }
-    catch(err){
+    catch (err) {
       console.log(err)
     }
   }
-  if(whichBtn == 2){
-    console.log("clicke by 2" , whichBtn)
-    try{
+  if (whichBtn == 2) {
+    console.log("clicke by 2", whichBtn)
+    try {
       ipcRenderer.send("updated-bill-info", updatedbillData);
       ipcRenderer.send("fetch-bill-by-billNo", billNo);
       ipcRenderer.send("deduct-qty", itemDetails);
     }
-    catch(err){
+    catch (err) {
       console.log(err)
     }
   }
 }
 
 const dublicateBillBtn = document.getElementById("duplicate-bill-btn");
-dublicateBillBtn.addEventListener("click", ()=>{
-  printBill(1,billData)
+dublicateBillBtn.addEventListener("click", () => {
+  printBill(1, billData)
 })
 
 
 const saveBillBtn = document.getElementById("save-bill-btn")
-saveBillBtn.addEventListener("click" , ()=>{
-  printBill(2,billData)
+saveBillBtn.addEventListener("click", () => {
+  printBill(2, billData)
 })
 
 const updateDiscountBtn = document.getElementById("updateDiscountBtn");
@@ -449,4 +435,15 @@ updateDiscountBtn.addEventListener("click", () => {
   ipcRenderer.send("fetch-bill-by-billNo", billNo);
 })
 
+
+document.addEventListener("DOMContentLoaded", () => {
+  const productData = JSON.parse(localStorage.getItem("products"));
+  const locationData = JSON.parse(localStorage.getItem("locations"));
+
+  if (productData && locationData) {
+    apiProduct = productData;
+    Locations = locationData;
+    populateProducts(apiProduct, locationName);
+  }
+})
 

@@ -54,7 +54,8 @@
           <option value="TRY">Turkey (₤) - TRY</option>
           <option value="Other">Other</option>
         </select>
-        <button type="button" onclick="nextStep(2)" class="button mt-6">
+        <button type="button" 
+        onclick="nextStep(2)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white mt-6">
           Next
         </button>
       </div>
@@ -83,8 +84,9 @@
             class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary  text-common" />
         </div>
         <div class="flex justify-between gap-1">
-          <button onclick="previousStep(2)" class="button">Previous</button>
-          <button type="button" onclick="nextStep(3)" class="button">
+          <button onclick="previousStep(2)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
+          <button type="button" 
+          onclick="nextStep(3)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">
             Next
           </button>
         </div>
@@ -108,8 +110,8 @@
           <span class="checkbox-label">76mm</span>
         </label>
         <div class="flex gap-2 justify-between">
-          <button onclick="previousStep(3)" class="button">Previous</button>
-          <button type="submit" class="button">Done</button>
+          <button onclick="previousStep(3)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
+          <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Done</button>
         </div>
       </form>
     </div>

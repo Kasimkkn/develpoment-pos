@@ -23,7 +23,8 @@ import Receipe from "./src/models/receipeSchema.js";
 import Purchase from "./src/models/purchaseSchema.js";
 import UserRights from "./src/models/userRightsSchema.js";
 import events from 'events'
-events.EventEmitter.defaultMaxListeners = 100;
+events.EventEmitter.defaultMaxListeners = Infinity;
+
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
 
 config({
