@@ -1777,8 +1777,8 @@ ipcMain.on("fetch-monthly-purchase", async (event, fromDate, toDate) => {
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
     
-    const data = await Purchase.find({ created_at: { $gte: startDate, $lte: endDate } });
-    event.reply("daily-purchase-data", data);
+    const data = await Purchase.find({ date: { $gte: startDate, $lte: endDate } });
+    event.reply("monthly-purchase-data", data);
   } catch (error) {
     console.log("error fetching daily purchase", error);
     event.reply("fetch-daily-purchase-error", "Error fetching daily purchase");

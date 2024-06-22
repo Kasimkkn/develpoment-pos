@@ -4,16 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supplier</title>
-  <link rel="stylesheet" href="../../node_modules/flowbite/dist/flowbite.min.css">
+  <title>Monthly Purchase</title>
+  <link rel="stylesheet" href="../../node_modules/flowbite/dist/flowbite.min.css" />
+  <link rel="stylesheet" href="../../node_modules/datatables.net-dt/css/dataTables.dataTables.min.css" />
+  <link rel="stylesheet" href="../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css">
   <link rel="stylesheet" href="../css/output.css" />
   <link rel="stylesheet" href="../css/style.css" />
+  <style></style>
 </head>
 
-<body>>
+<body class="bg-primary-two">
+
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
-    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden hover:bg-tertiary  ">
+    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden  hover:bg-secondary  ">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd"
@@ -221,190 +225,69 @@
       </div>
     </div>
   </aside>
-
-  <main class="bg-primary-two" style="height: 100vh;">
-    <div class="relative shadow-md rounded-lg">
-      <div
-        class="flex items-center justify-start flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 bg-white p-4 gap-6">
-        <label for="table-search" class="sr-only">Search</label>
+  <main class="bg-primary-two">
+    <div class="py-6 px-4 sm:px-6 lg:px-8">
+      <h1>monthly Purchase</h1>
+      <div class="flex gap-4 items-center justify-start mt-4 max-w-sm">
         <div class="relative">
-          <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 20 20">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
-          </div>
-          <input id="table_search_item" type="text" max="10" maxlength="10"
-            class="block pt-2 ps-10 py-2 text-sm text-black border rounded-lg w-80 bg-secondary border-primary "
-            placeholder="Search for purchase" />
+          <input type="date" id="fromMonthDate"
+            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
         </div>
-
+        <span>To</span>
         <div class="relative">
-
-          <button id="addNewSupplierBtn" data-modal-target="addNewSupplierModal" data-modal-show="addNewSupplierModal"
-            class="inline-flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max mb-2 beautyBtn text-white max-md:h-5 max-md:text-xs">
-            Add
-          </button>
-
+          <input type="date" id="toMonthDate"
+            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
         </div>
+        <button id="generateMonthlyButton"
+          class="flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max beautyBtn text-white">
+          Generate
+        </button>
       </div>
-      <table class="w-full text-sm text-left rtl:text-right text-black">
-        <thead class="text-xs text-black uppercase bg-secondary">
-          <tr>
-            <th scope="col" class="px-6 py-3">Supplier No</th>
-            <th scope="col" class="px-6 py-3">Supplier Name</th>
-            <th scope="col" class="px-6 py-3">Mobile No</th>
-            <th scope="col" class="px-6 py-3">Status</th>
-            <th scope="col" class="px-6 py-3">Action</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+
+
+      <div class="relative overflow-x-auto mt-4">
+        <div class="">
+          <table id="monthly-purchase-table" class="w-ful">
+            <thead class="text-xs text-black uppercase bg-primary">
+              <tr>
+                <th scope="col" class="px-6 py-3">Purchase No</th>
+                <th scope="col" class="px-6 py-3">supplier_name</th>
+                <th scope="col" class="px-6 py-3">date</th>
+                <th scope="col" class="px-6 py-3">items</th>
+                <th scope="col" class="px-6 py-3">total</th>
+              </tr>
+            </thead>
+            <tbody class="bg-secondary text-sm">
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
   </main>
 
-  <!-- Edit Supplier modal -->
-  <div id="editSupplierModal" tabindex="-1" aria-hidden="true"
-    class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
-    style="
-      background-color: rgba(179, 179, 184, 0.2);
-      backdrop-filter: blur(5px);
-    ">
-    <div class="relative w-full max-w-2xl max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-secondary rounded-lg shadow">
-        <!-- Modal header -->
-        <div class="flex items-start justify-between p-4 border-b rounded-t">
-          <h3 class="text-xl font-semibold text-black">
-            Edit Supplier
-          </h3>
-          <button type="button"
-            class="text-black bg-transparent hover:bg-secondary hover:text-black rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-            data-modal-hide="editSupplierModal" onclick="closeModal()">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
-        </div>
-        <!-- Modal body -->
-        <div class="p-6 space-y-6">
-          <div class="grid grid-cols-6 gap-6">
-            <div class="col-span-6 sm:col-span-3">
-              <label for="supplier_name" class="block mb-2 text-sm font-medium text-black">Supplier Name</label>
-              <input name="supplier_name" id="supplier_name" max="100" maxlength="100"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
-                placeholder="e.g. Jhom , Shyam" required="true" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="supplier_mobile_no" class="block mb-2 text-sm font-medium text-black">Mobile No</label>
-              <input name="supplier_mobile_no" id="supplier_mobile_no" max="10" maxlength="10"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
-                placeholder="e.g. 9876543210" required="true" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="Status" class="block mb-2 text-sm font-medium text-black">Status</label>
-              <select name="Status" id="Status" class="block py-2.5 w-full text-sm text-black bg-white px-3 border-0 appearance-none rounded-lg border-primary">
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <!-- Modal footer -->
-        <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse  rounded-b justify-between">
-          <button type="submit" onclick="editSupplierHandler()"
-            class="text-white beautyBtn    font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
-            Edit
-          </button>
-        </div>
-      </div>
-    </div>
+<div id="keyboard" class="hidden fixed shadow-lg">
+  </div>
+    <div id="alphKeyboard" class="hidden fixed shadow-lg">
   </div>
 
-  <!-- New Supplier modal -->
-  <div id="addNewSupplierModal" tabindex="-1" aria-hidden="true"
-    class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
-    style="
-      background-color: rgba(179, 179, 184, 0.2);
-      backdrop-filter: blur(5px);
-    ">
-    <div class="relative w-full max-w-2xl max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-secondary rounded-lg shadow">
-        <!-- Modal header -->
-        <div class="flex items-start justify-between p-4 border-b rounded-t">
-          <h3 class="text-xl font-semibold text-black">
-            New Supplier
-          </h3>
-          <button type="button" onclick="closeModal()"
-            class="text-black bg-transparent hover:bg-secondary hover:text-black rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-            data-modal-hide="addNewSupplierModal">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-            </svg>
-            <span class="sr-only">Close modal</span>
-          </button>
-        </div>
-        <!-- Modal body -->
-        <div class="p-6 space-y-6">
-          <div class="grid grid-cols-6 gap-6">
+  <script>
+    require('jquery');
+    var JSZip = require("jszip");
+    var pdfMake = require("pdfmake/build/pdfmake");
+    var PDF_Fonts = require('pdfmake/build/vfs_fonts')
+    pdfMake.vfs = PDF_Fonts.pdfMake.vfs;
 
-            <div class="col-span-6 sm:col-span-3">
-              <label for="new_supplier_name" class="block mb-2 text-sm font-medium text-black">Supplier Name</label>
-              <input name="new_supplier_name" id="new_supplier_name" max="100" maxlength="100"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
-                placeholder="e.g. Jhom , Shyam" required="true" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="new_supplier_address" class="block mb-2 text-sm font-medium text-black">Supplier Address</label>
-              <input name="new_supplier_address" id="new_supplier_address" max="100" maxlength="100"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
-                placeholder="e.g. Jhom , Shyam" required="true" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="new_mobile_no" class="block mb-2 text-sm font-medium text-black">Mobile No</label>
-              <input name="new_mobile_no" id="new_mobile_no" max="10" maxlength="10"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
-                placeholder="e.g. 100 ,200" required="true" />
-            </div>
-
-            <div class="col-span-6 sm:col-span-3">
-              <label for="new_status" class="block mb-2 text-sm font-medium text-black">Status</label>
-              <select name="new_status" id="new_status" required="true"
-                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5">
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-              </select>
-            </div>
-
-          </div>
-        </div>
-        <!-- Modal footer -->
-        <div class="flex items-center p-6 space-x-3 rtl:space-x-reverse border-t rounded-b justify-between">
-          <button type="submit" onclick="newSupplierHandler()"
-            class="text-white beautyBtn    font-medium rounded-lg text-sm px-5 py-2.5 text-cente">
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="keyboard" class="hidden fixed shadow-lg">
-  </div>
-  <div id="alphKeyboard" class="hidden fixed shadow-lg">
-  </div>
-
-  <script src="../global.js"></script>
-  <script src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
-  <script src="../js/supplier.js"></script>
+    require("datatables.net-dt");
+    require("datatables.net-autofill-dt");
+    require("datatables.net-buttons-dt");
+    require("datatables.net-buttons/js/buttons.colVis.js");
+    require("datatables.net-buttons/js/buttons.html5.js");
+    require("datatables.net-buttons/js/buttons.print.js");
+  </script>
+  <script src="../global.js" defer=""></script>
+  <script src="../js/monthly-purchase.js" defer></script>
+  <script src="../../node_modules/flowbite/dist/flowbite.min.js" defer></script>
 </body>
 
 </html>

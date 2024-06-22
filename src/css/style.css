@@ -149,6 +149,14 @@ input:hover {
 .text-common {
   color: var(--common-color);
 }
+.dataTable thead tr th {
+  text-align: start !important;
+  width: max-content !important;
+}
+.dataTable tbody tr td {
+  text-align: start !important;
+  width: max-content !important;
+}
 .dt-layout-cell table tbody tr td {
   border:1px solid #eee;
   font-size: 13px;
@@ -183,15 +191,10 @@ input:hover {
 #stock-in-hand-table tbody tr td:nth-child(2) {
   text-align: start;
 }
+#monthly-purchase-table tbody tr td:nth-child(2) {
+  text-align: start;
+}
 
-#stock-in-hand-table tbody tr td:nth-child(6) {
-  text-align: end;
-}
-#stock-in-hand-table thead tr th:nth-child(6) .dt-column-title {
-  text-align: end;
-  width: 100%;
-  display: block;
-}
 
 #sidebarCloseBtn:hover{
   cursor: pointer;
