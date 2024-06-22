@@ -34,5 +34,8 @@
   "profileBtn": "પ્રોફાઇલ",
   "settingBtn": "સેટિંગ્સ",
   "syncDataOnline": "ડેટા સિંક કરો",
-  "logoutButton": "લૉગઆઉટ"
+  "logoutButton": "લૉગઆઉટ",
+  "duplicate-bill-btn" : "Duplicate Bill",
+  "save-bill-btn": "Save Bill",
+  "updateDiscountBtn":"Update"
 }

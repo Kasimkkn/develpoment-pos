@@ -34,5 +34,8 @@
   "profileBtn":"Profile",
   "settingBtn":"Settings",
   "syncDataOnline":"Sync Data",
-  "logoutButton":"Logout"
+  "logoutButton":"Logout",
+  "duplicate-bill-btn" : "Duplicate Bill",
+  "save-bill-btn": "Save Bill",
+  "updateDiscountBtn":"Update"
 }

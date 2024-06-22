@@ -61,7 +61,7 @@ body{
 input{
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
-  outline: none !important;
+  /* outline: none !important; */
   background-color: var(--input-color);
 
 }
@@ -73,7 +73,7 @@ input[type="color"]{
 div.dt-container .dt-search input {
   border: 1px solid var(--common-color) !important;
   color: var(--common-color);
-  outline: none !important;
+  /* outline: none !important; */
   background-color: var(--input-color) !important;
 }
 select{
@@ -84,32 +84,24 @@ select{
   padding: 0.625rem; 
 }
 
-input:focus {
-  outline: none !important;
-  border: none !important;
-}
-input:active {
-  outline: none !important;
-}
-input:hover {
-  outline: none !important;
-}
-
 #keyboard {
   position: fixed;
   max-width: 300px;
   z-index: 10000;
-  background: var(--common-color);
-  padding: 5px;
+  background: var(--tertiary-color);
+  padding: 2px;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 #alphKeyboard{
   position: fixed;
   max-width: 480px;
   z-index: 10000;
-  background: var(--common-color);
+  padding: 2px;
+  background: var(--tertiary-color);
   padding: 5px;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 
 .keys, .alphakeys {
@@ -120,7 +112,7 @@ input:hover {
 }
 
 .key {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -129,7 +121,7 @@ input:hover {
   text-align: center;
 }
 .alphakey {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;

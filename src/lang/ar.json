@@ -34,5 +34,8 @@
   "profileBtn": "الملف الشخصي",
   "settingBtn": "الإعدادات",
   "syncDataOnline": "مزامنة البيانات",
-  "logoutButton": "تسجيل الخروج"
+  "logoutButton": "تسجيل الخروج",
+  "duplicate-bill-btn" : "Duplicate Bill",
+  "save-bill-btn": "Save Bill",
+  "updateDiscountBtn":"Update"
 }
