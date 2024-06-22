@@ -33,6 +33,28 @@ const fetchPaymentWise = async (fromDate, toDate) => {
 };
 
 const renderPaymentWise = (data) => {
+    if(data.length > 0){
+        const initialColumns = [
+            { title: "Date" },
+            { title: "Total" },
+            { title: "Discount By %" },
+            { title: "Discount" },
+            { title: "Total Tax" },
+            { title: "Final Amount" }
+        ];
+    
+        const payModes = {};
+        data.forEach((sale) => {
+            Object.keys(sale).forEach(key => {
+                if (key.startsWith('total') && !payModes[key] && key !== 'totalAmount' && key !== 'totalFinalAmount' && key !== 'totalDiscountPerc' && key !== 'totalDiscount' && key !== 'totalTax') {
+                    payModes[key] = true;
+                }
+            });
+        });
+    
+        Object.keys(payModes).forEach(paymode => {
+            initialColumns.push({ title: paymode.split("total")[1].toLowerCase() });
+        });
     const PaymentWiseTable = $("#payment-wise-table").DataTable({
         layout: {
             topStart: {
@@ -43,7 +65,8 @@ const renderPaymentWise = (data) => {
         destroy: true,
         paging: false,
         info: false,
-        ordering: false
+        ordering: false,
+        columns: initialColumns
     });
     PaymentWiseTable.clear();
     let totalAmount = 0;
@@ -51,38 +74,29 @@ const renderPaymentWise = (data) => {
     let totalDiscountPerc = 0;
     let totalDiscount = 0;
     let totalTax = 0;
-    let cashPayment = 0;
-    let cardPayment = 0;
-    let upiPayment = 0;
-    let otherPayment = 0;
 
     data.forEach((sale) => {
-        
-        PaymentWiseTable.row
-        .add([
+        totalAmount += parseFloat(sale.totalAmount);
+        totalFinalAmount += parseFloat(sale.totalFinalAmount);
+        totalDiscountPerc += parseFloat(sale.totalDiscountPerc);
+        totalDiscount += parseFloat(sale.totalDiscount);
+        totalTax += parseFloat(sale.totalTax);
+
+        const rowData = [
             new Date(sale._id.date).toLocaleDateString("en-GB"),
             sale.totalAmount.toFixed(2),
             sale.totalDiscountPerc ? sale.totalDiscountPerc.toFixed(2) : '0.00',
             sale.totalDiscount? sale.totalDiscount.toFixed(2) : '0.00',
             sale.totalTax? sale.totalTax.toFixed(2) : '0.00',
             sale.totalFinalAmount? sale.totalFinalAmount.toFixed(2) : '0.00',
-            sale.totalCash ? Number(sale.totalCash).toFixed(2) : '0.00',
-            sale.totalCard ? Number(sale.totalCard).toFixed(2) : '0.00',
-            sale.totalUpi ? Number(sale.totalUpi).toFixed(2) : '0.00',
-            sale.totalOther ? Number(sale.totalOther).toFixed(2) : '0.00',
-          ])
-          .draw(false);
-    
-        totalAmount += parseFloat(sale.totalAmount);
-        totalFinalAmount += parseFloat(sale.totalFinalAmount);
-        totalDiscountPerc += parseFloat(sale.totalDiscountPerc);
-        totalDiscount += parseFloat(sale.totalDiscount);
-        totalTax += parseFloat(sale.totalTax);
-        if (sale.totalCash) cashPayment += parseFloat(sale.totalCash);
-        if (sale.totalCard) cardPayment += parseFloat(sale.totalCard);
-        if (sale.totalUpi) upiPayment += parseFloat(sale.totalUpi);
-        if (sale.totalOther) otherPayment += parseFloat(sale.totalOther);
-      });
+            
+        ]
+        Object.keys(payModes).forEach(paymode => {
+            rowData.push(sale[paymode.toLowerCase()] ? sale[paymode.toLowerCase()].toFixed(2) : '0.00');
+        });
+        
+        PaymentWiseTable.row.add(rowData)
+  });
     
       // Add total row
       PaymentWiseTable.row
@@ -93,10 +107,31 @@ const renderPaymentWise = (data) => {
           totalDiscount.toFixed(2),
           totalTax.toFixed(2),
           totalFinalAmount.toFixed(2),
-          cashPayment.toFixed(2),
-          cardPayment.toFixed(2),
-          upiPayment.toFixed(2),
-          otherPayment.toFixed(2),
-        ])
-        .draw(false);
+          ...Object.keys(payModes).map(paymode => {
+            const total = data.reduce((total, sale) => total + (sale[paymode.toLowerCase()] || 0), 0);
+            return total.toFixed(2);
+        }),
+        ]).draw(false);
+
+        PaymentWiseTable.draw();
+    } else {
+        const locationWiseTable = $("#payment-wise-table").DataTable({
+            layout: {
+                topStart: {
+                    buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+                }
+            },
+            responsive: true,
+            destroy: true,
+            paging: false,
+            info: false,
+            ordering: false,
+        });
+    
+        // Clear existing table data
+        locationWiseTable.clear();
+    
+        // Draw DataTable
+        locationWiseTable.draw();
+        }
 };

@@ -32,83 +32,130 @@ const fetchMonthlySales = async (fromDate, toDate) => {
 };
 
 const rendermonthlySales = (data) => {
-  const monthlySalesTable = $("#monthly-sales-table").DataTable({
-    layout: {
-      topStart: {
-        buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+  console.log(data);
+  if(data.length > 0) {
+    const initialColumns = [
+      { title: "Bills" },
+      { title: "Total" },
+      { title: "Discount By %" },
+      { title: "Discount" },
+      { title: "Total Tax" },
+      { title: "Round Off" },
+      { title: "Final Amount" }
+    ];
+
+    const payModes = {};
+    Object.keys(data[0]).forEach(key => {
+      if (key.startsWith('total') && key !== 'totalAmount' && key !== 'totalFinalAmount' && key !== 'totalDiscountPerc' && key !== 'totalDiscount' && key !== 'totalTax' && key !== '_id') {
+        payModes[key] = true;
       }
-    },
-    responsive: true,
-    destroy: true,
-    paging: false,
-    info: false,
-    ordering: false
-  });
-  monthlySalesTable.clear();
+    });
 
-  let totalAmount = 0;
-  let totalTax = 0;
-  let totalRound = 0;
-  let totalDiscountPerc = 0;
-  let totalDiscount = 0;
-  let totalFinal = 0;
-  let cashPayment = 0;
-  let cardPayment = 0;
-  let upiPayment = 0;
-  let otherPayment = 0;
+    Object.keys(payModes).forEach(paymode => {
+      initialColumns.push({ title: paymode.split("total")[1].toLowerCase() });
+    });
 
-  data[0]?.sales?.forEach((sale) => {
-    monthlySalesTable.row
-      .add([
-        sale.bill_no,
-        new Date(sale.created_at).toLocaleDateString("en-GB"),
-        sale.total_amount.toFixed(2),
-        `${sale.discount_perc ? (sale.total_amount * (sale.discount_perc / 100)).toFixed(2)  : '0.00'}`,
-        `${sale.discount_rupees ? sale.discount_rupees.toFixed(2) : '0.00'}`,
-        `${sale.total_tax ? sale.total_tax.toFixed(2) : '0.00'}`,
-        `${sale.round_off}`,
-        sale.final_amount.toFixed(2),
-        sale.cash_pay ? sale.final_amount.toFixed(2) : '0.00',
-        sale.card_pay ? sale.final_amount.toFixed(2) : '0.00',
-        sale.upi_pay ? sale.final_amount.toFixed(2) : '0.00',
-        sale.other_pay ? sale.final_amount.toFixed(2) : '0.00',
-      ])
-      .draw(false);
+    // Initialize DataTable with all columns
+    const dailySalesTable = $("#monthly-sales-table").DataTable({
+      layout: {
+        topStart: {
+          buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        }
+      },
+      responsive: true,
+      destroy: true,
+      paging: false,
+      info: false,
+      ordering: false,
+      columns: initialColumns // Set all columns during initialization
+    });
 
-      if (!sale.round_off.startsWith("-")) {
-        totalRound += Number(sale.round_off);
-      } else if (sale.round_off.startsWith("-")) {
-        totalRound -= Number(sale.round_off.split("-")[1]);
-      }
+    // Clear existing table data
+    dailySalesTable.clear();
+
+    let totalAmount = 0;
+    let totalTax = 0;
+    let totalRound = 0;
+    let totalDiscountPerc = 0;
+    let totalDiscount = 0;
+    let totalFinal = 0;
+
+    // Populate rows in DataTable
+    data[0]?.sales?.forEach((sale) => {
+      const discountPerc = sale.discount_perc ? (sale.total_amount * sale.discount_perc / 100).toFixed(2) : '0.00';
+      const discountRupees = sale.discount_rupees ? sale.discount_rupees : '0.00';
+      const roundOff = sale.round_off ? sale.round_off : '0.00';
 
       totalAmount += parseFloat(sale.total_amount);
       totalTax += parseFloat(sale.total_tax);
-      totalDiscountPerc += sale.discount_perc ? parseFloat(sale.total_amount * sale.discount_perc / 100) : 0;
-      totalDiscount += sale.discount_rupees ? parseFloat(sale.discount_rupees) : 0;
+      totalDiscountPerc += parseFloat(discountPerc);
+      totalDiscount += parseFloat(discountRupees);
       totalFinal += parseFloat(sale.final_amount);
-  
-      if (sale.cash_pay) cashPayment += parseFloat(sale.final_amount);
-      if (sale.card_pay) cardPayment += parseFloat(sale.final_amount);
-      if (sale.upi_pay) upiPayment += parseFloat(sale.final_amount);
-      if (sale.other_pay) otherPayment += parseFloat(sale.final_amount);
 
-  });
+      const rowData = [
+        sale.bill_no,
+        sale.total_amount.toFixed(2),
+        discountPerc,
+        discountRupees,
+        sale.total_tax.toFixed(2),
+        roundOff,
+        sale.final_amount.toFixed(2)
+      ];
 
-  // Add total row
-  monthlySalesTable.row
-    .add([
-      '',
+      Object.keys(payModes).forEach(paymode => {
+        const paymodeKey = paymode.split("total")[1].toLowerCase();
+        rowData.push(sale.pay_mode.toLowerCase() === paymodeKey ? sale.final_amount.toFixed(2) : '0.00');
+      });
+
+      dailySalesTable.row.add(rowData);
+
+      if (!roundOff.startsWith("-")) {
+        totalRound += Number(roundOff);
+      } else if (roundOff.startsWith("-")) {
+        totalRound -= Number(roundOff.split("-")[1]);
+      }
+    });
+
+    // Add overall totals row
+    const totalsRow = [
       'Total',
       totalAmount.toFixed(2),
       totalDiscountPerc.toFixed(2),
       totalDiscount.toFixed(2),
       totalTax.toFixed(2),
       totalRound.toFixed(2),
-      totalFinal.toFixed(2),
-      cashPayment.toFixed(2),
-      cardPayment.toFixed(2),
-      upiPayment.toFixed(2),
-      otherPayment.toFixed(2),
-    ])
-    .draw(false);
+      totalFinal.toFixed(2)
+    ];
+
+    Object.keys(payModes).forEach(paymode => {
+      const total = data.reduce((sum, saleData) => {
+        return sum + (saleData[paymode.toLowerCase()] || 0);
+      }, 0);
+      totalsRow.push(total.toFixed(2));
+    });
+
+    dailySalesTable.row.add(totalsRow).draw(false);
+
+    // Draw DataTable
+    dailySalesTable.draw();
+  } else {
+    const dailySalesTable = $("#monthly-sales-table").DataTable({
+      layout: {
+        topStart: {
+          buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+        }
+      },
+      responsive: true,
+      destroy: true,
+      paging: false,
+      info: false,
+      ordering: false
+    });
+
+    // Clear existing table data
+    dailySalesTable.clear();
+
+    // Draw DataTable
+    dailySalesTable.draw();
+  }
 };

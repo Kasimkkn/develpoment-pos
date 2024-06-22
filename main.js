@@ -1760,6 +1760,21 @@ ipcMain.on("fetch-daily-sales", async (event, datesByInput) => {
     const startDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 23, 59, 59, 999);
 
+    const paymodes = await Paymode.find({ status: true });
+
+    const groupStages = {
+      _id: null,
+      sales: { $push: "$$ROOT" }
+    };
+    
+    paymodes.forEach(paymode => {
+      groupStages[`total${paymode.paymode_name}`] = {
+        $sum: {
+          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+        }
+      };
+    });
+
     const aggregationPipeline = [
       {
         $match: {
@@ -1770,14 +1785,7 @@ ipcMain.on("fetch-daily-sales", async (event, datesByInput) => {
         }
       },
       {
-        $group: {
-          _id: null,
-          totalCash: { $sum: { $cond: { if: { $eq: ["$cash_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalCard: { $sum: { $cond: { if: { $eq: ["$card_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalUpi: { $sum: { $cond: { if: { $eq: ["$upi_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalOther: { $sum: { $cond: { if: { $eq: ["$other_pay", true] }, then: "$final_amount", else: 0 } } },
-          sales: { $push: "$$ROOT" }
-        }
+        $group: groupStages
       }
     ];
 
@@ -1797,6 +1805,21 @@ ipcMain.on("fetch-monthly-sales", async (event, fromDate, toDate) => {
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
 
+    const paymodes = await Paymode.find({ status: true });
+
+    const groupStages = {
+      _id: null,
+      sales: { $push: "$$ROOT" }
+    };
+    
+    paymodes.forEach(paymode => {
+      groupStages[`total${paymode.paymode_name}`] = {
+        $sum: {
+          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+        }
+      };
+    });
+
     const aggregationPipeline = [
       {
         $match: {
@@ -1807,14 +1830,7 @@ ipcMain.on("fetch-monthly-sales", async (event, fromDate, toDate) => {
         }
       },
       {
-        $group: {
-          _id: null,
-          totalCash: { $sum: { $cond: { if: { $eq: ["$cash_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalCard: { $sum: { $cond: { if: { $eq: ["$card_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalUpi: { $sum: { $cond: { if: { $eq: ["$upi_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalOther: { $sum: { $cond: { if: { $eq: ["$other_pay", true] }, then: "$final_amount", else: 0 } } },
-          sales: { $push: "$$ROOT" }
-        }
+        $group: groupStages
       }
     ];
 
@@ -1943,8 +1959,6 @@ ipcMain.on("fetch-tableWise-sales", async (event, fromDate, toDate) => {
 });
 
 // location-wise report
-
-
 ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationName) => {
   try {
     const selectedStartDate = new Date(fromDate);
@@ -2159,13 +2173,36 @@ ipcMain.on("fetch-ItemWise-monthly-sales", async (event, fromDate, toDate) => {
   }
 })
 
-// payment wise monthly sales
+// payment wise
 ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
   try {
     const selectedStartDate = new Date(fromDate);
     const selectedEndDate = new Date(toDate);
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
+
+    const paymodes = await Paymode.find({ status: true });
+
+    const groupStages = {
+      _id: {
+        date: { $dateToString: { format: "%Y-%m-%d", date: "$created_at" } },
+      },
+      totalAmount: { $sum: "$total_amount" },
+      totalDiscountPerc: { $sum: { $multiply: ["$discount_perc", { $divide: ["$total_amount", 100] }] } },
+      totalDiscount: { $sum: "$discount_rupees" },
+      totalTax: { $sum: "$total_tax" },
+      totalFinalAmount: { $sum: "$final_amount" }
+    };
+
+    // Dynamically add group stages for each paymode
+    paymodes.forEach(paymode => {
+      const fieldName = `total${paymode.paymode_name}`;
+      groupStages[fieldName] = {
+        $sum: {
+          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+        }
+      };
+    });
 
     const aggregationPipeline = [
       {
@@ -2174,36 +2211,22 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
             $gte: startDate,
             $lte: endDate
           },
-          "pay_mode": { $ne: "unpaid" } // Exclude records where pay_mode is "unpaid"
+          "pay_mode": { $ne: "unpaid" }
         }
       },
-      {
-        $group: {
-          _id: {
-            date: { $dateToString: { format: "%Y-%m-%d", date: "$created_at" } },
-          },
-          totalAmount: { $sum: "$total_amount" },
-          totalDiscountPerc: { $sum: { $multiply: ["$discount_perc", { $divide: ["$total_amount", 100] }] } },
-          totalDiscount: { $sum: "$discount_rupees" },
-          totalTax: { $sum: "$total_tax" },
-          totalCash: { $sum: { $cond: { if: { $eq: ["$cash_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalFinalAmount: { $sum: "$final_amount" },
-          totalCard: { $sum: { $cond: { if: { $eq: ["$card_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalUpi: { $sum: { $cond: { if: { $eq: ["$upi_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalOther: { $sum: { $cond: { if: { $eq: ["$other_pay", true] }, then: "$final_amount", else: 0 } } },
-        }
-      }
+      { $group: groupStages }
     ];
 
-
     const data = await Bill.aggregate(aggregationPipeline);
+    console.log(data)
     event.reply("paymentWise-sales-data", data);
 
   } catch (error) {
-    console.log("error fetching payment-wise monthly sales", error);
+    console.error("Error fetching payment-wise monthly sales:", error);
     event.reply("paymentWise-sales-error", "Error fetching payment-wise monthly sales");
   }
 });
+
 
 // unpaid bills 
 ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {

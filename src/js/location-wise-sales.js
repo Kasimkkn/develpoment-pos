@@ -49,7 +49,6 @@ ipcRenderer.on("location-data", (event, data) => {
 
 
 const renderlocationWise = (data) => {
-    console.log(data)
     if(data.length > 0) {
     const initialColumns = [
         { title: "Bills" },
