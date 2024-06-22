@@ -23,7 +23,7 @@ generateReportBtn.addEventListener("click", () => {
 
 const fetchlocationWise = async (fromDate, toDate) => {
     try {
-        ipcRenderer.send("fetch-locationWise-sales",  fromDate, toDate , locationName );
+        ipcRenderer.send("fetch-locationWise-sales", fromDate, toDate, locationName);
         ipcRenderer.once("locationWise-sales-data", (event, data) => {
             renderlocationWise(data);
         });
@@ -37,17 +37,44 @@ ipcRenderer.on("location-data", (event, data) => {
     selectlocationWise.innerHTML = ''
     data.forEach((location) => {
         const option = document.createElement("option");
-        option.textContent = location._doc.location_name; 
+        option.textContent = location._doc.location_name;
         option.value = location._doc.location_name;
 
         selectlocationWise.appendChild(option);
-        selectlocationWise.addEventListener("change" , (e)=>{
+        selectlocationWise.addEventListener("change", (e) => {
             locationName = e.target.value
         })
     })
 })
 
+
 const renderlocationWise = (data) => {
+    console.log(data)
+    if(data.length > 0) {
+    const initialColumns = [
+        { title: "Bills" },
+        { title: "Table No" },
+        { title: "Total" },
+        { title: "Discount By %" },
+        { title: "Discount" },
+        { title: "Total Tax" },
+        { title: "Final Amount" }
+    ];
+
+    const payModes = {};
+    data.forEach((sale) => {
+        Object.keys(sale).forEach(key => {
+            if (key.startsWith('total') && !payModes[key] && key !== 'totalAmount' && key !== 'totalFinalAmount' && key !== 'totalDiscountPerc' && key !== 'totalDiscount' && key !== 'totalTax') {
+                payModes[key] = true;
+            }
+        });
+    });
+
+    Object.keys(payModes).forEach(paymode => {
+        initialColumns.push({ title: paymode.split("total")[1].toLowerCase() });
+    });
+
+    // Initialize DataTable with all columns
     const locationWiseTable = $("#location-wise-table").DataTable({
         layout: {
             topStart: {
@@ -58,9 +85,11 @@ const renderlocationWise = (data) => {
         destroy: true,
         paging: false,
         info: false,
-        ordering: false
+        ordering: false,
+        columns: initialColumns // Set all columns during initialization
     });
 
+    // Clear existing table data
     locationWiseTable.clear();
 
     let totalAmount = 0;
@@ -68,53 +97,69 @@ const renderlocationWise = (data) => {
     let totalDiscountPerc = 0;
     let totalDiscount = 0;
     let totalTax = 0;
-    let cashPayment = 0;
-    let cardPayment = 0;
-    let upiPayment = 0;
-    let otherPayment = 0;
 
+            // Populate rows in DataTable
     data.forEach((sale) => {
-        locationWiseTable.row
-        .add([
+        totalAmount += sale.totalAmount;
+        totalFinalAmount += sale.totalFinalAmount;
+        totalDiscountPerc += sale.totalDiscountPerc || 0;
+        totalDiscount += sale.totalDiscount || 0;
+        totalTax += sale.totalTax || 0;
+
+        const rowData = [
             sale._id.bill_no,
-            sale.table_no[0], 
+            sale.table_no[0],
             sale.totalAmount.toFixed(2),
             sale.totalDiscountPerc ? sale.totalDiscountPerc.toFixed(2) : '0.00',
             sale.totalDiscount ? sale.totalDiscount.toFixed(2) : '0.00',
             sale.totalTax ? sale.totalTax.toFixed(2) : '0.00',
-            sale.totalFinalAmount.toFixed(2),
-            sale.totalCash ? Number(sale.totalCash).toFixed(2) : '0.00',
-            sale.totalCard ? Number(sale.totalCard).toFixed(2) : '0.00',
-            sale.totalUpi ? Number(sale.totalUpi).toFixed(2) : '0.00',
-            sale.totalOther ? Number(sale.totalOther).toFixed(2) : '0.00',
-        ])
-        .draw(false);
+            sale.totalFinalAmount.toFixed(2)
+        ];
 
-        totalAmount += parseFloat(sale.totalAmount);
-        totalFinalAmount += parseFloat(sale.totalFinalAmount);
-        totalDiscountPerc += parseFloat(sale.totalDiscountPerc);
-        totalDiscount += parseFloat(sale.totalDiscount);
-        totalTax += parseFloat(sale.totalTax);
-        cashPayment += parseFloat(sale.totalCash || 0);
-        cardPayment += parseFloat(sale.totalCard || 0);
-        upiPayment += parseFloat(sale.totalUpi || 0);
-        otherPayment += parseFloat(sale.totalOther || 0);
+        Object.keys(payModes).forEach(paymode => {
+            rowData.push(sale[paymode.toLowerCase()] ? sale[paymode.toLowerCase()].toFixed(2) : '0.00');
+        });
+
+        locationWiseTable.row.add(rowData);
     });
-
-    // Add total row
-    locationWiseTable.row
-    .add([
-        ' ',
+    // Add overall totals row
+    locationWiseTable.row.add([
+        '',
         'Total',
         totalAmount.toFixed(2),
         totalDiscountPerc.toFixed(2),
         totalDiscount.toFixed(2),
         totalTax.toFixed(2),
         totalFinalAmount.toFixed(2),
-        cashPayment.toFixed(2),
-        cardPayment.toFixed(2),
-        upiPayment.toFixed(2),
-        otherPayment.toFixed(2),
-    ])
-    .draw(false);
+        ...Object.keys(payModes).map(paymode => {
+            const total = data.reduce((total, sale) => total + (sale[paymode.toLowerCase()] || 0), 0);
+            return total.toFixed(2);
+        }),
+    ]).draw(false);
+
+    // Draw DataTable
+    locationWiseTable.draw();
+    }
+    else{
+    const locationWiseTable = $("#location-wise-table").DataTable({
+        layout: {
+            topStart: {
+                buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5']
+            }
+        },
+        responsive: true,
+        destroy: true,
+        paging: false,
+        info: false,
+        ordering: false,
+    });
+
+    // Clear existing table data
+    locationWiseTable.clear();
+
+    // Draw DataTable
+    locationWiseTable.draw();
+    }
 };
+
+

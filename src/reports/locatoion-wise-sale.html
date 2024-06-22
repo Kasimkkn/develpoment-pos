@@ -73,11 +73,17 @@
                 class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/billbook.html">Bill Book</a>
             </li>
-            <li>
+                        <li>
               <a id="master_loyalty"
                 class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/loyalty.html">Loyalty</a>
             </li>
+            <li>
+              <a id="pay_mode"
+                class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+                href="../masters/paymode.html">Pay Mode</a>
+            </li>
+
             <li id="userLink">
               <a id="master_user" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
                 href="../masters/user.html">Users</a>
@@ -230,7 +236,7 @@
 
 
   <main class="bg-primary-two">
-    <div class="py-6 px-4 sm:px-6 lg:px-8">
+    <div class="py-2 px-4">
       <h1>location Wise Sales</h1>
       <div class="flex gap-4 items-center justify-start mt-4 max-w-sm">
         <div class="relative">
@@ -254,8 +260,16 @@
         </button>
       </div>
 
-
       <div class="relative overflow-x-auto mt-4">
+        <div class="">
+            <table id="location-wise-table" class="w-full">
+                <thead id="dynamic-thead" class="text-xs text-black capitalize bg-primary"></thead>
+                <tbody id="dynamic-tbody" class="bg-secondary text-sm"></tbody>
+            </table>
+        </div>
+    </div>
+    
+      <!-- <div class="relative overflow-x-auto mt-4">
         <div class="">
           <table id="location-wise-table" class="w-full ">
             <thead class="text-xs text-black uppercase bg-primary ">
@@ -278,8 +292,9 @@
           </table>
         </div>
 
-      </div>
-  </main>
+      </div> -->
+  
+    </main>
 
 <div id="keyboard" class="hidden fixed shadow-lg">
   </div>

@@ -269,7 +269,7 @@ datalist option{
   background-color: var(--common-color); 
 }
 .checkbox-container input[type="checkbox"]:checked::after {
-  content: "•";
+  content: " ";
   color: white;
   font-weight: bold;
   font-size: 16px; 

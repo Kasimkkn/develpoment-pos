@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.once("unsettled-bills-data", (event, data) => {
         unsettledBills = data;
         renderUnsettledBills(data);
-    })
+    });
 
-})
-
+    fetchPayModes();
+});
 
 UnsettledBilldatepicker.addEventListener("input", () => {
     const datesByPicker = UnsettledBilldatepicker.value;
@@ -31,7 +31,7 @@ UnsettledBilldatepicker.addEventListener("input", () => {
         unsettledBills = data;
         renderUnsettledBills(data);
     })
-})
+});
 
 const fetchUnsettledBills = async (datesByPicker) => {
     try {
@@ -61,25 +61,25 @@ const renderUnsettledBills = (data) => {
             <input type="checkbox" class="w-4 h-4 bg-gray-100 rounded" data-bill-no="${sale._doc.bill_no}">
         </div>
     </td>
-            <td class="px-6 py-4">
-                ${sale._doc.bill_no}        
-            </td>
-            <td class="px-6 py-4">
-                    <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.customer_name ? sale._doc.customer_name : 'no name'}
-            </td>
-            <td class="px-6 py-4">
-                    <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.discount_perc ? sale._doc.discount_perc : 0}%
-            </td>
-            <td class="px-6 py-4">
-                    <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.discount_rupees ? sale._doc.discount_rupees : 0}
-            </td>
-            <td class="px-6 py-4">
-                    <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.round_off}
-            </td>
-            <td class="px-6 py-4">
-                    <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.final_amount}
-            </td>
-        `;
+        <td class="px-6 py-4">
+            ${sale._doc.bill_no}        
+        </td>
+        <td class="px-6 py-4">
+                <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.customer_name ? sale._doc.customer_name : 'no name'}
+        </td>
+        <td class="px-6 py-4">
+                <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.discount_perc ? sale._doc.discount_perc : 0}%
+        </td>
+        <td class="px-6 py-4">
+                <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.discount_rupees ? sale._doc.discount_rupees : 0}
+        </td>
+        <td class="px-6 py-4">
+                <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.round_off}
+        </td>
+        <td class="px-6 py-4">
+                <div class="h-2.5 w-2.5 rounded-full me-2"></div> ${sale._doc.final_amount}
+        </td>
+    `;
         unsettledBillsTable.appendChild(tr);
         checkboxes = document.querySelectorAll('input[type="checkbox"]');
     });
@@ -90,27 +90,26 @@ const mainCheckbox = document.getElementById('checkbox-all-search');
 mainCheckbox.addEventListener("click", () => {
     checkboxes.forEach((checkbox) => {
         checkbox.checked = mainCheckbox.checked;
-        if(checkbox.checked == false){
+        if (checkbox.checked == false) {
             allBills = [];
         }
-        if(checkbox.checked == true){
+        if (checkbox.checked == true) {
             allBills.push(checkbox.dataset.billNo);
         }
         checkbox.addEventListener("click", () => {
-            if(checkbox.checked == false){
+            if (checkbox.checked == false) {
                 const index = allBills.findIndex(element => element == checkbox.dataset.billNo);
                 allBills.splice(index, 1);
-                if(allBills.length == 0){
+                if (allBills.length == 0) {
                     mainCheckbox.checked = false;
                 }
             }
-            if(checkbox.checked == true){
+            if (checkbox.checked == true) {
                 allBills.push(checkbox.dataset.billNo);
             }
         });
     });
 });
-
 
 function setPayMode(paymodeType) {
     try {
@@ -124,13 +123,12 @@ function setPayMode(paymodeType) {
                     showConfirmButton: false,
                     timer: 1250
                 })
-                fetchUnsettledBills(datesByPicker);
-                // ipcRenderer.once("unsettled-bills-data", (event, data) => {
-                //     unsettledBills = data;
-                //     renderUnsettledBills(data);
-                // })
-
             })
+            fetchUnsettledBills(datesByPicker);
+            ipcRenderer.once("unsettled-bills-data", (event, data) => {
+                unsettledBills = data;
+                renderUnsettledBills(data);
+            });
         }
         else {
             let checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -142,19 +140,45 @@ function setPayMode(paymodeType) {
                             icon: 'success',
                             title: data,
                             showConfirmButton: false,
-                            timer: 750
+                            timer: 1250
                         });
-                        // fetchUnsettledBills(datesByPicker);
-                        // ipcRenderer.once("unsettled-bills-data", (event, data) => {
-                        //     unsettledBills = data;
-                        //     renderUnsettledBills(data);
-                        // })
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1250);
                     });
                 });
             }
+
         }
     } catch (error) {
         console.log(error);
     }
 }
 
+// Fetch and render pay modes dynamically
+const fetchPayModes = async () => {
+    try {
+        ipcRenderer.send("fetch-paymode");
+        ipcRenderer.on("paymode-data", (event, payModes) => {
+            renderPayModes(payModes);
+        });
+    } catch (error) {
+        console.error("Error fetching paymodes:", error);
+    }
+}
+
+const renderPayModes = (payModes) => {
+    console.log(payModes);
+    const payModeList = document.getElementById("payModeList");
+    payModeList.innerHTML = "";
+
+    payModes.forEach((payMode) => {
+        if (payMode._doc.status) {
+            const li = document.createElement("li");
+            li.innerText = payMode._doc.paymode_name.toUpperCase();
+            li.classList.add("hover:underline", "text-xl", "text-common", "hover:text-black", "active:text-black");
+            li.onclick = () => setPayMode(payMode._doc.paymode_name.toUpperCase());
+            payModeList.appendChild(li);
+        }
+    });
+}

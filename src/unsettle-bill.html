@@ -95,42 +95,17 @@
         <div class="py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg">
           <h1 class="text-2xl text-center">Select Pay Mode</h1>
           <div class="flex gap-4 items-center justify-center mt-4">
-            <ul class="flex gap-4 items-start justify-center mt-4 flex-col">
-              <li
-                onclick="setPayMode('CASH')"
-                class="hover:underline text-xl text-common hover:text-black active:text-black"
-              >
-                CASH
-              </li>
-              <li
-                onclick="setPayMode('UPI')"
-                class="hover:underline text-xl text-common hover:text-black active:text-black"
-              >
-                UPI
-              </li>
-              <li
-                onclick="setPayMode('CARD')"
-                class="hover:underline text-xl text-common hover:text-black active:text-black"
-              >
-                CARD
-              </li>
-              <li
-                onclick="setPayMode('OTHER')"
-                class="hover:underline text-xl text-common hover:text-black active:text-black"
-              >
-                OTHER
-              </li>
+            <ul id="payModeList" class="flex gap-4 items-start justify-center mt-4 flex-col">
+              <!-- Pay mode options will be dynamically rendered here -->
             </ul>
           </div>
         </div>
       </aside>
     </div>
 
-    <div id="keyboard" class="hidden fixed shadow-lg">
-    </div>
-      <div id="alphKeyboard" class="hidden fixed shadow-lg">
-    </div>
-
+    <div id="keyboard" class="hidden fixed shadow-lg"></div>
+    <div id="alphKeyboard" class="hidden fixed shadow-lg"></div>
+    
     <script src="global.js"></script>
     <script src="js/unsettled-bills.js"></script>
     <script defer src="../node_modules/flowbite/dist/flowbite.min.js"></script>

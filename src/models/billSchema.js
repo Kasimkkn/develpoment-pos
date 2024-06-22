@@ -64,22 +64,7 @@ const billSchema = new mongoose.Schema({
      updated_at:{
         type: Date,
      },
-     cash_pay:{
-        type:Boolean,
-        default:false
-     },
-     card_pay:{
-        type:Boolean,
-        default:false
-     },
-     upi_pay:{
-        type:Boolean,
-        default:false
-     },
-     other_pay:{
-        type:Boolean,
-        default:false
-     },
+
      is_void_payment:{
         type:Boolean,
         default:false
@@ -123,7 +108,7 @@ const billSchema = new mongoose.Schema({
      },
      pay_mode:{
         type:String,
-        default:"CASH"
+        default:"unpaid"
      }, 
      is_synced:{
         type: Boolean,

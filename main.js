@@ -27,6 +27,7 @@ events.EventEmitter.defaultMaxListeners = Infinity;
 
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
 import Supplier from "./src/models/supplierSchema.js";
+import Paymode from "./src/models/paymodeSchema.js";
 
 config({
   path: "./.env",
@@ -423,56 +424,56 @@ ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, toda
   }
 });
 
-ipcMain.on('create-only-first-user' , async (event) => {
+ipcMain.on('create-only-first-user', async (event) => {
   try {
     const getUsers = await User.find();
-    if(getUsers.length == 0){
-    const user = new User({
-      user_no: 1,
-      user_id: "admin@123",
-      password: "admin@123",
-      first_name: "admin",
-      last_name: "new",
-      address: "somewhere  on earth",
-      mobile_no: 1112223334,
-      GST_no: "29AE932UD9892JC02",
-      tax_perc: 5,
-      creation_date: Date.now(),
-      user_role: "admin",
-      status: true,
-      __v: 0
-    });
-    user.save().then(() => {
-      const userRight = new UserRights({
+    if (getUsers.length == 0) {
+      const user = new User({
         user_no: 1,
+        user_id: "admin@123",
+        password: "admin@123",
         first_name: "admin",
-        master_option: true,
-        edit_bills: true,
-        reports: true,
-        item_wise_report: true,
-        category_wise_report: true,
-        item_wise_monthly_report: true,
-        table_wise_report: true,
-        unpaid_bills: true,
-        payment_wise_report: true,
-        location_wise_report: true,
-        daily_sales: true,
-        monthly_sales: true,
-        stocks: true,
-        stock_details: true,
-        purchase_details: true,
-        receipe_details: true,
-        is_synced: true,
-      })
-      userRight.save().then(() => {
-        console.log("User created successfully");
+        last_name: "new",
+        address: "somewhere  on earth",
+        mobile_no: 1112223334,
+        GST_no: "29AE932UD9892JC02",
+        tax_perc: 5,
+        creation_date: Date.now(),
+        user_role: "admin",
+        status: true,
+        __v: 0
+      });
+      user.save().then(() => {
+        const userRight = new UserRights({
+          user_no: 1,
+          first_name: "admin",
+          master_option: true,
+          edit_bills: true,
+          reports: true,
+          item_wise_report: true,
+          category_wise_report: true,
+          item_wise_monthly_report: true,
+          table_wise_report: true,
+          unpaid_bills: true,
+          payment_wise_report: true,
+          location_wise_report: true,
+          daily_sales: true,
+          monthly_sales: true,
+          stocks: true,
+          stock_details: true,
+          purchase_details: true,
+          receipe_details: true,
+          is_synced: true,
+        })
+        userRight.save().then(() => {
+          console.log("User created successfully");
+        }).catch((error) => {
+          console.error("Error creating user right:", error);
+        })
       }).catch((error) => {
-        console.error("Error creating user right:", error);
+        console.error("Error creating user:", error);
       })
-    }).catch((error) => {
-      console.error("Error creating user:", error);
-    })    
-  }
+    }
   } catch (error) {
     console.error("Error creating user:", error);
   }
@@ -641,10 +642,10 @@ ipcMain.on("new-Supplier", async (event, supplier) => {
 
 
 // edit-Supplier
-ipcMain.on("edit-supplier", async (event,SupplierId , supplier) => {
+ipcMain.on("edit-supplier", async (event, SupplierId, supplier) => {
   try {
     const supplierData = await Supplier.findOne({ supplier_no: SupplierId });
-    if(!supplierData){
+    if (!supplierData) {
       event.reply("supplier-error", "Supplier not found");
       return;
     }
@@ -820,7 +821,7 @@ ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
       table_no: tableNo,
       location_name: locationName,
       item_no: item._doc.item_no,
-      sp_info : item._doc.sp_info
+      sp_info: item._doc.sp_info
     });
     if (newQuantity === 0) {
       await existingItem.deleteOne();
@@ -1236,7 +1237,7 @@ ipcMain.on("edit-category", async (event, categoryId, categoryData) => {
         category_name: categoryData.categoryName,
         description: categoryData.description,
         status: categoryData.isActive,
-        is_synced : false,
+        is_synced: false,
       }
     );
     event.reply("edit-category-success", data);
@@ -1283,7 +1284,7 @@ ipcMain.on("edit-location", async (event, locationId, locationData) => {
         location_price: locationData.rate,
         is_taxable: locationData.isTaxable,
         status: locationData.isActive,
-        is_synced : false,
+        is_synced: false,
       }
     );
     const locationsData = await Location.find({}).sort({ location_no: 1 });
@@ -1336,7 +1337,7 @@ ipcMain.on("edit-user", async (event, userId, userData) => {
         last_name: userData.lastName,
         user_role: userData.Role,
         status: userData.isActive,
-        is_synced : false,
+        is_synced: false,
       }
     );
     event.reply("edit-user-success", data);
@@ -1456,7 +1457,7 @@ ipcMain.on("edit-bill-book", async (event, billBookId, billBookData) => {
       { bill_book: Number(billBookId) },
       {
         is_active: billBookData.isActive,
-        is_synced:false,
+        is_synced: false,
       }
     );
 
@@ -1496,7 +1497,7 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
       if (existingItem) {
         existingItem.quantity = item.quantity;
         await existingItem.save();
-      } 
+      }
       else {
         await ExistingCartItem.create({
           table_no,
@@ -1696,6 +1697,62 @@ ipcMain.on("save-transaction", async (event, transactionData) => {
   }
 })
 
+// fetch-paymode
+ipcMain.on("fetch-paymode", async (event) => {
+  try {
+    const payModes = await Paymode.find({});
+    event.reply("paymode-data", payModes);
+  } catch (error) {
+    console.error("Error fetching paymodes:", error);
+    event.reply("fetch-paymode-error", "Error fetching paymodes");
+  }
+})
+
+// new-paymode
+ipcMain.on("new-paymode", async (event, paymodeData) => {
+  try {
+    // get next paymode_no
+    const maxPaymode = await Paymode.findOne({}, { paymode_no: 1 }).sort({ paymode_no: -1 });
+    let maxPaymodeNo = 0;
+    if (maxPaymode) {
+      maxPaymodeNo = maxPaymode.paymode_no;
+    }
+
+    await Paymode.create({
+      paymode_no: maxPaymodeNo + 1,
+      paymode_name: paymodeData.paymode_name,
+      status: paymodeData.status,
+      is_synced: false
+    });
+    console.log("new paymode created")
+    const data = await Paymode.find({});
+    event.reply("paymode-data", data);
+  } catch (error) {
+    console.error("Error creating new paymode:", error);
+    event.reply("save-paymode-error", "Error creating new paymode");
+  }
+})
+
+// edit-PayMode
+ipcMain.on("edit-paymode", async (event, PayModeId, PayModeData) => {
+  try {
+    const paymode = await Paymode.findOne({
+      paymode_no: PayModeId
+    });
+    if (paymode) {
+      paymode.paymode_name = PayModeData.paymode_name;
+      paymode.status = PayModeData.status;
+      paymode.is_synced = false
+      await paymode.save();
+    }
+    const data = await Paymode.find()
+    event.reply("paymode-data", data);
+  } catch (error) {
+    console.error("Error editing item:", error);
+    event.reply("edit-paymode-error", "Error editing item");
+  }
+})
+
 // daily -sales report
 ipcMain.on("fetch-daily-sales", async (event, datesByInput) => {
   try {
@@ -1776,7 +1833,7 @@ ipcMain.on("fetch-monthly-purchase", async (event, fromDate, toDate) => {
     const selectedEndDate = new Date(toDate);
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
-    
+
     const data = await Purchase.find({ date: { $gte: startDate, $lte: endDate } });
     event.reply("monthly-purchase-data", data);
   } catch (error) {
@@ -1886,12 +1943,37 @@ ipcMain.on("fetch-tableWise-sales", async (event, fromDate, toDate) => {
 });
 
 // location-wise report
+
+
 ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationName) => {
   try {
     const selectedStartDate = new Date(fromDate);
     const selectedEndDate = new Date(toDate);
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
+    
+    const paymodes = await Paymode.find({ status: true });
+
+    const groupStages = {
+      _id: {
+        location_name: "$location_name",
+        bill_no: "$bill_no"
+      },
+      table_no: { $addToSet: "$table_no" },
+      totalAmount: { $sum: "$total_amount" },
+      totalDiscountPerc: { $sum: { $multiply: ["$discount_perc", { $divide: ["$total_amount", 100] }] } },
+      totalDiscount: { $sum: "$discount_rupees" },
+      totalTax: { $sum: "$total_tax" },
+      totalFinalAmount: { $sum: "$final_amount" }
+    };
+
+    paymodes.forEach(paymode => {
+      groupStages[`total${paymode.paymode_name}`] = {
+        $sum: {
+          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+        }
+      };
+    });
 
     const aggregationPipeline = [
       {
@@ -1903,31 +1985,15 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
           "location_name": locationName
         }
       },
-      {
-        $group: {
-          _id: {
-            location_name: "$location_name",
-            bill_no: "$bill_no"
-          },
-          table_no: { $addToSet: "$table_no" },
-          totalAmount: { $sum: "$total_amount" },
-          totalDiscountPerc: { $sum: { $multiply: ["$discount_perc", { $divide: ["$total_amount", 100] }] } },
-          totalDiscount: { $sum: "$discount_rupees" },
-          totalTax : { $sum: "$total_tax" },
-          totalFinalAmount: { $sum: "$final_amount" },
-          totalCash: { $sum: { $cond: { if: { $eq: ["$cash_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalCard: { $sum: { $cond: { if: { $eq: ["$card_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalUpi: { $sum: { $cond: { if: { $eq: ["$upi_pay", true] }, then: "$final_amount", else: 0 } } },
-          totalOther: { $sum: { $cond: { if: { $eq: ["$other_pay", true] }, then: "$final_amount", else: 0 } } },
-        }
-      }
+      { $group: groupStages }
     ];
 
     const data = await Bill.aggregate(aggregationPipeline);
+    console.log(data)
     event.reply("locationWise-sales-data", data);
   } catch (error) {
-    console.log("error fetching monthly sales", error);
-    event.reply("fetch-monthly-sales-error", "Error fetching monthly sales");
+    console.error("Error fetching location-wise sales:", error);
+    throw error;
   }
 });
 
@@ -2302,6 +2368,7 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
 // set pay mode
 ipcMain.on("set-paymode", async (event, allBills, payMode) => {
   try {
+    console.log(first)
     for (const billNo of allBills) {
       const billInfo = await Bill.findOne({ bill_no: billNo });
 
@@ -2312,22 +2379,9 @@ ipcMain.on("set-paymode", async (event, allBills, payMode) => {
       if (billInfo.pay_mode === "unpaid") {
         billInfo.pay_mode = payMode;
       }
-
-      if (payMode === "CASH") {
-        billInfo.cash_pay = true;
-      } else if (payMode === "CARD") {
-        billInfo.card_pay = true;
-      } else if (payMode === "UPI") {
-        billInfo.upi_pay = true;
-        billInfo.is_locked = true;
-      } else if (payMode === "OTHER") {
-        billInfo.other_pay = true;
-        billInfo.is_locked = true;
-      }
       billInfo.is_synced = false;
       await billInfo.save();
     }
-
     event.reply("set-paymode-success", "Payment mode set successfully");
   } catch (error) {
     console.log("Error setting payment mode", error);
@@ -2338,6 +2392,7 @@ ipcMain.on("set-paymode", async (event, allBills, payMode) => {
 // set single pay mode
 ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
   try {
+    console.log("set-single-paymode", billNo, payMode);
     const billDetail = await Bill.findOne({ bill_no: billNo });
 
     if (!billDetail) {
@@ -2346,19 +2401,6 @@ ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
 
     if (billDetail.pay_mode === "unpaid") {
       billDetail.pay_mode = payMode;
-
-      if (payMode === "CASH") {
-        billDetail.cash_pay = true;
-      } else if (payMode === "CARD") {
-        billDetail.card_pay = true;
-      } else if (payMode === "UPI") {
-        billDetail.upi_pay = true;
-        billDetail.is_locked = true;
-      } else if (payMode === "OTHER") {
-        billDetail.other_pay = true;
-        billDetail.is_locked = true;
-      }
-
       billDetail.is_synced = false;
       await billDetail.save();
 
@@ -2751,15 +2793,15 @@ ipcMain.on("deduct-qty", async (event, data) => {
       for (let subItem of rawMaterial.sub_item_details) {
         const itemDetail = data.find(item => item.item_name === rawMaterial.item_name);
         if (itemDetail) {
-          const quantityMultiplier = itemDetail.quantity; 
-          const quantityMinus = (subItem.quantity * quantityMultiplier) / 1000; 
+          const quantityMultiplier = itemDetail.quantity;
+          const quantityMinus = (subItem.quantity * quantityMultiplier) / 1000;
           const tobeMinusQty = stockData.find(item => item.item_name === subItem.item_name)?.quantity;
 
           if (tobeMinusQty !== undefined) {
-            const updatedQuantity = (tobeMinusQty - quantityMinus).toFixed(2); 
+            const updatedQuantity = (tobeMinusQty - quantityMinus).toFixed(2);
             const stockItem = stockData.find(item => item.item_name === subItem.item_name);
             if (stockItem) {
-              stockItem.quantity = updatedQuantity < 0 ? 0 : updatedQuantity; 
+              stockItem.quantity = updatedQuantity < 0 ? 0 : updatedQuantity;
               const mrp = parseFloat(stockItem.mrp);
               const quantity = parseFloat(stockItem.quantity);
               if (isNaN(mrp) || isNaN(quantity)) {
@@ -2790,11 +2832,11 @@ ipcMain.on("deduct-qty", async (event, data) => {
   }
 });
 
- // delete-edit-receipe
- ipcMain.on("delete-edit-receipe", async (event, receipeId,itemIndex) => {
+// delete-edit-receipe
+ipcMain.on("delete-edit-receipe", async (event, receipeId, itemIndex) => {
   try {
     const receipeData = await Receipe.findOne({
-      receipe_no : receipeId
+      receipe_no: receipeId
     })
     if (!receipeData) {
       event.reply("delete-edit-receipe-error", "Receipe not found");
@@ -2828,7 +2870,7 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
       event.reply("edit-receipe-error", "Recipe not found");
       return;
     }
-    
+
     itemData.sub_items_details = itemData.sub_items_details.filter(subItem =>
       subItem.item_name !== '' && subItem.quantity !== '' && subItem.quantity !== 'null'
     );
@@ -2843,7 +2885,7 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
           item_name: subItemData.item_name,
           quantity: subItemData.quantity
         });
-      } 
+      }
       else {
         // Update existing sub-item's quantity
         if (subItemData.quantity !== null || subItemData.item_name !== '') {
@@ -2897,7 +2939,7 @@ ipcMain.on("new-Purchase", async (event, data) => {
       stockItem.addded_at = Date.now()
       stockItem.is_synced = false
       await stockItem.save()
-      
+
       data.item_no = stockItem.item_no
       data.is_synced = false
       let purchaseData = {
@@ -2928,11 +2970,11 @@ ipcMain.on("new-Purchase", async (event, data) => {
         itemNo = lastItemNo.item_no + 1;
       }
       await Stock.create({
-        item_no : itemNo,
+        item_no: itemNo,
         item_name: data.item_name,
         quantity: data.quantity,
         mrp: data.mrp,
-        min_stock : 10,
+        min_stock: 10,
         total: (data.mrp * data.quantity).toFixed(2),
         addded_at: Date.now(),
         is_synced: false
@@ -3040,8 +3082,8 @@ ipcMain.on('sync-data', async (event) => {
 
 const urlCloud = process.env.MONGO_URI_CLOUD
 app.whenReady().then(async () => {
-createWindow();
-cloudConnection = await connectToCloudDB(urlCloud);
+  createWindow();
+  cloudConnection = await connectToCloudDB(urlCloud);
 });
 
 app.on('window-all-closed', () => {

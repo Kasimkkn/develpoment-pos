@@ -65,6 +65,10 @@
               <a class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./masters/loyalty.html" id="master_loyalty">Loyalty</a>
             </li>
+            <li>
+              <a id="pay_mode" class="flex items-center w-full p-2 text-black  hover:bg-secondary rounded-lg pl-11"
+                href="./masters/paymode.html">Pay Mode</a>
+            </li>
             <li id="userLink">
               <a class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./masters/user.html" id="master_user">Users</a>
@@ -88,27 +92,33 @@
           </button>
           <ul id="dropdown-reports" class="hidden py-2 space-y-2">
             <li id="daily_sales">
-              <a id="daily_sales_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="daily_sales_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/daily-sales.html">Daily Sales</a>
             </li>
             <li id="monthly_sales">
-              <a id="monthly_sales_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="monthly_sales_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/monthly-sales.html">Monthly Sales</a>
             </li>
             <li id="location_wise_report">
-              <a id="location_wise_report_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="location_wise_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/locatoion-wise-sale.html">Location Wise</a>
             </li>
             <li id="item_wise_report">
-              <a id="item_wise_report_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="item_wise_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/item-wise-daily.html">Item Wise Daily</a>
             </li>
             <li id="item_wise_monthly_report">
-              <a id="item_wise_monthly_report_btn"  class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="item_wise_monthly_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/item-wise-monthly.html">Item Wise Monthly</a>
             </li>
             <li id="table_wise_report">
-              <a id="table_wise_report_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="table_wise_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/table-wise-sales.html">Table Wise Sales</a>
             </li>
             <li id="menu_print">
@@ -116,15 +126,18 @@
                 href="./reports/menu-print.html">Menu Print</a>
             </li>
             <li id="category_wise_report">
-              <a id="category_wise_report_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="category_wise_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/category-items.html">Category Items Sales</a>
             </li>
             <li id="unpaid_bills">
-              <a id="unpaid_bills_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="unpaid_bills_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/unpaid-bills.html">Unpaid Bills</a>
             </li>
             <li id="payment_wise_report">
-              <a id="payment_wise_report_btn" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="payment_wise_report_btn"
+                class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./reports/payment-wise.html">Payment Wise</a>
             </li>
 
@@ -158,7 +171,7 @@
               <a id="supplier" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./stock/supplier.html">Supplier</a>
             </li>
-                        <li id="stock_in_hand">
+            <li id="stock_in_hand">
               <a id="supplier" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./stock/stockInHand.html">Stock In Hand</a>
             </li>
@@ -332,8 +345,7 @@
         </div>
 
         <div class="flex gap-2">
-          <button 
-            id="customerLoyaltyBtn"
+          <button id="customerLoyaltyBtn"
             class="inline-flex items-center justify-between rounded-md text-sm h-10 px-4 py-2 w-max mb-2 bg-common hover:bg-common-hover text-white">
             L
           </button>
@@ -535,20 +547,20 @@
         <div class="p-4 md:p-5">
           <div class="p-2">
             <label for="customerPhoneNO" class="block mb-2 text-sm font-medium text-black">Customer Phone No</label>
-            <input id="customerPhoneNO" type="number" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10" autocomplete="off"
-              maxlength="10" list="customerPhoneList"
+            <input id="customerPhoneNO" type="number" name="customerPhoneNO" placeholder="e.g. 9999999999" max="10"
+              autocomplete="off" maxlength="10" list="customerPhoneList"
               class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
-              <datalist id="customerPhoneList"></datalist>
+            <datalist id="customerPhoneList"></datalist>
 
-            </div>
+          </div>
           <div class="p-2">
             <label for="customerName" class="block mb-2 text-sm font-medium text-black">Customer Name</label>
             <input id="customerName" type="text" name="customerName" placeholder="e.g. John Doe" autofocus max="25"
               maxlength="25" list="customerNameList"
               class="bg-white border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
-              <datalist id="customerNameList"></datalist>
-            </div>
-          
+            <datalist id="customerNameList"></datalist>
+          </div>
+
           <div class="p-2">
             <label for="customerGSTNo" class="block mb-2 text-sm font-medium text-black">Customer GST No</label>
             <input id="customerGSTNo" type="text" name="customerGSTNo" placeholder="e.g. 123ABC4567890" max="15"
@@ -616,7 +628,7 @@
               <input id="customerPhone" min="10" max="10" maxlength="10" type="tel"
                 class="rounded-none rounded-e-lg bg-white border  border-primary block flex-1 min-w-0 w-full text-sm p-2.5"
                 placeholder="+91 1234567890" list="loyaltyCustomerPhoneList">
-                <datalist id="loyaltyCustomerPhoneList"></datalist>
+              <datalist id="loyaltyCustomerPhoneList"></datalist>
 
             </div>
 
@@ -635,8 +647,7 @@
               You Can Redeem :
             </span>
             <input id="redeemAmount" type="tel" min="0"
-              class="rounded-lg bg-white border  border-primary block flex-1 w-20 text-sm p-2"
-              placeholder="100">
+              class="rounded-lg bg-white border  border-primary block flex-1 w-20 text-sm p-2" placeholder="100">
           </div>
 
           <div class="w-full justify-end flex items-center gap-3 p-2 bg-secondary mb-4">
@@ -742,7 +753,7 @@
   </div>
 
   <script src="global.js"></script>
-  
+
   <script>
     const script = document.createElement('script');
     script.src = 'global.js';
@@ -751,7 +762,7 @@
     };
     document.head.appendChild(script);
 
-</script>
+  </script>
 
   <script>
     function getCurrentDateTime() {
@@ -792,7 +803,7 @@
   <script defer src="js/index.js"></script>
   <script defer src="js/order.js"></script>
   <script defer src="js/script.js"></script>
-  
+
   <script defer src="js/bill-details.js"></script>
   <script defer src="../node_modules/flowbite/dist/flowbite.min.js"></script>
 
