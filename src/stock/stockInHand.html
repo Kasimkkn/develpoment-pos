@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Monthly Sales</title>
+  <title>Stock In Hand</title>
   <link rel="stylesheet" href="../../node_modules/flowbite/dist/flowbite.min.css" />
   <link rel="stylesheet" href="../../node_modules/datatables.net-dt/css/dataTables.dataTables.min.css" />
   <link rel="stylesheet" href="../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css">
@@ -17,7 +17,7 @@
 
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
-    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden  hover:bg-secondary  ">
+    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden   ">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd"
@@ -221,53 +221,44 @@
       </div>
     </div>
   </aside>
+
+
   <main class="bg-primary-two">
     <div class="py-6 px-4 sm:px-6 lg:px-8">
-      <h1>monthly Sales</h1>
-      <div class="flex gap-4 items-center justify-start mt-4 max-w-sm">
-        <div class="relative">
-          <input type="date" id="fromMonthDate"
-            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
-        </div>
-        <span>To</span>
-        <div class="relative">
-          <input type="date" id="toMonthDate"
-            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
-        </div>
-        <button id="generateMonthlyButton"
-          class="flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max beautyBtn text-white">
-          Generate
-        </button>
-      </div>
-
-
+      <h1>All Stock Items</h1>
       <div class="relative overflow-x-auto mt-4">
         <div class="">
-          <table id="monthly-sales-table" class="w-ful">
+          <table class="w-full" id="stock-in-hand-table">
             <thead class="text-xs text-black uppercase bg-primary">
               <tr>
-                <th scope="col" class="px-6 py-3">Bill No</th>
-                <th scope="col" class="px-6 py-3">Date</th>
-                <th scope="col" class="px-6 py-3">Total Amount</th>
-                <th scope="col" class="capitalize px-6 py-3">Discount By %</th>
-                <th scope="col" class="capitalize px-6 py-3">discount</th>
-                <th scope="col" class="capitalize px-6 py-3">total Tax</th>
-                <th scope="col" class="capitalize px-6 py-3">round off</th>
-                <th scope="col" class="capitalize px-6 py-3">Final Amount</th>
-                <th scope="col" class="capitalize px-6 py-3">Cash</th>
-                <th scope="col" class="capitalize px-6 py-3">Card</th>
-                <th scope="col" class="capitalize px-6 py-3">UPI</th>
-                <th scope="col" class="capitalize px-6 py-3">Other</th>
+                <th class="px-6 py-3">
+                  Item No
+                </th>
+                <th scope="col" class="px-6 py-3">  
+                  Item Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                quantity
+                </th>
+                <th scope="col" class="px-6 py-3">
+                mrp
+                </th>
+                <th scope="col" class="px-6 py-3">
+                total
+                </th>
+                <th scope="col" class="px-6 py-3">
+                addded_at
+                </th>
               </tr>
             </thead>
             <tbody class="bg-secondary text-sm">
             </tbody>
           </table>
-
         </div>
 
       </div>
   </main>
+
 
 <div id="keyboard" class="hidden fixed shadow-lg">
   </div>
@@ -288,9 +279,10 @@
     require("datatables.net-buttons/js/buttons.html5.js");
     require("datatables.net-buttons/js/buttons.print.js");
   </script>
-  <script src="../global.js" defer=""></script>
-  <script src="../js/monthly-sales.js" defer></script>
-  <script src="../../node_modules/flowbite/dist/flowbite.min.js" defer></script>
+
+<script src="../global.js"></script>
+  <script src="../js/stockInHand.js"></script>
+  <script src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
 </body>
 
 </html>

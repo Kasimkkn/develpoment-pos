@@ -60,7 +60,7 @@ const renderPaymentWise = (data) => {
         
         PaymentWiseTable.row
         .add([
-            new Date(sale._id.date).toLocaleDateString(),
+            new Date(sale._id.date).toLocaleDateString("en-GB"),
             sale.totalAmount.toFixed(2),
             sale.totalDiscountPerc ? sale.totalDiscountPerc.toFixed(2) : '0.00',
             sale.totalDiscount? sale.totalDiscount.toFixed(2) : '0.00',

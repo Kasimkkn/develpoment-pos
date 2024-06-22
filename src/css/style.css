@@ -180,6 +180,18 @@ input:hover {
 #loyal-customers-table tbody tr td:nth-child(2) {
   text-align: start;
 }
+#stock-in-hand-table tbody tr td:nth-child(2) {
+  text-align: start;
+}
+
+#stock-in-hand-table tbody tr td:nth-child(6) {
+  text-align: end;
+}
+#stock-in-hand-table thead tr th:nth-child(6) .dt-column-title {
+  text-align: end;
+  width: 100%;
+  display: block;
+}
 
 #sidebarCloseBtn:hover{
   cursor: pointer;

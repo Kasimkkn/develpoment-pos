@@ -1769,18 +1769,6 @@ ipcMain.on("fetch-monthly-sales", async (event, fromDate, toDate) => {
   }
 });
 
-// Stock-in-hand
-ipcMain.on("fetch-stock-in-hand", async (event) => {
-  try {
-      const data = await Stock.find();
-      event.reply("stock-in-hand-data", data);
-  }
-  catch (error) {
-      console.log("error fetching stock in hand", error);
-      event.reply("fetch-stock-in-hand-error", "Error fetching stock in hand");
-  }
-})
-
 // monthly-purchase 
 ipcMain.on("fetch-monthly-purchase", async (event, fromDate, toDate) => {
   try {
