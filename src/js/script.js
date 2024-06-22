@@ -24,6 +24,31 @@ ipcRenderer.on("bill-no-data", (event, data) => {
   bill_no = data;
 })
 
+const initializeModal = (id) => {
+  const $targetEl = document.getElementById(id);
+  const options = {
+    placement: "center",
+    backdrop: "dynamic",
+    backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
+    closable: true,
+  };
+
+  const modal = new Modal($targetEl, options);
+  return modal;
+};
+
+const customerBillInfoModal = initializeModal("customerInfoModal");
+const loyaltyPointsModal = initializeModal("customerLoyaltyModal");
+
+
+function customerBill() {
+  customerBillInfoModal.show();
+}
+function applyLoyaltyPoints() {
+  loyaltyPointsModal.show()
+}
+
+
 const loyalCustomerPhone = document.getElementById("customerPhoneNO");
 const loyaltyCustomerNO = document.getElementById("customerPhone");
 const loyalCustomerName = document.getElementById("customerName");
@@ -119,7 +144,7 @@ const otpValue = document.getElementById("otpValue");
 const redeemAmount = document.getElementById("redeemAmount");
 
 document.getElementById("send-otp").addEventListener("click", () => {
-  if(loyalCustomerPhone.value.length < 10 || otpInput.value != '' || redeemAmount.value == 0) {
+  if(loyaltyCustomerNO.value.length < 10 && redeemAmount.value == 0) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -131,7 +156,8 @@ document.getElementById("send-otp").addEventListener("click", () => {
       const generatedOtp = Math.floor(1000 + Math.random() * 9000);
       otpValue.value = generatedOtp;
 
-      const phone = loyalCustomerPhone.value;
+      const phone = Number(loyaltyCustomerNO.value);
+      console.log(phone)
       const message = `Your OTP is ${generatedOtp}`;
       sendWhatsAppMessage(phone, message)
       .then(response => {
@@ -201,17 +227,16 @@ document.getElementById("apply-button").addEventListener("click", () => {
       otpInput.value = "";
       otpValue.value = "";
       redeemAmount.value = "";
-      ipcRenderer.once("fetch-loyalty-points-success", (event, data) => {
-        loyalCustomerData = data
-        document.getElementById("customerPoints").textContent = data._doc.total_points
-        document.getElementById("redeemAmount").value = data._doc.total_points
-      })
       Swal.fire({
         icon: "success",
         title: "Success",
         text: "Points redeemed successfully",
         timer: 1000,
       })
+      setTimeout(() => {
+        loyaltyPointsModal.hide();
+        customerBill();
+      }, 1000)
     })
     }
   }
@@ -480,29 +505,9 @@ function printKOT() {
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
-  const initializeCustomerInfoModal = (id) => {
-    const $targetEl = document.getElementById(id);
-    const options = {
-      placement: "center",
-      backdrop: "dynamic",
-      backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
-      closable: true,
-    };
 
-    const modal = new Modal($targetEl, options);
-    return modal;
-  };
 
-  const customerInfoModal = initializeCustomerInfoModal("customerInfoModal");
-  const loyaltyPointsModal = initializeCustomerInfoModal("customerLoyaltyModal");
-  function customerBill() {
-    customerInfoModal.show();
-  }
-  function applyLoyaltyPoints() {
-    loyaltyPointsModal.show()
-  }
   let totalTimeKotIsPrinted = 0;
   document.getElementById("print-KOt-btn").addEventListener("click", function () {
     totalTimeKotIsPrinted += 1;

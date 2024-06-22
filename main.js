@@ -2391,7 +2391,6 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
 // set pay mode
 ipcMain.on("set-paymode", async (event, allBills, payMode) => {
   try {
-    console.log(first)
     for (const billNo of allBills) {
       const billInfo = await Bill.findOne({ bill_no: billNo });
 
@@ -2415,7 +2414,6 @@ ipcMain.on("set-paymode", async (event, allBills, payMode) => {
 // set single pay mode
 ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
   try {
-    console.log("set-single-paymode", billNo, payMode);
     const billDetail = await Bill.findOne({ bill_no: billNo });
 
     if (!billDetail) {
