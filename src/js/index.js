@@ -175,7 +175,8 @@ transferTableButton.addEventListener("click", (event) => {
 const renderLocationBlocks = () => {
   const locationTablesContainer = document.getElementById("locationTables");
   locationTablesContainer.innerHTML = "";
-
+  
+  toTransferTableDropdown.innerHTML = "";
   apiLocation.forEach((location) => {
     if(!location._doc.status) return;
     const locationSection = document.createElement("section");
@@ -206,22 +207,17 @@ const renderLocationBlocks = () => {
 
         if (isActive) {
           tableLink.classList.add("beautyBtn");
-          tableLink.classList.add("text-white");
-          tableLink.classList.add("bg-common");
           const option = document.createElement("option");
           option.value = `${location._doc.location_name} ${table._doc.table_no}`;
           option.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
           firstTableDropdown.appendChild(option.cloneNode(true));
           secondTableDropdown.appendChild(option.cloneNode(true));
           activeTableDropdwon.appendChild(option.cloneNode(true));
-
-        }
-
-        if (!isActive) {
+        }else{
           const allTablesOption = document.createElement("option");
           allTablesOption.value = `${location._doc.location_name} ${table._doc.table_no}`;
           allTablesOption.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
-          toTransferTableDropdown.appendChild(allTablesOption.cloneNode(true));
+          toTransferTableDropdown.appendChild(allTablesOption);
         }
 
         const tableSpan = document.createElement("span");

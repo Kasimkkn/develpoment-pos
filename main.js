@@ -1534,15 +1534,37 @@ ipcMain.on("transfer-table", async (event, toTransferTabledata) => {
     const allData = await ExistingCartItem.find({
       table_no: activeTableNo,
       location_name: activeTableLocation
-    })
-    if (allData) {
+    });
+
+    // find the location data
+    const locationData = await Location.findOne({
+      location_name: toTransferTableLocation
+    });
+
+    if (!locationData) {
+      throw new Error(`Location data not found for ${toTransferTableLocation}`);
+    }
+
+    const locationWisePriceField = `rate_${locationData.location_price}`;
+
+    if (allData.length > 0) {
       for (let i = 0; i < allData.length; i++) {
+        const itemData = await Item.findOne({
+          item_name: allData[i].item_name
+        });
+
+        if (!itemData) {
+          throw new Error(`Item data not found for ${allData[i].item_name}`);
+        }
+
+        const newItemPrice = itemData[locationWisePriceField];
+
         await ExistingCartItem.findOneAndUpdate({
-          table_no: activeTableNo,
-          location_name: activeTableLocation,
+          _id: allData[i]._id,
         }, {
           table_no: toTransferTableNo,
           location_name: toTransferTableLocation,
+          price: newItemPrice,
         });
       }
     }
@@ -1550,8 +1572,8 @@ ipcMain.on("transfer-table", async (event, toTransferTabledata) => {
     const updateItems = await ExistingCartItem.find({});
     event.reply("transfer-table-success", updateItems);
   } catch (error) {
-    console.log("error transfering table", error);
-    event.reply("transfer-table-error", "Error transfering table");
+    console.log("error transferring table", error);
+    event.reply("transfer-table-error", "Error transferring table");
   }
 });
 
