@@ -1,11 +1,11 @@
 
 :root {
-  --common-hover-color : #21205F;
-  --input-color : #F5F5DC;
-  --primary-color: #D3D3D3;
-  --secondary-color: #F5F5DC;
-  --tertiary-color: #62CBE7;
-  --common-color: #104373;
+  --common-hover-color : rgb(40, 163, 163);
+  --input-color : rgb(255, 255, 255);
+  --primary-color: rgb(197, 237, 237);
+  --secondary-color: rgb(123, 215, 215);
+  --tertiary-color: rgb(8, 125, 125);
+  --common-color: rgb(4, 71, 71);
 }
 
 .bg-primary {
@@ -267,6 +267,13 @@ datalist option{
 .checkbox-container input[type="checkbox"]:checked {
   appearance: none;
   background-color: var(--common-color); 
+  outline: none !important;
+}
+.checkbox-container input[type="checkbox"]:active {
+  outline: none !important;
+}
+.checkbox-container input[type="checkbox"]:focus {
+  outline: none !important;
 }
 .checkbox-container input[type="checkbox"]:checked::after {
   content: " ";
@@ -318,7 +325,7 @@ datalist option{
   top: 0;
   left: 0;
   height: 100%;
-  width: 315px;
+  width: 320px;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   transition: width 0.3s ease;
