@@ -12,13 +12,13 @@ function closeModal() {
 }
 
 function openEditModal(stockId) {
-  const stock = apiStock.find(stock => stock._doc.item_no === stockId);
+  const stock = apiStock.find(stock => stock.item_no === stockId);
 
   if (stock) {
-    document.getElementById("item_name").value = stock._doc.item_name;
-    document.getElementById("item_quantity").value = stock._doc.quantity;
-    document.getElementById("item_mrp").value = stock._doc.mrp;
-    document.getElementById("item_min").value = stock._doc.min_stock;
+    document.getElementById("item_name").value = stock.item_name;
+    document.getElementById("item_quantity").value = stock.quantity;
+    document.getElementById("item_mrp").value = stock.mrp;
+    document.getElementById("item_min").value = stock.min_stock;
 
     const editStockModal = document.getElementById("editStockModal");
     editStockModal.classList.remove("hidden");
@@ -56,14 +56,14 @@ const renderStockDropdown = (stockList , supplierList) => {
   newItemDropdown.innerHTML = "";
   stockList.forEach((stock) => {
     const option = document.createElement("option");
-    option.textContent = stock._doc.item_name;
+    option.textContent = stock.item_name;
     newItemDropdown.appendChild(option);
   });
 
   supplierDropdwon.innerHTML = "";
   supplierList.forEach((supplier) => {
     const option = document.createElement("option");
-    option.textContent = supplier._doc.supplier_name;
+    option.textContent = supplier.supplier_name;
     supplierDropdwon.appendChild(option);
   });
 };
@@ -108,6 +108,7 @@ const newPurchaseHandler = () => {
 
 // Function to render purchase table
 const renderPurchase = (purchaseList) => {
+  console.log(purchaseList)
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
 
@@ -116,25 +117,25 @@ const renderPurchase = (purchaseList) => {
     tr.classList.add("bg-secondary", "border-b", "hover:bg-primary");
     tr.innerHTML = `
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.purchase_no}</div>
+        <div class="max-md:text-xs">${purchase.purchase_no}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.supplier_name}</div>
+        <div class="max-md:text-xs">${purchase.supplier_name}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${new Date(purchase._doc.date).toLocaleDateString('en-GB')}</div>
+        <div class="max-md:text-xs">${new Date(purchase.date).toLocaleDateString('en-GB')}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.item_details.item_name}</div>
+        <div class="max-md:text-xs">${purchase.item_details[0].item_name}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.item_details.quantity}kg</div>
+        <div class="max-md:text-xs">${purchase.item_details[0].quantity}kg</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.item_details.mrp}</div>
+        <div class="max-md:text-xs">${purchase.item_details[0].mrp}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase._doc.item_details.total}</div>
+        <div class="max-md:text-xs">${purchase.item_details[0].total}</div>
       </td>
     `;
 
@@ -174,6 +175,6 @@ ipcRenderer.on("supplier-data", (event, supplier) => {
 });
 
 ipcRenderer.on("fetch-purchase-data", (event, purchase) => {
-  apiPurchase = purchase;
+  apiPurchase = JSON.parse(purchase);
   renderPurchase(apiPurchase);
 });

@@ -52,14 +52,14 @@ const rendermonthlyPurchase = (data) => {
     let totalItemAmount = 0;
     monthlyPurchaseTable.row
       .add([
-        sale._doc.purchase_no,
-        sale._doc.supplier_name ? sale._doc.supplier_name : 'no name',
-        new Date(sale._doc.date).toLocaleDateString("en-GB"),
-        `${sale._doc.item_details.quantity} x ${sale._doc.item_details.mrp} ${sale._doc.item_details.item_name}`,
-        `${sale._doc.item_details.quantity * sale._doc.item_details.mrp}`,
+        sale.purchase_no,
+        sale.supplier_name ? sale.supplier_name : 'no name',
+        new Date(sale.date).toLocaleDateString("en-GB"),
+        `${sale.item_details[0].quantity} x ${sale.item_details[0].mrp} ${sale.item_details[0].item_name}`,
+        `${sale.item_details[0].quantity * sale.item_details[0].mrp}`,
       ])
       .draw(false);
-      totalItemAmount += sale._doc.item_details.quantity * sale._doc.item_details.mrp;
+      totalItemAmount += sale.item_details[0].quantity * sale.item_details[0].mrp;
       totalAmount += totalItemAmount;
     });
 

@@ -37,5 +37,9 @@
   "logoutButton": "લૉગઆઉટ",
   "duplicate-bill-btn" : "Duplicate Bill",
   "save-bill-btn": "Save Bill",
-  "updateDiscountBtn":"Update"
+  "updateDiscountBtn":"Update",
+  "supplier":"Supplier",
+  "stockInHand":"Stock In Hand",
+  "monthlyPurchase":"Monthly Purchase",
+  "partyWisePurchase":"party Wise Purchase"
 }

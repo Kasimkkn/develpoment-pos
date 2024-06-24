@@ -172,12 +172,16 @@
                 href="./stock/supplier.html">Supplier</a>
             </li>
             <li id="stock_in_hand">
-              <a id="supplier" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="stockInHand" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./stock/stockInHand.html">Stock In Hand</a>
             </li>
             <li id="monthly_purchase">
-              <a id="supplier" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+              <a id="monthlyPurchase" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
                 href="./stock/monthlyPurchase.html">Monthly Purchase</a>
+            </li>
+            <li id="party_wise_purchase">
+              <a id="partyWisePurchase" class="flex items-center w-full p-2 text-black hover:bg-secondary rounded-lg pl-11"
+                href="./stock/partyWisePurchase.html">Party Wise Purchase</a>
             </li>
           </ul>
         </li>
@@ -252,7 +256,7 @@
     <!-- Main Section -->
     <main class="main_section bg-secondary" style="padding-left: 0 !important">
       <div class="flex flex-col space-y-4 w-full py-2 px-4">
-        <div class="flex items-start flex-col gap-2">
+        <div class="flex items-start flex-col gap-2 fixed " style="width: 52rem;">
           <div class="flex gap-2 w-full items-center">
             <input id="searchInput" autofocus type="text"
               class="flex h-10 w-80 rounded-md border border-primary bg-white px-3 py-2 text-sm "
@@ -289,7 +293,7 @@
           <div class="flex gap-2 h-10 w-full" id="category-list"></div>
         </div>
 
-        <div class="flex flex-wrap gap-2" id="product-list"></div>
+        <div class="flex flex-wrap gap-2 overflow-scroll" style="margin-top: 6rem;" id="product-list"></div>
       </div>
     </main>
 

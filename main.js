@@ -1851,7 +1851,7 @@ ipcMain.on("fetch-monthly-purchase", async (event, fromDate, toDate) => {
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
 
     const data = await Purchase.find({ date: { $gte: startDate, $lte: endDate } });
-    event.reply("monthly-purchase-data", data);
+    event.reply("monthly-purchase-data", JSON.parse(JSON.stringify(data)));
   } catch (error) {
     console.log("error fetching daily purchase", error);
     event.reply("fetch-daily-purchase-error", "Error fetching daily purchase");
@@ -1898,31 +1898,61 @@ ipcMain.on("fetch-supplier-wise-purchase", async (event, fromDate, toDate) => {
     const selectedEndDate = new Date(toDate);
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
-    // using aggreation pipeline find out all the items that were purhcase on that date
+
     const aggregationPipeline = [
       {
         $match: {
-          created_at: {
+          date: {
             $gte: startDate,
             $lte: endDate
           }
         }
       },
       {
+        $unwind: "$item_details"
+      },
+      {
+        $sort: {
+          purchase_no: -1 // Sort by purchase_no in descending order
+        }
+      },
+      {
         $group: {
-          _id: "$supplier_name",
-          count: { $sum: 1 },
-          total_final_amount: { $sum: "$final_amount" }
+          _id: {
+            supplier_name: "$supplier_name",
+            item_name: "$item_details.item_name"
+          },
+          purchase_no: { $first: "$purchase_no" },
+          date: { $first: "$date" },
+          totalQuantity: { $sum: "$item_details.quantity" },
+          totalAmount: { $sum: "$item_details.total" }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id.supplier_name",
+          purchases: {
+            $push: {
+              purchase_no: "$purchase_no",
+              date: "$date",
+              item_name: "$_id.item_name",
+              totalQuantity: "$totalQuantity",
+              totalAmount: "$totalAmount"
+            }
+          }
         }
       }
-    ]
+    ];
+
     const data = await Purchase.aggregate(aggregationPipeline);
-    event.reply("supplier-wise-purchase-data", data);
+
+    event.reply("supplier-wise-purchase-data", JSON.parse(JSON.stringify(data)));
   } catch (error) {
     console.log("error fetching supplier wise purchase", error);
     event.reply("fetch-supplier-wise-purchase-error", "Error fetching supplier wise purchase");
   }
 });
+
 
 // Table-wise report
 ipcMain.on("fetch-tableWise-sales", async (event, fromDate, toDate) => {
@@ -2933,7 +2963,7 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
 ipcMain.on("fetch-purchase", async (event) => {
   try {
     const data = await Purchase.find();
-    event.reply("fetch-purchase-data", data);
+    event.reply("fetch-purchase-data", JSON.stringify(data));
   } catch (error) {
     console.error("Error fetching purchase:", error);
     event.reply("fetch-error", "Error fetching purchase");
