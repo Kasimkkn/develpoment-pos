@@ -35,6 +35,11 @@ const renderStockItems = (data) => {
                 menu._doc.item_no,
                 menu._doc.item_name,
                 menu._doc.quantity,
+                menu._doc.quantity < menu._doc.min_stock ? `
+                        <td class="px-6 py-4">
+        <div class="bg-pink-800 text-white text-xs text-center w-max font-medium me-2 px-2.5 py-0.5 rounded">${menu._doc.min_stock}</div>
+    </td>
+                ` : `${menu._doc.min_stock}`,
                 menu._doc.mrp,
                 menu._doc.total,
                 menu._doc.addded_at ? new Date(menu._doc.addded_at).toLocaleDateString('en-GB') : '',
@@ -44,6 +49,7 @@ const renderStockItems = (data) => {
     });
     StockItemsTable.row.add(
         [
+            '',
             '',
             '',
             '',

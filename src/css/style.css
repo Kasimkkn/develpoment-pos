@@ -1,12 +1,13 @@
 
 :root {
-  --common-hover-color : rgb(192, 112, 112);
-  --input-color : rgb(203, 171, 171);
-  --primary-color: rgb(230, 205, 252);
-  --secondary-color: rgb(187, 245, 255);
-  --tertiary-color: rgb(247, 223, 171);
-  --common-color: rgb(168, 8, 67);
+  --common-color: #51386b;  /* Dark, burgundy */
+  --primary-color: #906781; /* Light, soft rose */
+  --secondary-color: #8becd4; /* Background, light yellow */
+  --tertiary-color: #528a93; /* Background, light blue */
+  --common-hover-color: #c07070; /* Adjusted to match theme */
+  --input-color: #cbaaab; /* Adjusted to match theme */
 }
+
 
 .bg-primary {
   background-color: var(--primary-color);
