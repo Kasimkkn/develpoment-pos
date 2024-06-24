@@ -1869,22 +1869,43 @@ ipcMain.on("fetch-item-wise-purchase", async (event, fromDate, toDate) => {
     const aggregationPipeline = [
       {
         $match: {
-          created_at: {
+          date: {
             $gte: startDate,
             $lte: endDate
           }
         }
       },
       {
+        $unwind: "$item_details"
+      },
+      {
         $group: {
-          _id: "$item_name",
-          count: { $sum: 1 },
-          total_final_amount: { $sum: "$final_amount" }
+          _id: {
+            item_name: "$item_details.item_name"
+          },
+          purchase_no: { $first: "$purchase_no" },
+          date: { $first: "$date" },
+          totalQuantity: { $sum: "$item_details.quantity" },
+          totalAmount: { $sum: "$item_details.total" }
+        }
+      },
+      {
+        $group: {
+          _id: "$purchase_no",
+          purchases: {
+            $push: {
+              purchase_no: "$purchase_no",
+              date: "$date",
+              item_name: "$_id.item_name",
+              totalQuantity: "$totalQuantity",
+              totalAmount: "$totalAmount"
+            }
+          }
         }
       }
     ]
-    const data = await Purchase.aggregate(aggregationPipeline);
-    event.reply("item-wise-purchase-data", data);
+    const data = await Purchase.aggregate(aggregationPipeline).sort({ purchase_no : -1});
+    event.reply("item-wise-purchase-data", JSON.parse(JSON.stringify(data)));
   } catch (error) {
     console.log("error fetching item wise purchase", error);
     event.reply("fetch-item-wise-purchase-error", "Error fetching item wise purchase");
@@ -1909,12 +1930,12 @@ ipcMain.on("fetch-supplier-wise-purchase", async (event, fromDate, toDate) => {
         }
       },
       {
-        $unwind: "$item_details"
-      },
-      {
         $sort: {
           purchase_no: -1 // Sort by purchase_no in descending order
         }
+      },
+      {
+        $unwind: "$item_details"
       },
       {
         $group: {

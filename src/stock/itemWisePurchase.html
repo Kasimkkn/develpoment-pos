@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Menu Print</title>
+  <title>Item Wise Purchase</title>
   <link rel="stylesheet" href="../../node_modules/flowbite/dist/flowbite.min.css" />
   <link rel="stylesheet" href="../../node_modules/datatables.net-dt/css/dataTables.dataTables.min.css" />
   <link rel="stylesheet" href="../../node_modules/datatables.net-buttons-dt/css/buttons.dataTables.min.css">
@@ -17,7 +17,7 @@
 
   <button data-drawer-target="sidebar-multi-level-sidebar" data-drawer-toggle="sidebar-multi-level-sidebar"
     aria-controls="sidebar-multi-level-sidebar" type="button"
-    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden   ">
+    class="absolute z-40 inline-flex items-center p-2 mt-2 ms-3 text-sm text-black rounded-lg sm:hidden  hover:bg-secondary  ">
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd"
@@ -240,50 +240,47 @@
       </div>
     </div>
   </aside>
-
-
   <main class="bg-primary-two">
     <div class="py-6 px-4 sm:px-6 lg:px-8">
-      <h1>All Menu Items</h1>
+      <h1>Item Wise Purchase</h1>
+      <div class="flex gap-4 items-center justify-start mt-4 max-w-sm">
+        <div class="relative">
+          <input type="date" id="fromMonthDate"
+            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
+        </div>
+        <span>To</span>
+        <div class="relative">
+          <input type="date" id="toMonthDate"
+            class="bg-primary border border-gray-300 text-black text-sm rounded-lg   block w-full p-2.5" />
+        </div>
+        <button id="generateMonthlyButton"
+          class="flex items-center justify-between rounded-md text-sm  h-10 px-4 py-2 w-max beautyBtn text-white">
+          Generate
+        </button>
+      </div>
+
+
       <div class="relative overflow-x-auto mt-4">
         <div class="">
-          <table class="w-full" id="menu-print-table">
+          <table id="item-wise-purchase-table" class="w-ful">
             <thead class="text-xs text-black uppercase bg-primary">
               <tr>
-                <th class="px-6 py-3">
-                  Item No
-                </th>
-                <th scope="col" class="px-6 py-3">  
-                  Item Name
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate One
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate Two
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate Three
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate Four
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate Five
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Rate Six
-                </th>
+                <th scope="col" class="px-6 py-3">Purchase No</th>
+                <th scope="col" class="px-6 py-3">date</th>
+                <th scope="col" class="px-6 py-3">item name</th>
+                <th scope="col" class="px-6 py-3">item  qty</th>
+                <th scope="col" class="px-6 py-3">item amount</th>
+                <th scope="col" class="px-6 py-3">total</th>
               </tr>
             </thead>
             <tbody class="bg-secondary text-sm">
             </tbody>
           </table>
+
         </div>
 
       </div>
   </main>
-
 
 <div id="keyboard" class="hidden fixed shadow-lg">
   </div>
@@ -304,10 +301,9 @@
     require("datatables.net-buttons/js/buttons.html5.js");
     require("datatables.net-buttons/js/buttons.print.js");
   </script>
-
-<script src="../global.js"></script>
-  <script src="../js/menu-print.js"></script>
-  <script src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
+  <script src="../global.js" defer=""></script>
+  <script src="../js/item-wise-purchase.js" defer></script>
+  <script src="../../node_modules/flowbite/dist/flowbite.min.js" defer></script>
 </body>
 
 </html>
