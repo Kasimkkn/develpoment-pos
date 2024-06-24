@@ -115,12 +115,15 @@ const renderstock = (stock) => {
     <td class="px-6 py-4">
         <div class="max-md:text-xs">${Stock._doc.quantity}kg</div>
     </td>
-    <td class="px-6 py-4">
-        <div class="max-md:text-xs">${Stock._doc.mrp}</div>
+    ${Stock._doc.quantity < Stock._doc.min_stock ? 
+      `<td class="px-6 py-4">
+        <div class="bg-pink-800 text-white text-xs text-center w-max font-medium me-2 px-2.5 py-0.5 rounded">${Stock._doc.min_stock}</div>
+    </td>`
+      : `
+      <td class="px-6 py-4">
+        <div class="bg-green-800 text-white text-xs text-center w-max font-medium me-2 px-2.5 py-0.5 rounded">${Stock._doc.min_stock}</div>
     </td>
-    <td class="px-6 py-4">
-        <div class="max-md:text-xs">${Stock._doc.total}</div>
-    </td>
+      ` }
     <td class="px-6 py-4">
       <button type="button" 
       onClick="openEditModal(${Stock._doc.item_no})"

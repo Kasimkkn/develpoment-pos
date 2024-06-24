@@ -227,36 +227,36 @@
     </div>
   </aside>
 
-  <main class="w-full flex justify-center items-center flex-col pt-5 bg-secondary overflow-hidden"
+  <main class="w-full flex pt-8 items-center flex-col bg-secondary overflow-hidden"
     style="height: 100vh;">
-
-    <div class="flex gap-4 w-full items-center" style="padding-left: 2.5rem;" id="color-picker">
-
-      <div class="flex gap-2 items-center p-2 bg-white rounded-lg">
-        <label for="common-color">Common</label>
-        <input type="color" id="common-color" name="common-color" value="#104373">
-      </div>
-      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
-        <label for="common-hover-color">Hover</label>
-        <input type="color" id="common-hover-color" name="common-hover-color" value="#104373">
-      </div>
-
-      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
-        <label for="primary-color">Primary</label>
-        <input type="color" id="primary-color" name="primary-color" value="#D3D3D3">
-      </div>
-
-      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
-        <label for="secondary-color">Secondary</label>
-        <input type="color" id="secondary-color" name="secondary-color" value="#F5F5DC">
-      </div>
-
-      <div class="flex gap-2 items-center bg-white rounded-lg p-2">
-        <label for="secondary-color">Tertiary</label>
-        <input type="color" id="secondary-color" name="tertiary-color" value="#62CBE7">
-      </div>
-
-      <button id="saveColorsBtn"
+    <div class="flex gap-2 w-full justify-between bg-white" style="padding: 1rem 2.5rem;">
+      <div class="flex gap-2 " id="color-picker">
+        <div class="flex flex-col gap-1 items-center p-2 rounded-lg">
+          <label class="text-black" for="common-color">Common</label>
+          <input type="color" id="common-color" name="common-color" value="#104373">
+        </div>
+        <div class="flex flex-col gap-1 items-center rounded-lg p-2">
+          <label class="text-black" for="common-hover-color">Hover</label>
+          <input type="color" id="common-hover-color" name="common-hover-color" value="#104373">
+        </div>
+  
+        <div class="flex flex-col gap-1 items-center rounded-lg p-2">
+          <label class="text-black" for="primary-color">Primary</label>
+          <input type="color" id="primary-color" name="primary-color" value="#D3D3D3">
+        </div>
+  
+        <div class="flex flex-col gap-1 items-center rounded-lg p-2">
+          <label class="text-black" for="secondary-color">Secondary</label>
+          <input type="color" id="secondary-color" name="secondary-color" value="#F5F5DC">
+        </div>
+  
+        <div class="flex flex-col gap-1 items-center rounded-lg p-2">
+          <label class="text-black" for="secondary-color">Tertiary</label>
+          <input type="color" id="secondary-color" name="tertiary-color" value="#62CBE7">
+        </div>
+  
+      <div class="flex gap-2 items-center">
+        <button id="saveColorsBtn"
         class="inline-flex items-center justify-between rounded-md text-sm px-4 py-2 w-max mb-2 beautyBtn text-white">
         save
       </button>
@@ -265,10 +265,19 @@
         class="inline-flex items-center justify-between rounded-md text-sm px-4 py-2 w-max mb-2 beautyBtn text-white">
         Default
       </button>
-    </div>
-
-    <div class="flex w-full pt-4" style="padding-left: 2.5rem;">
-      <h2 class="text-xl text-common font-bold">Customer Settings</h2>
+      </div>   
+      </div>
+      <div class="flex gap-2 items-center justify-center">
+        <div class="flex flex-col gap-1">
+          <label class="text-black" for="languageSettign">Select Languge</label>
+          <select id="languageSettign"
+          class="block py-1 px-1 w-full text-sm text-black bg-secondary border-primary rounded-md">
+            <option value="en">English</option>
+            <option value="ar">Arabic</option>
+            <option value="gj">Gujarati</option>
+          </select>
+        </div>
+      </div>
     </div>
     <div class="flex flex-col  p-5 gap-5">
       <div class="w-full pl-5 flex gap-5 flex-wrap">

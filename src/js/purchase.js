@@ -119,20 +119,14 @@ const renderPurchase = (purchaseList) => {
       <td class="px-6 py-4">
         <div class="max-md:text-xs">${purchase.purchase_no}</div>
       </td>
+            <td class="px-6 py-4">
+        <div class="max-md:text-xs">${new Date(purchase.date).toLocaleDateString('en-GB')}</div>
+      </td>
       <td class="px-6 py-4">
         <div class="max-md:text-xs">${purchase.supplier_name}</div>
       </td>
       <td class="px-6 py-4">
-        <div class="max-md:text-xs">${new Date(purchase.date).toLocaleDateString('en-GB')}</div>
-      </td>
-      <td class="px-6 py-4">
         <div class="max-md:text-xs">${purchase.item_details[0].item_name}</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase.item_details[0].quantity}kg</div>
-      </td>
-      <td class="px-6 py-4">
-        <div class="max-md:text-xs">${purchase.item_details[0].mrp}</div>
       </td>
       <td class="px-6 py-4">
         <div class="max-md:text-xs">${purchase.item_details[0].total}</div>

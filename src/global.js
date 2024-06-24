@@ -237,16 +237,18 @@ if (syncDataOnline) {
     });
 }
 
-const languageSelector = document.getElementById("language-selector");
+const languageSelector = document.getElementById("languageSettign");
 
     if(languageSelector) {    
     languageSelector.addEventListener("change", function () {
       const selectedLanguage = languageSelector.value;
+      localStorage.setItem("language", selectedLanguage);
       setLocale(selectedLanguage);
     });
 }
 
 function setLocale(locale) {
+
     // Construct the path dynamically
     fs.readFile(`src/lang/${locale}.json`, 'utf8', (err, data) => {
       if (err) {
@@ -272,4 +274,11 @@ function setLocale(locale) {
     }
   }
   
-  setLocale("en");
+const languageValue = localStorage.getItem("language");
+  if (languageValue) {
+    languageSelector.value = languageValue;
+    setLocale(languageValue);
+  }
+  else{
+      setLocale("en");
+  }
