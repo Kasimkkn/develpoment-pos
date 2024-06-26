@@ -2,9 +2,6 @@ const { ipcRenderer } = require("electron");
 const path = require('path');
 const fs = require('fs');
 
-
-
-
 const btnToSetDefault = document.getElementById("btnToSetDefault");
 if(btnToSetDefault) {
  btnToSetDefault.addEventListener("click", () => {
@@ -17,7 +14,6 @@ if(btnToSetDefault) {
  })
 }
 
-// Function to update CSS variables
 const updateColor = (variable, value) => {
     document.documentElement.style.setProperty(variable, value);
   };
@@ -68,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const resturantName = billInfo._doc.resturant_name;
         const CustomerHotelName = document.getElementById("CustomerHotelName");
-        CustomerHotelName.innerHTML = resturantName;
+        if (CustomerHotelName){
+            CustomerHotelName.innerHTML = resturantName;
+        }
     }
     else {
         const loginPath = path.join(__dirname, 'login.html');
@@ -276,8 +274,10 @@ function setLocale(locale) {
   
 const languageValue = localStorage.getItem("language");
   if (languageValue) {
-    languageSelector.value = languageValue;
-    setLocale(languageValue);
+    if(languageSelector){
+        languageSelector.value = languageValue;
+        setLocale(languageValue);
+    }
   }
   else{
       setLocale("en");

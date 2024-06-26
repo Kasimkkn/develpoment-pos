@@ -47,14 +47,9 @@ const updateCartUI = () => {
     }
     itemElement.innerHTML = `
     <input type="hidden" value="${item.item_no}" id="itemNo"/>
-    <div class="flex items-center justify-center p-2">
-          <span class="w-14 h-14 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-2xl">${item.item_no}</p>
-          </span>
-        </div>
     <div class="flex flex-col gap-2 items-start w-40 max-lg:w-32">
       <div class="flex gap-1 justify-between items-center text-sm">
-      <p class="text-sm flex gap-2">${item.item_name.split(" ").slice(0, 2).join(" ")}</p>
+      <p class="text-sm flex gap-2">${item.item_name}</p>
       ${sp_info !== "none" ? `(${sp_info})` : ``}
       </div>
       <div class="text-xs flex gap-2 items-center">
@@ -261,17 +256,19 @@ const populateProducts = (products, locationName) => {
         price = product._doc.rate_one;
     }
     const productElement = document.createElement("div");
-    productElement.classList.add("product", "bg-white", "shadow-md", "rounded-xl");
-    productElement.style.width = "9rem";
+    productElement.classList.add("product", "w-40", "bg-white", "rounded-xl", "duration-500", "hover:shadow-xl");
     productElement.innerHTML = `
-     <div class="flex items-center justify-between px-2 py-2 gap-2">
-          <span class="w-16 h-16 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-xl">${product._doc.item_no}</p>
+          <div class="flex p-1 flex-col justify-between gap-2">
+          <span class="flex gap-2">
+            <img src="${product._doc.item_image}" class="w-40 h-16 rounded-lg object-cover" alt="product image">
             </span>
-            <div class="flex flex-col gap-1 w-full">
-                        <p class="text-sm font-bold " style="text-transform: capitalize;">
-            ${product._doc.item_name.split(" ").slice(0, 2).join(" ")}</p> 
-            <p class="text-sm font-extralight">${userCurrency}${price}</p>
+            <div class="flex flex-col gap-1">
+            <p class="text-sm font-extralight" style="text-transform: capitalize;">
+            ${product._doc.item_name.split(" ").slice(0, 3).join(" ")}
+            </p> 
+            <p class="text-sm font-bold">
+            ${userCurrency} ${price}
+            </p>
             </div>
           </div>
     `;

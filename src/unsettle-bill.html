@@ -91,11 +91,13 @@
       </main>
 
       <!-- Right Side Section -->
-      <aside class="edit_right_side_section bg-tertiary p-8">
-        <div class="py-6 px-4 sm:px-6 lg:px-8 bg-white rounded-lg">
+      <aside class="edit_right_side_section bg-tertiary flex flex-col gap-2 p-8">
+        <div class="py-6 px-4 bg-white hidden rounded-lg gap-4 items-center justify-center mt-4" id="singleSplitUi">
+        </div>
+        <div class="py-6 px-4 bg-white rounded-lg">
           <h1 class="text-2xl text-center">Select Pay Mode</h1>
           <div class="flex gap-4 items-center justify-center mt-4">
-            <ul id="payModeList" class="flex gap-4 items-start justify-center mt-4 flex-col">
+            <ul id="payModeList" class="flex gap-4 items-start justify-center mt-4 flex-wrap">
               <!-- Pay mode options will be dynamically rendered here -->
             </ul>
           </div>

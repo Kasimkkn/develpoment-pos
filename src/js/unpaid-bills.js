@@ -16,17 +16,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   fetchunpaidBills(datesByInput);
   ipcRenderer.on("unpaid-bills-data", (event, data) => {
-    unpaidBills = data;
-    renderunpaidBills(data);
-  });
+    unpaidBills = JSON.parse(data);
+    renderunpaidBills(unpaidBills);
+ });
 });
 
 todaySaleInput.addEventListener("input", () => {
   const datesByInput = todaySaleInput.value;
   fetchunpaidBills(datesByInput);
   ipcRenderer.on("unpaid-bills-data", (event, data) => {
-    unpaidBills = data;
-    renderunpaidBills(data);
+    unpaidBills = JSON.parse(data);
+    renderunpaidBills(unpaidBills);
   });
 });
 
@@ -35,9 +35,9 @@ const fetchunpaidBills = async (datesByInput) => {
     ipcRenderer.send("fetch-unpaid-bills", datesByInput);
     if (
       ipcRenderer.on("unpaid-bills-data", (event, data) => {
-        unpaidBills = data;
-        renderunpaidBills(data);
-      })
+        unpaidBills = JSON.parse(data);
+        renderunpaidBills(unpaidBills);
+     })
     ) {
       renderunpaidBills(unpaidBills);
     }
@@ -68,15 +68,15 @@ const renderunpaidBills = (data) => {
 
     unpaidBillsTable.row
       .add([
-        sale._doc.bill_no,
-        sale._doc.location_name,
-        sale._doc.table_no,
-        sale._doc.final_amount.toFixed(2),
-        String(sale._doc.created_at).split("T")[0],
+        sale.bill_no,
+        sale.location_name,
+        sale.table_no,
+        sale.final_amount.toFixed(2),
+        String(sale.created_at).split("T")[0],
       ])
       .draw(false);
 
-    totalAmount += sale._doc.final_amount;
+    totalAmount += sale.final_amount;
   });
 
   // Add total row

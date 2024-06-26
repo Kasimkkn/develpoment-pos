@@ -4,7 +4,7 @@
   --primary-color: #906781; /* Light, soft rose */
   --secondary-color: #8becd4; /* Background, light yellow */
   --tertiary-color: #528a93; /* Background, light blue */
-  --common-hover-color: #c07070; /* Adjusted to match theme */
+  --common-hover-color: #ae5f5f; /* Adjusted to match theme */
   --input-color: #cbaaab; /* Adjusted to match theme */
 }
 
@@ -18,7 +18,7 @@
 }
 
 .bg-secondary {
-  background-color: var(--secondary-color);
+  background: linear-gradient(45deg , var(--secondary-color), var(--primary-color));
 }
 
 .text-secondary {
@@ -308,7 +308,7 @@ datalist option{
   color: white;
 }
 .beautyBtn:hover {
-  background-color: var(--common-hover-color);
+  background: linear-gradient(90deg , var(--common-hover-color), var(--common-color));
 }
 #whoteCartSection{
   padding: 1rem 1rem;

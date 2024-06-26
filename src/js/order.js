@@ -47,32 +47,27 @@ const updateCartUI = () => {
     }
     itemElement.innerHTML = `
     <input type="hidden" value="${item._doc.item_no}" id="itemNo"/>
-    <div class="flex items-center justify-center p-2">
-          <span class="w-14 h-14 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-2xl">${item._doc.item_no}</p>
-          </span>
-        </div>
-    <div class="flex flex-col gap-2 items-start w-40 max-lg:w-32">
+  <div class="flex flex-col gap-1 w-full">
       <div class="flex gap-1 justify-between items-center text-sm">
-      <p class="text-sm flex gap-2">${item._doc.item_name.split(" ").slice(0, 1).join(" ")}</p>
-      ${sp_info !== "none" ? `(${sp_info})` : ``}
+      <p class="text-sm flex ">${item._doc.item_name.split(" ").slice(0, 3).join(" ")} ${sp_info !== "none" ? `(${sp_info})` : ``}</p>
       <button data-modal-target="quantityAddModal" data-modal-toggle="quantityAddModal" id="quantity-${item._doc.item_no}" class="beautyBtn text-black flex items-center justify-center rounded-md  w-10 hover:cursor-pointer">note</button>
       </div>
+    <div class="flex justify-between items-center">
       <div class="text-xs flex gap-2 items-center">
       <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleIncrement('${item._doc.item_no}','${item._doc.price}', event)">+</button>
       ${item._doc.quantity} 
       <button class="text-lg text-white rounded-md beautyBtn w-8 h-8" onclick="handleDecrement(${item._doc.item_no}, '${sp_info}',event)">-</button>
-      
       </div>
-    </div>
-    <div class="flex flex-col gap-2 justify-center items-center">
+    <div class="flex gap-2 justify-end items-end">
       <p class="text-xs">${(item._doc.price * item._doc.quantity).toFixed(2)}</p>
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32" id="delete" class="hover:cursor-pointer"
       onclick='removeItemFromCart("${locationName}", "${tableNo}", ${JSON.stringify(item._doc)})'>
       <path d="M24.2,12.193,23.8,24.3a3.988,3.988,0,0,1-4,3.857H12.2a3.988,3.988,0,0,1-4-3.853L7.8,12.193a1,1,0,0,1,2-.066l.4,12.11a2,2,0,0,0,2,1.923h7.6a2,2,0,0,0,2-1.927l.4-12.106a1,1,0,0,1,2,.066Zm1.323-4.029a1,1,0,0,1-1,1H7.478a1,1,0,0,1,0-2h3.1a1.276,1.276,0,0,0,1.273-1.148,2.991,2.991,0,0,1,2.984-2.694h2.33a2.991,2.991,0,0,1,2.984,2.694,1.276,1.276,0,0,0,1.273,1.148h3.1A1,1,0,0,1,25.522,8.164Zm-11.936-1h4.828a3.3,3.3,0,0,1-.255-.944,1,1,0,0,0-.994-.9h-2.33a1,1,0,0,0-.994.9A3.3,3.3,0,0,1,13.586,7.164Zm1.007,15.151V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Zm4.814,0V13.8a1,1,0,0,0-2,0v8.519a1,1,0,0,0,2,0Z"></path>
       </svg>
     </div>
-    <input type="hidden" value="${item._doc.sp_info}" />
+    </div>  
+  </div>
+      
   `;
 
     cartElement.appendChild(itemElement);
@@ -244,14 +239,6 @@ const getCartItemQuantity = (itemNo) => {
   return totalQuantity;
 };
 
-const extractAndCapitalize = (str) => {
-  const matches = str.match(/(\b\S)|\s+(\S)/g);
-  if (matches) {
-    return matches.map(match => match.trim().toUpperCase()).join('');
-  }
-  return '';
-};
-
 const populateProducts = (products, locationName) => {
   const productList = document.getElementById("product-list");
   productList.innerHTML = "";
@@ -291,14 +278,17 @@ const populateProducts = (products, locationName) => {
     productElement.href = "#";
     productElement.classList.add("product", "w-40", "bg-white", "rounded-xl", "duration-500", "hover:shadow-xl");
     productElement.innerHTML = `
-          <div class="flex items-center justify-between px-2 py-2 gap-2">
-          <span class="w-16 h-16 border beautyBtn rounded-full flex items-center justify-center" style="border:2px solid var(--common-color)">
-            <p class="text-xl">${product._doc.item_no}</p>
+          <div class="flex p-1 flex-col justify-between gap-2">
+          <span class="flex gap-2">
+            <img src="${product._doc.item_image}" class="w-40 h-16 rounded-lg object-cover" alt="product image">
             </span>
-            <div class="flex flex-col gap-1 w-full">
-                        <p class="text-sm font-bold " style="text-transform: capitalize;">
-            ${product._doc.item_name.split(" ").slice(0, 2).join(" ")}</p> 
-            <p class="text-sm font-extralight">${userCurrency}${price}</p>
+            <div class="flex flex-col gap-1">
+            <p class="text-sm font-extralight" style="text-transform: capitalize;">
+            ${product._doc.item_name.split(" ").slice(0, 3).join(" ")}
+            </p> 
+            <p class="text-sm font-bold">
+            ${userCurrency} ${price}
+            </p>
             </div>
           </div>
 
@@ -375,7 +365,6 @@ const populateCateogories = (categories) => {
 
 const $targetEl = document.getElementById('quantityAddModal');
 const $targetEl2 = document.getElementById('customerInfoModal');
-const $targetEl3 = document.getElementById('quantityAddModal');
 
 const options = {
   placement: 'bottom-right',
@@ -388,9 +377,16 @@ const options = {
 const quantityAddModal = new Modal($targetEl, options);
 const customerInfoModal = new Modal($targetEl2, options);
 
+const newQuantityInput = document.getElementById("newQuantity");
+const specialInfoInput = document.getElementById("specialInfo");
+
 let cartItemId = 0
 const openQuantityModal = (itemId) => {
   cartItemId = itemId
+  const itemOfCart = cartItems.find((item) => item._doc.item_no === Number(itemId));
+  console.log(itemOfCart)
+  newQuantityInput.value = itemOfCart ? itemOfCart._doc.quantity : 1;
+  specialInfoInput.value = itemOfCart ? itemOfCart._doc.sp_info == "none" ? "" : itemOfCart._doc.sp_info : "";
   quantityAddModal.show();
 }
 

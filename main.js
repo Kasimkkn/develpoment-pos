@@ -957,54 +957,77 @@ ipcMain.on("update-bill-quantity", async (event, toUpdateData) => {
 ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
 
   try {
-    const LocationData = await Location.find();
-    const ItemData = await Item.find({});
-    const currentLocation = LocationData.find(loc => loc._doc.location_name == toUpdateData.locationName);
-    const locationPriceKey = currentLocation ? "rate_" + currentLocation._doc.location_price : "rate_one";
-
-    const product = ItemData.find(item => item._doc.item_no == toUpdateData.itemId);
-
-    let price;
-    switch (locationPriceKey) {
-      case "rate_one":
-        price = product._doc.rate_one;
-        break;
-      case "rate_two":
-        price = product._doc.rate_two;
-        break;
-      case "rate_three":
-        price = product._doc.rate_three;
-        break;
-      case "rate_four":
-        price = product._doc.rate_four;
-        break;
-      case "rate_five":
-        price = product._doc.rate_five;
-        break;
-      case "rate_six":
-        price = product._doc.rate_six;
-        break;
-      default:
-        price = product._doc.rate_one;
-
-    }
-    const cartItem = new ExistingCartItem({
+    const cartItems = await ExistingCartItem.findOne({
       table_no: toUpdateData.tableNo,
       location_name: toUpdateData.locationName,
       item_no: toUpdateData.itemId,
-      item_name: product.item_name,
-      item_image: product.item_image,
-      price,
-      quantity: toUpdateData.newQuantity,
-      sp_info: toUpdateData.specialInfo,
-      is_printed: false,
     });
-    await cartItem.save();
-    // }
-    const updatedCartItems = await ExistingCartItem.find({
-      table_no: toUpdateData.tableNo,
-      location_name: toUpdateData.locationName,
-    });
+
+    console.log(cartItems)
+
+    if (cartItems && cartItems.sp_info!="none") {
+      const LocationData = await Location.find();
+      const ItemData = await Item.find({});
+      const currentLocation = LocationData.find(loc => loc._doc.location_name == toUpdateData.locationName);
+      const locationPriceKey = currentLocation ? "rate_" + currentLocation._doc.location_price : "rate_one";
+  
+      const product = ItemData.find(item => item._doc.item_no == toUpdateData.itemId);
+  
+      let price;
+      switch (locationPriceKey) {
+        case "rate_one":
+          price = product._doc.rate_one;
+          break;
+        case "rate_two":
+          price = product._doc.rate_two;
+          break;
+        case "rate_three":
+          price = product._doc.rate_three;
+          break;
+        case "rate_four":
+          price = product._doc.rate_four;
+          break;
+        case "rate_five":
+          price = product._doc.rate_five;
+          break;
+        case "rate_six":
+          price = product._doc.rate_six;
+          break;
+        default:
+          price = product._doc.rate_one;
+  
+      }
+      const cartItem = new ExistingCartItem({
+        table_no: toUpdateData.tableNo,
+        location_name: toUpdateData.locationName,
+        item_no: toUpdateData.itemId,
+        item_name: product.item_name,
+        item_image: product.item_image,
+        price,
+        quantity: toUpdateData.newQuantity,
+        sp_info: toUpdateData.specialInfo,
+        is_printed: false,
+      });
+      await cartItem.save();
+      // }
+      const updatedCartItems = await ExistingCartItem.find({
+        table_no: toUpdateData.tableNo,
+        location_name: toUpdateData.locationName,
+      });
+    
+      event.reply("cartItems-data", updatedCartItems);
+    }
+    else{
+      cartItems.quantity = toUpdateData.newQuantity;
+      cartItems.sp_info = toUpdateData.specialInfo;
+      await cartItems.save();
+      const updatedCartItems = await ExistingCartItem.find({
+        table_no: toUpdateData.tableNo,
+        location_name: toUpdateData.locationName,
+      });
+      console.log("updatedCartItems", updatedCartItems)
+      event.reply("cartItems-data", updatedCartItems);
+    }
 
     const getSpInfo = await SpInfo.find({
       sp_info: toUpdateData.specialInfo
@@ -2032,10 +2055,44 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
       totalFinalAmount: { $sum: "$final_amount" }
     };
 
+    // Dynamically add group stages for each paymode
     paymodes.forEach(paymode => {
-      groupStages[`total${paymode.paymode_name}`] = {
+      const fieldName = `total${paymode.paymode_name}`;
+      groupStages[fieldName] = {
         $sum: {
-          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+          $cond: {
+            if: {
+              $or: [
+                { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] },
+                { $in: [paymode.paymode_name.toUpperCase(), { $ifNull: ["$pay_mode", []] }] } // Ensure $pay_mode is treated as an array or empty array if null
+              ]
+            },
+            then: {
+              $cond: {
+                if: { $isArray: "$pay_mode" },
+                then: {
+                  $reduce: {
+                    input: { $range: [0, { $size: "$pay_mode" }] },
+                    initialValue: 0,
+                    in: {
+                      $add: [
+                        "$$value",
+                        {
+                          $cond: {
+                            if: { $eq: [paymode.paymode_name.toUpperCase(), { $arrayElemAt: ["$pay_mode", "$$this"] }] },
+                            then: { $arrayElemAt: ["$splited_amount", "$$this"] },
+                            else: 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                else: "$final_amount"
+              }
+            },
+            else: 0
+          }
         }
       };
     });
@@ -2047,20 +2104,22 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
             $gte: startDate,
             $lte: endDate
           },
-          "location_name": locationName
+          "location_name": locationName,
+          "pay_mode": { $ne: "unpaid" }
         }
       },
       { $group: groupStages }
     ];
 
     const data = await Bill.aggregate(aggregationPipeline);
-    console.log(data)
+    
     event.reply("locationWise-sales-data", data);
   } catch (error) {
     console.error("Error fetching location-wise sales:", error);
     throw error;
   }
 });
+
 
 // item-wise - daily report
 ipcMain.on("fetch-itemWise-sales", async (event, datesByInput) => {
@@ -2250,7 +2309,37 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
       const fieldName = `total${paymode.paymode_name}`;
       groupStages[fieldName] = {
         $sum: {
-          $cond: { if: { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] }, then: "$final_amount", else: 0 }
+          $cond: {
+            if: { $or: [
+              { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] },
+              { $in: [paymode.paymode_name.toUpperCase(), "$pay_mode"] }
+            ] },
+            then: {
+              $cond: {
+                if: { $isArray: "$pay_mode" },
+                then: {
+                  $reduce: {
+                    input: { $range: [0, { $size: "$pay_mode" }] },
+                    initialValue: 0,
+                    in: {
+                      $add: [
+                        "$$value",
+                        {
+                          $cond: {
+                            if: { $eq: [paymode.paymode_name.toUpperCase(), { $arrayElemAt: ["$pay_mode", "$$this"] }] },
+                            then: { $arrayElemAt: ["$splited_amount", "$$this"] },
+                            else: 0
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                else: "$final_amount"
+              }
+            },
+            else: 0
+          }
         }
       };
     });
@@ -2262,23 +2351,25 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
             $gte: startDate,
             $lte: endDate
           },
-          "pay_mode": { $ne: "unpaid" }
+          "pay_mode": { 
+            $not: { $eq: "unpaid" } // Check if pay_mode is not equal to "unpaid"
+          }
         }
       },
-      { $group: groupStages }
+      {
+        $group: groupStages
+      }
     ];
 
     const data = await Bill.aggregate(aggregationPipeline);
-    console.log(data)
+    
     event.reply("paymentWise-sales-data", data);
 
   } catch (error) {
     console.error("Error fetching payment-wise monthly sales:", error);
     event.reply("paymentWise-sales-error", "Error fetching payment-wise monthly sales");
   }
-});
-
-
+}); 
 // unpaid bills 
 ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {
   try {
@@ -2294,7 +2385,7 @@ ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {
       final_amount: { $gt: 0 }
     }).select("-item_details");
 
-    event.reply("unpaid-bills-data", data);
+    event.reply("unpaid-bills-data", JSON.stringify(data));
   } catch (error) {
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
@@ -2431,7 +2522,7 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
       final_amount: { $gt: 0 },
       pay_mode: "unpaid"
     }).select("-item_details");
-    event.reply("unsettled-bills-data", data);
+    event.reply("unsettled-bills-data", JSON.stringify(data));
 
   } catch (error) {
     console.error("Error fetching daily sales:", error);
@@ -3132,6 +3223,48 @@ ipcMain.on("edit-user-rights", async (event, userID, usedData) => {
     event.reply("edit-user-rights-error", "Error editing user rights");
   }
 })
+
+// set-split-paymode
+ipcMain.on("set-split-paymode", async (event, billNo, splitPayments) => {
+  try {
+    console.log(splitPayments);
+    const BillData = await Bill.findOne({ bill_no: billNo });
+    if (!BillData) {
+      event.reply("set-split-paymode-error", "Bill not found");
+      return;
+    }
+    if (!splitPayments) {
+      event.reply("set-split-paymode-error", "No split payments provided");
+      return;
+    }
+
+    BillData.is_synced = false;
+
+    // Ensure pay_mode and amount are arrays
+    if (!Array.isArray(BillData.pay_mode)) {
+      BillData.pay_mode = [];
+    }
+    if (!Array.isArray(BillData.splited_amount)) {
+      BillData.splited_amount = [];
+    }
+
+    // Assign the split payments to the bill data
+    for (let i = 0; i < splitPayments.length; i++) {
+      BillData.pay_mode[i] = splitPayments[i].paymode.toUpperCase();
+      BillData.splited_amount[i] = splitPayments[i].amount;
+    }
+
+    console.log(BillData);
+    await BillData.save();
+
+    event.reply("set-split-paymode-success", "Split payments set successfully");
+  } catch (error) {
+    console.error("Error editing user rights:", error);
+    event.reply("set-split-paymode-error", "Error editing user rights");
+  }
+});
+
+
 
 let cloudConnection;
 

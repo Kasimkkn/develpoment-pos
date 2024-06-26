@@ -48,7 +48,7 @@ const fetchDailySales = async (datesByInput) => {
 
 const renderDailySales = (data) => {
   console.log(data);
-  if(data.length > 0) {
+  if (data.length > 0) {
     const initialColumns = [
       { title: "Bills" },
       { title: "Total" },
@@ -119,7 +119,12 @@ const renderDailySales = (data) => {
 
       Object.keys(payModes).forEach(paymode => {
         const paymodeKey = paymode.split("total")[1].toLowerCase();
-        rowData.push(sale.pay_mode.toLowerCase() === paymodeKey ? sale.final_amount.toFixed(2) : '0.00');
+        if (Array.isArray(sale.pay_mode)) {
+          const index = sale.pay_mode.map(mode => mode.toLowerCase()).indexOf(paymodeKey);
+          rowData.push(index !== -1 ? sale.splited_amount[index].toFixed(2) : '0.00');
+        } else {
+          rowData.push(sale.pay_mode.toLowerCase() === paymodeKey ? sale.final_amount.toFixed(2) : '0.00');
+        }
       });
 
       dailySalesTable.row.add(rowData);
@@ -143,8 +148,16 @@ const renderDailySales = (data) => {
     ];
 
     Object.keys(payModes).forEach(paymode => {
+      const paymodeKey = paymode.split("total")[1].toLowerCase();
       const total = data.reduce((sum, saleData) => {
-        return sum + (saleData[paymode.toLowerCase()] || 0);
+        return sum + saleData.sales.reduce((saleSum, sale) => {
+          if (Array.isArray(sale.pay_mode)) {
+            const index = sale.pay_mode.map(mode => mode.toLowerCase()).indexOf(paymodeKey);
+            return saleSum + (index !== -1 ? sale.splited_amount[index] : 0);
+          } else {
+            return saleSum + (sale.pay_mode.toLowerCase() === paymodeKey ? sale.final_amount : 0);
+          }
+        }, 0);
       }, 0);
       totalsRow.push(total.toFixed(2));
     });
@@ -174,3 +187,4 @@ const renderDailySales = (data) => {
     dailySalesTable.draw();
   }
 };
+

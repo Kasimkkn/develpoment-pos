@@ -48,7 +48,11 @@ const billSchema = new mongoose.Schema({
      final_amount:{
         type:Number,
         default:0.00
-     } ,
+     },
+     splited_amount:{
+        type:[Number],
+        default:0.00
+     },
      table_no:{
         type:String,
         required: true
@@ -107,7 +111,7 @@ const billSchema = new mongoose.Schema({
         default:"0.00"
      },
      pay_mode:{
-        type:String,
+        type:[String] || String,
         default:"unpaid"
      }, 
      is_synced:{
