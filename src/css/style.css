@@ -1,10 +1,10 @@
 
 :root {
-  --common-color: #51386b;  /* Dark, burgundy */
-  --primary-color: #906781; /* Light, soft rose */
-  --secondary-color: #8becd4; /* Background, light yellow */
-  --tertiary-color: #528a93; /* Background, light blue */
-  --common-hover-color: #ae5f5f; /* Adjusted to match theme */
+  --common-color: rgb(227, 100, 37);  /* Dark, burgundy */
+  --primary-color: white; /* Light, soft rose */
+  --secondary-color: rgb(224, 221, 221); /* Background, light yellow */
+  --tertiary-color: rgb(237, 230, 230); /* Background, light blue */
+  --common-hover-color: #f06a17; /* Adjusted to match theme */
   --input-color: #cbaaab; /* Adjusted to match theme */
 }
 
@@ -18,7 +18,8 @@
 }
 
 .bg-secondary {
-  background: linear-gradient(45deg , var(--secondary-color), var(--primary-color));
+  /* background: linear-gradient(45deg , var(--secondary-color), var(--primary-color)); */
+  background-color: var(--secondary-color);
 }
 
 .text-secondary {
@@ -84,7 +85,10 @@ select{
   background-color: var(--input-color);
   padding: 0.625rem; 
 }
-
+#accordion-collapse{
+  /* animate the box */
+  transition: all 0.3s ease;
+}
 #keyboard {
   position: fixed;
   max-width: 300px;
