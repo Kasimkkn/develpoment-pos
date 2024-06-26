@@ -51,7 +51,6 @@ const fetchUnsettledBills = async (datesByPicker) => {
 const renderUnsettledBills = (data) => {
     const unsettledBillsTable = document.getElementById("Unsettled-bills-table");
     unsettledBillsTable.innerHTML = "";
-    console.log(data)
     data.forEach((sale) => {
         const tr = document.createElement("tr");
         tr.classList.add("bg-secondary", "border-b", "hover:bg-white");
@@ -88,10 +87,13 @@ const attachCheckboxListeners = () => {
                     allBills.splice(index, 1);
                 }
             }
-            if (allBills.length === 1 || allBills.length <= 1 ) {
+            if (allBills.length === 1) {
                 singleBillPayUi(allBills[0], apiPayModes);
             }
             else if(allBills.length > 1) {
+                singleBillPayUi(false, apiPayModes);
+            }
+            else {
                 singleBillPayUi(false, apiPayModes);
             }
         });
@@ -114,6 +116,7 @@ mainCheckbox.addEventListener("click", () => {
 
 function setPayMode(paymodeType) {
     try {
+        console.log("allBills", allBills)
         if (allBills.length > 1) {
             allBills.shift();
             ipcRenderer.send("set-paymode", allBills, paymodeType);
@@ -125,12 +128,12 @@ function setPayMode(paymodeType) {
                     timer: 1250
                 });
             });
-            fetchUnsettledBills(datesByPicker);
-            ipcRenderer.once("unsettled-bills-data", (event, data) => {
-                unsettledBills = JSON.parse(data);
-                renderUnsettledBills(unsettledBills);
-            });
-        } else {
+            setTimeout(() => {
+                location.reload();
+            }, 1250);
+        } 
+        else {
+            console.log("hello")
             let checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
             if (checkedBoxes.length > 0) {
                 checkedBoxes.forEach(checkbox => {
@@ -184,7 +187,6 @@ const renderPayModes = (payModes) => {
 
 const settleOneBill = (billNo) => {
     const selected_record = unsettledBills.filter((bill) => bill.bill_no == billNo);
-    const totalAmount = selected_record[0].final_amount;
 
     let splitPayments = [];
     document.querySelectorAll(`input[name="billAmt"]`).forEach((input, index) => {
@@ -218,8 +220,8 @@ const singleBillPayUi = (billNo, apiPayModes) => {
     const singleSplitUi = document.getElementById("singleSplitUi");
     if(billNo === false){
         singleSplitUi.style.display = "none";
-        singleSplitUi.classList.add("hidden");
-        // return;
+        // singleSplitUi.classList.add("hidden");
+        return;
     }
     else{
         singleSplitUi.style.display = "flex";
@@ -239,7 +241,9 @@ const singleBillPayUi = (billNo, apiPayModes) => {
                         for="billAmt-${index}" onclick="handleAmount(${index}, '${paymode._doc.paymode_name}', '${billNo}')">
                             ${paymode._doc.paymode_name}
                         </label>
-                        <input style="width: 50%;" id="billAmt-${index}" name="billAmt" type="number" oninput="handleAmountChange(${index}, this.value, '${paymode._doc.paymode_name}', '${billNo}')">
+                        <input style="width: 50%;"
+                        class="block text-sm text-black border rounded-lg border-primary"
+                        id="billAmt-${index}" name="billAmt" type="number" oninput="handleAmountChange(${index}, this.value, '${paymode._doc.paymode_name}', '${billNo}')">
                     </ul>
                 </div>
             `).join('')}
@@ -255,8 +259,7 @@ const singleBillPayUi = (billNo, apiPayModes) => {
 };
 
 const handleAmount = (index, paymodeName, billNo) => {
-    console.log(index, paymodeName);
-    const selected_record = unsettledBills.filter((bill) => bill.bill_no == billNo);
+    
     const totalAmount = document.getElementById(`total-${billNo}`);
     const inputElement = document.getElementById(`billAmt-${index}`);
     const currentValue = parseFloat(totalAmount.innerText);
@@ -267,7 +270,6 @@ const handleAmount = (index, paymodeName, billNo) => {
 
 
 const handleAmountChange = (index, value, paymodeName, billNo) => {
-    console.log(index, value, paymodeName);
     const totalAmount = document.getElementById(`total-${billNo}`);
     const selected_record = unsettledBills.filter((bill) => bill.bill_no == billNo);
     

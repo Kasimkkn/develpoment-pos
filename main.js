@@ -965,14 +965,14 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
 
     console.log(cartItems)
 
-    if (cartItems && cartItems.sp_info!="none") {
+    if (cartItems && cartItems.sp_info != "none") {
       const LocationData = await Location.find();
       const ItemData = await Item.find({});
       const currentLocation = LocationData.find(loc => loc._doc.location_name == toUpdateData.locationName);
       const locationPriceKey = currentLocation ? "rate_" + currentLocation._doc.location_price : "rate_one";
-  
+
       const product = ItemData.find(item => item._doc.item_no == toUpdateData.itemId);
-  
+
       let price;
       switch (locationPriceKey) {
         case "rate_one":
@@ -995,7 +995,7 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
           break;
         default:
           price = product._doc.rate_one;
-  
+
       }
       const cartItem = new ExistingCartItem({
         table_no: toUpdateData.tableNo,
@@ -1014,10 +1014,10 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
         table_no: toUpdateData.tableNo,
         location_name: toUpdateData.locationName,
       });
-    
+
       event.reply("cartItems-data", updatedCartItems);
     }
-    else{
+    else {
       cartItems.quantity = toUpdateData.newQuantity;
       cartItems.sp_info = toUpdateData.specialInfo;
       await cartItems.save();
@@ -1789,7 +1789,7 @@ ipcMain.on("fetch-daily-sales", async (event, datesByInput) => {
       _id: null,
       sales: { $push: "$$ROOT" }
     };
-    
+
     paymodes.forEach(paymode => {
       groupStages[`total${paymode.paymode_name}`] = {
         $sum: {
@@ -1834,7 +1834,7 @@ ipcMain.on("fetch-monthly-sales", async (event, fromDate, toDate) => {
       _id: null,
       sales: { $push: "$$ROOT" }
     };
-    
+
     paymodes.forEach(paymode => {
       groupStages[`total${paymode.paymode_name}`] = {
         $sum: {
@@ -1927,7 +1927,7 @@ ipcMain.on("fetch-item-wise-purchase", async (event, fromDate, toDate) => {
         }
       }
     ]
-    const data = await Purchase.aggregate(aggregationPipeline).sort({ purchase_no : -1});
+    const data = await Purchase.aggregate(aggregationPipeline).sort({ purchase_no: -1 });
     event.reply("item-wise-purchase-data", JSON.parse(JSON.stringify(data)));
   } catch (error) {
     console.log("error fetching item wise purchase", error);
@@ -2039,7 +2039,7 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
     const selectedEndDate = new Date(toDate);
     const startDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate(), 0, 0, 0);
     const endDate = new Date(selectedEndDate.getFullYear(), selectedEndDate.getMonth(), selectedEndDate.getDate(), 23, 59, 59, 999);
-    
+
     const paymodes = await Paymode.find({ status: true });
 
     const groupStages = {
@@ -2112,7 +2112,7 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
     ];
 
     const data = await Bill.aggregate(aggregationPipeline);
-    
+
     event.reply("locationWise-sales-data", data);
   } catch (error) {
     console.error("Error fetching location-wise sales:", error);
@@ -2310,10 +2310,12 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
       groupStages[fieldName] = {
         $sum: {
           $cond: {
-            if: { $or: [
-              { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] },
-              { $in: [paymode.paymode_name.toUpperCase(), "$pay_mode"] }
-            ] },
+            if: {
+              $or: [
+                { $eq: ["$pay_mode", paymode.paymode_name.toUpperCase()] },
+                { $in: [paymode.paymode_name.toUpperCase(), "$pay_mode"] }
+              ]
+            },
             then: {
               $cond: {
                 if: { $isArray: "$pay_mode" },
@@ -2351,7 +2353,7 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
             $gte: startDate,
             $lte: endDate
           },
-          "pay_mode": { 
+          "pay_mode": {
             $not: { $eq: "unpaid" } // Check if pay_mode is not equal to "unpaid"
           }
         }
@@ -2362,14 +2364,14 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
     ];
 
     const data = await Bill.aggregate(aggregationPipeline);
-    
+
     event.reply("paymentWise-sales-data", data);
 
   } catch (error) {
     console.error("Error fetching payment-wise monthly sales:", error);
     event.reply("paymentWise-sales-error", "Error fetching payment-wise monthly sales");
   }
-}); 
+});
 // unpaid bills 
 ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {
   try {
@@ -2534,17 +2536,18 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
 ipcMain.on("set-paymode", async (event, allBills, payMode) => {
   try {
     for (const billNo of allBills) {
+      console.log("billNo", billNo);
       const billInfo = await Bill.findOne({ bill_no: billNo });
 
       if (!billInfo) {
-        throw new Error(`Bill with number ${billNo} not found`);
+        console.log(`Bill with number ${billNo} not found`);
+        continue;
       }
-
-      if (billInfo.pay_mode === "unpaid") {
-        billInfo.pay_mode = payMode;
-      }
+      billInfo.pay_mode = payMode;
+      billInfo.splited_amount = billInfo.final_amount;
       billInfo.is_synced = false;
       await billInfo.save();
+      console.log("bill info saved", billInfo.bill_no);
     }
     event.reply("set-paymode-success", "Payment mode set successfully");
   } catch (error) {
@@ -2561,16 +2564,13 @@ ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
     if (!billDetail) {
       throw new Error("Bill not found");
     }
-
-    if (billDetail.pay_mode === "unpaid") {
       billDetail.pay_mode = payMode;
+      billDetail.splited_amount = billDetail.final_amount;
       billDetail.is_synced = false;
       await billDetail.save();
 
       event.reply("set-paymode-success", "Payment mode set successfully");
-    } else {
-      event.reply("set-paymode-error", "Bill is already paid");
-    }
+    
   } catch (error) {
     console.log("Error setting payment mode", error);
     event.reply("set-paymode-error", "Error setting payment mode");
