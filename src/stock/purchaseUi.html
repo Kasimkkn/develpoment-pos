@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Stock</title>
+  <link rel="stylesheet" href="../../node_modules/flowbite/dist/flowbite.min.css" />
+  <link rel="stylesheet" href="../css/output.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/edit-bill.css">
+</head>
+
+<body style="max-height: 100vh;overflow: hidden;">
+  <!-- Main Content -->
+  <div class="edit-wrapper">
+
+    <main class="edit_main_section bg-secondary" style="padding-left: 0 !important">
+      <div class="flex flex-col space-y-3 w-full py-2 px-4">
+        <div class="flex items-center gap-3 w-full justify-between" style="padding-right: 1rem !important;">
+          <div class="flex gap-3 items-center">
+            <a href="../index.html" class="text-common text-2xl">
+              <svg id="Layer_2" width="40" height="40" fill="var(--common-color)" enable-background="new 0 0 512 512" viewBox="0 0 512 512"
+                xmlns="http://www.w3.org/2000/svg">
+                <g>
+                  <g>
+                    <path
+                      d="m201.85 314.54c-6.08 0-12.18-2.21-16.99-6.67l-101.44-94.08c-5.14-4.77-8.05-11.48-8-18.5s3.04-13.69 8.25-18.39l104.22-94.08c10.25-9.25 26.06-8.44 35.31 1.81s8.44 26.06-1.81 35.31l-83.94 75.77 81.4 75.5c10.12 9.39 10.72 25.21 1.33 35.33-4.92 5.31-11.62 8-18.33 8z" />
+                  </g>
+                  <g>
+                    <path
+                      d="m304.54 435.61h-204.46c-13.81 0-25-11.19-25-25s11.19-25 25-25h204.46c45.42 0 82.37-36.95 82.37-82.37s-36.95-82.37-82.37-82.37h-204.46c-13.81 0-25-11.19-25-25s11.19-25 25-25h204.46c72.99 0 132.37 59.38 132.37 132.37s-59.38 132.37-132.37 132.37z" />
+                  </g>
+                </g>
+              </svg>
+            </a>
+            <input id="searchInput" maxlength="10" type="text" name="searchInput"
+            class="flex h-10 rounded-md border w-full  border-primary bg-white px-3 py-2 text-sm "
+            placeholder="Search dishes...." />
+          </div>
+          <div class="flex gap-3 items-center">
+            <div class="flex items-center w-full gap-2">
+              <label for="supplier_name" class="text-sm font-medium text-black">Supplier</label>
+              <input name="supplier_name" id="supplier_name" max="1000" maxlength="1000" list="supplier_name_list"
+                class="shadow-sm bg-white border text-black text-sm rounded-lg border-primary  block w-full p-2.5"
+                placeholder="e.g. Jhon, Smith" required="true" />
+              <datalist id="supplier_name_list"></datalist>
+            </div>
+           </div> 
+        </div>
+        <div class="flex flex-col gap-5" style="max-width: 1100px;">
+          <div id="search-product-list" style="max-height: 91vh; max-width: 100%;overflow-y: scroll;"
+            class="bg-tertiary flex gap-3 flex-wrap p-2 rounded-lg"></div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Right Side Section -->
+    <aside class="edit_right_side_section bg-tertiary">
+      <div id="whoteCartSection">
+        <div class="mb-2 flex justify-between flex-col gap-3">
+          <div class="flex justify-between w-full">
+          </div>
+        </div>
+        <div dir="ltr"
+          class="relative overflow-hidden w-full rounded-md p-3"
+          style="
+             margin: 0;
+             margin-top: 0.4rem;
+              position: relative;
+              --radix-scroll-area-corner-width: 0px;
+              --radix-scroll-area-corner-height: 0px;
+              height: calc(100vh - 170px);
+            ">
+          <style>
+            [data-radix-scroll-area-viewport] {
+              scrollbar-width: none;
+            }
+
+            [data-radix-scroll-area-viewport]::-webkit-scrollbar {
+              display: none;
+            }
+          </style>
+
+          <div data-radix-scroll-area-viewport="" class="h-full rounded-[inherit]" style="overflow: hidden scroll">
+            <div class="space-y-4">
+              <div class="w-full flex justify-between flex-col gap-3 divide-y-2 max-lg:gap-2" id="cart"></div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-col max-md:gap-1" style="margin-top: 2rem" id="cart-summary">
+          <div class="flex justify-between">
+            <span class="max-lg:text-sm max-md:text-[10px]" id="total-items">Total (0 Items)</span>
+            <span class="max-lg:text-[18px] max-md:text-[14px]" id="total-amount">&#8377; 0.00</span>
+          </div>
+
+          <div class="mt-2 flex justify-between">
+            <span class="text-lg font-semibold max-md:text-sm">Net Amt</span>
+            <span class="text-lg font-bold max-md:text-sm" id="net-amount">&#8377; 0.00</span>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="save-bill-btn"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common text-white">
+            Save Bill
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+    <div id="quantityAddModal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-secondary rounded-lg shadow">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+          <h3 class="text-xl font-semibold text-black">Select Quantity</h3>
+          <button type="button" data-modal-hide="quantityAddModal"
+            class="end-2.5 text-black bg-transparent second hover:text-black rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+            onclick="closeModal()">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-4 md:p-5 flex flex-col">
+          <div class="flex gap-5 justify-between p-4">
+            <div>
+              <label for="newQuantity" class="block mb-2 text-sm font-medium text-black">Quantity in Kg</label>
+              <input type="tel" id="newQuantity" name="newQuantity" placeholder="e.g. 50,100" autofocus value="1" min="1"
+                max="100000" maxlength="100000" autocomplete="on"
+                class="bg-primary border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
+            </div>
+
+            <div>
+              <label for="newPrice" class="block mb-2 text-sm font-medium text-black">Price</label>
+              <input id="newPrice" name="newPrice" type="text" placeholder="e.g. 100,200" autocomplete="on"
+                max="10000" maxlength="10000" 
+                class="bg-primary border border-gray-300 text-black text-sm rounded-lg  block w-full p-2.5" />
+
+            </div>
+          </div>
+          <div class="text-center">
+            <button id="add-quantity-btn"
+              class="inline-flex items-center justify-between rounded-md text-sm h-10 px-4 py-2 w-max mb-2 bg-common text-white">
+              Add
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="bill-content" style="display: none"></div>
+  <div id="keyboard" class="hidden fixed shadow-lg">
+  </div>
+    <div id="alphKeyboard" class="hidden fixed shadow-lg">
+  </div>
+  <script src="../global.js"></script>
+  <script defer src="../js/purchaseUi.js"></script>
+  <script defer src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
+</body>
+
+</html>

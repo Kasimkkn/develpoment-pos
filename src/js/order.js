@@ -388,6 +388,7 @@ const openQuantityModal = (itemId) => {
   newQuantityInput.value = itemOfCart ? itemOfCart._doc.quantity : 1;
   specialInfoInput.value = itemOfCart ? itemOfCart._doc.sp_info == "none" ? "" : itemOfCart._doc.sp_info : "";
   quantityAddModal.show();
+  newQuantityInput.focus();
 }
 
 function closeModal() {

@@ -3169,6 +3169,85 @@ ipcMain.on("new-Purchase", async (event, data) => {
   }
 })
 
+// save-purchase-data
+ipcMain.on("save-purchase-data", async (event, data, supplier_name) => {
+  try {
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      event.reply("error-purchase-data", "No data provided");
+      return;
+    }
+
+    for (const item of data) {
+      const { item_name, quantity, price } = item;
+
+      if (!item_name || isNaN(quantity) || isNaN(price)) {
+        event.reply("error-purchase-data", `Invalid data for item: ${JSON.stringify(item)}`);
+        return;
+      }
+
+      // Check if the item exists in Stock
+      let stockItem = await Stock.findOne({ item_name });
+
+      if (stockItem) {
+        // Update existing stock item
+        stockItem.quantity = (Number(stockItem.quantity) + Number(quantity)).toFixed(2);
+        stockItem.mrp = Number(price);
+        stockItem.total = (Number(stockItem.mrp) * stockItem.quantity).toFixed(2);
+        stockItem.addded_at = Date.now();
+        stockItem.is_synced = false;
+        await stockItem.save();
+      } else {
+        // Create new Stock entry
+        const lastStockItem = await Stock.findOne().sort({ item_no: -1 });
+        let itemNo = 1;
+        if (lastStockItem) {
+          itemNo = lastStockItem.item_no + 1;
+        }
+
+        stockItem = new Stock({
+          item_no: itemNo,
+          item_name,
+          quantity: Number(quantity),
+          mrp: Number(price),
+          min_stock: 10,
+          total: (Number(price) * Number(quantity)).toFixed(2),
+          addded_at: Date.now(),
+          is_synced: false,
+        });
+        await stockItem.save();
+      }
+
+      // Create new Purchase entry
+      const lastPurchase = await Purchase.findOne().sort({ purchase_no: -1 });
+      let purchaseNo = 1;
+      if (lastPurchase) {
+        purchaseNo = lastPurchase.purchase_no + 1;
+      }
+
+      const purchaseData = {
+        purchase_no: purchaseNo,
+        item_details: {
+          item_no: stockItem.item_no,
+          item_name,
+          quantity: Number(quantity),
+          mrp: Number(price),
+          total: (Number(price) * Number(quantity)).toFixed(2),
+        },
+        supplier_name,
+        date: Date.now(),
+        is_synced: false,
+        is_selected: false,
+      };
+
+      await Purchase.create(purchaseData);
+    }
+    event.reply("purchase-save-success", "Data saved successfully");
+  } catch (error) {
+    console.error("Error saving Purchase:", error);
+    event.reply("error-purchase-data", "Error creating purchase");
+  }
+});
+
 // fetch-user-rights
 ipcMain.on("fetch-user-rights", async (event) => {
   try {

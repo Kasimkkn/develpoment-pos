@@ -48,7 +48,6 @@ const updateColor = (variable, value) => {
 document.addEventListener("DOMContentLoaded", () => {
     loadSavedColors();
     const loggedInUser = localStorage.getItem('loggedInUser');
-    const userPreference = localStorage.getItem('userPreferences');
     const userRights = JSON.parse(localStorage.getItem('userRights'));
     const billInfo = JSON.parse(localStorage.getItem("billInfo"))
     if (loggedInUser) {

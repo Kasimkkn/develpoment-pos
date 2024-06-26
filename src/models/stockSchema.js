@@ -28,7 +28,8 @@ const stockSchema = new mongoose.Schema({
     },
     addded_at:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     is_synced:{
         type: Boolean,
