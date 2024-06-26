@@ -88,9 +88,11 @@ const attachCheckboxListeners = () => {
                     allBills.splice(index, 1);
                 }
             }
-            // when only one bill is selected then singleBillPayUi is called
-            if (allBills.length === 1 || allBills.length <= 1) {
+            if (allBills.length === 1 || allBills.length <= 1 ) {
                 singleBillPayUi(allBills[0], apiPayModes);
+            }
+            else if(allBills.length > 1) {
+                singleBillPayUi(false, apiPayModes);
             }
         });
     });
@@ -213,12 +215,17 @@ const settleOneBill = (billNo) => {
 
 
 const singleBillPayUi = (billNo, apiPayModes) => {
-    const selected_record = unsettledBills.filter((bill) => bill.bill_no == billNo);
     const singleSplitUi = document.getElementById("singleSplitUi");
-    singleSplitUi.style.display = "flex";
-    singleSplitUi.innerHTML = "";
-
-    const ui = `
+    if(billNo === false){
+        singleSplitUi.style.display = "none";
+        singleSplitUi.classList.add("hidden");
+        // return;
+    }
+    else{
+        singleSplitUi.style.display = "flex";
+        const selected_record = unsettledBills.filter((bill) => bill.bill_no == billNo);
+        singleSplitUi.innerHTML = "";
+        const ui = `
         <div class="px-2 py-1 flex flex-col gap-1">
             <div class="flex justify-between py-2">
                 <span>Total Amount :</span>
@@ -244,6 +251,7 @@ const singleBillPayUi = (billNo, apiPayModes) => {
         </div>
     `;
     singleSplitUi.innerHTML = ui;
+    }
 };
 
 const handleAmount = (index, paymodeName, billNo) => {
