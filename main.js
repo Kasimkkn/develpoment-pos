@@ -52,6 +52,7 @@ async function createWindow() {
   win.loadFile('src/login.html');
 
   const url = process.env.MONGO_URI;
+  console.log(url)
   await connectDB(url)
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
