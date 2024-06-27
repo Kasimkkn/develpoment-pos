@@ -45,6 +45,7 @@ const updateColor = (variable, value) => {
       updateColor('--common-hover-color', savedCommonHoverColor);
     }
   };
+
 document.addEventListener("DOMContentLoaded", () => {
     loadSavedColors();
     const loggedInUser = localStorage.getItem('loggedInUser');
@@ -246,38 +247,40 @@ const languageSelector = document.getElementById("languageSettign");
 
 function setLocale(locale) {
 
-    // Construct the path dynamically
     fs.readFile(`src/lang/${locale}.json`, 'utf8', (err, data) => {
       if (err) {
         console.error("Error fetching translations:", err);
         return;
       }
       const translations = JSON.parse(data);
-      applyTranslations(translations);
+      applyTranslations(translations , locale);
       document.documentElement.lang = locale;
     });
   }
-  function applyTranslations(translations) {
-    // Iterate over each key in the translations object and update the corresponding element
+  function applyTranslations(translations , locale) {
     for (const key in translations) {
       if (translations.hasOwnProperty(key)) {
         const element = document.getElementById(key);
         if (element) {
+           if(locale==="ar"){
+              element.dir = "rtl";
+           }   
           element.innerText = translations[key];
-        } else {
-          console.warn(`Element with ID ${key} not found.`);
         }
       }
     }
   }
   
-const languageValue = localStorage.getItem("language");
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const languageValue = localStorage.getItem("language");
   if (languageValue) {
     if(languageSelector){
         languageSelector.value = languageValue;
-        setLocale(languageValue);
     }
+    setLocale(languageValue);
   }
   else{
       setLocale("en");
   }
+  })

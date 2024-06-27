@@ -31,6 +31,7 @@
   "rawMaterial":"Raw Material",
   "purchase":"Purchase",
   "receipe":"Receipe",
+  "pay_mode":"Pay Mode",
   "profileBtn":"Profile",
   "settingBtn":"Settings",
   "syncDataOnline":"Sync Data",
@@ -41,5 +42,14 @@
   "supplier":"Supplier",
   "stockInHand":"Stock In Hand",
   "monthlyPurchase":"Monthly Purchase",
-  "partyWisePurchase":"party Wise Purchase"
+  "partyWisePurchase":"party Wise Purchase",
+  "itemWisePurchase":"item Wise Purchase",
+  "themeSetting":"Change Theme",
+  "saveColorsBtn":"Save",
+  "btnToSetDefault":"Default",
+  "loyaltySetting":"Loyalty Settings",
+  "changeLang":"Change Language",
+  "languageLabel":"Select Languge",
+  "customerInfomation":"customer Information",
+  "saveBtn":"Save"
 }
