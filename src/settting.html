@@ -233,7 +233,7 @@
 
       <div class="w-full flex gap-2">
 
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-1 flex-col gap-1">
           <h2 id="accordion-collapse-heading-3">
             <button type="button"
               class="rounded-md text-sm flex justify-between items-center px-4 py-2 w-full beautyBtn text-white gap-4"
@@ -248,7 +248,7 @@
             </button>
           </h2>
           <div id="accordion-collapse-body-3" class="hidden" aria-labelledby="accordion-collapse-heading-3">
-            <div style="width:50rem;" class="flex flex-wrap gap-2 p-2 rounded-lg bg-white">
+            <div class="flex flex-wrap gap-2 p-2 rounded-lg bg-white transition ease-in-out delay-150">
 
               <div style="width: 49%;" class="flex flex-col ">
                 <label for="customer_Id" class="capitalize text-sm" id="customer_Id_label">Customer Id</label>
@@ -369,7 +369,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-1 flex-col gap-1">
 
           <h2 id="accordion-collapse-heading-1">
             <button type="button"
@@ -387,26 +387,26 @@
           <div id="accordion-collapse-body-1" class="hidden" aria-labelledby="accordion-collapse-heading-1">
             <div class="flex flex-col gap-2 p-2 rounded-lg bg-white" id="color-picker">
               <div class="flex gap-2">
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-wrap gap-2">
                   <div class="flex gap-1 items-center p-2 rounded-lg">
                     <label class="text-black" for="common-color">Common</label>
-                    <input type="color" id="common-color" name="common-color" value="#000000">
+                    <input type="color" id="common-color" name="common-color" value="#e36425">
                   </div>
                   <div class="flex  gap-1 items-center rounded-lg p-2">
                     <label class="text-black" for="common-hover-color">Hover</label>
-                    <input type="color" id="common-hover-color" name="common-hover-color" value="#000000">
+                    <input type="color" id="common-hover-color" name="common-hover-color" value="#f06a17">
                   </div>
                   <div class="flex  gap-1 items-center rounded-lg p-2">
                     <label class="text-black" for="primary-color">Primary</label>
-                    <input type="color" id="primary-color" name="primary-color" value="#000000">
+                    <input type="color" id="primary-color" name="primary-color" value="#ffffff">
                   </div>
                   <div class="flex  gap-1 items-center rounded-lg p-2">
                     <label class="text-black" for="secondary-color">Secondary</label>
-                    <input type="color" id="secondary-color" name="secondary-color" value="#000000">
+                    <input type="color" id="secondary-color" name="secondary-color" value="#e0dddd">
                   </div>
                   <div class="flex  gap-1 items-center rounded-lg p-2">
                     <label class="text-black" for="secondary-color">Tertiary</label>
-                    <input type="color" id="secondary-color" name="tertiary-color" value="#000000">
+                    <input type="color" id="secondary-color" name="tertiary-color" value="#ede6e6">
                   </div>
                   <div class="flex gap-2 items-center">
                     <button id="saveColorsBtn"
@@ -431,7 +431,7 @@
 
       <div class="w-full flex gap-2">
 
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-1 flex-col gap-1">
 
           <h2 id="accordion-collapse-heading-4">
             <button type="button"
@@ -505,7 +505,8 @@
           </div>
 
         </div>
-        <div class="flex flex-col gap-1">
+
+        <div class="flex flex-1 flex-col gap-1">
 
           <h2 id="accordion-collapse-heading-2">
             <button type="button"
@@ -536,6 +537,7 @@
       </div>
 
     </div>
+
     <div class="flex px-3 gap-2">
       <button id="saveBtn"
         class="rounded-md text-sm flex justify-between items-center px-4 py-2 w-max mt-2 beautyBtn text-white">Save</button>

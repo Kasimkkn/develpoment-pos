@@ -5,7 +5,7 @@
   "unsettleBillBtn": "Unsettled Bills",
   "get-customer-info-btn": "Print Bill",
   "print-KOt-btn":"Print KOT",
-  "isNumeric": "Set Numeric keyboard?",
+  "isNumericKey": "Set Numeric keyboard?",
   "master_option": "Master",
   "master_category":"Category",
   "master_items":"Items",

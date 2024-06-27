@@ -1,9 +1,9 @@
 
 :root {
-  --common-color: rgb(227, 100, 37);  /* Dark, burgundy */
-  --primary-color: white; /* Light, soft rose */
-  --secondary-color: rgb(224, 221, 221); /* Background, light yellow */
-  --tertiary-color: rgb(237, 230, 230); /* Background, light blue */
+  --common-color: #e36425;  /* Dark, burgundy */
+  --primary-color: #ffffff; /* Light, soft rose */
+  --secondary-color: #e0dddd; /* Background, light yellow */
+  --tertiary-color: #ede6e6; /* Background, light blue */
   --common-hover-color: #f06a17; /* Adjusted to match theme */
   --input-color: #cbaaab; /* Adjusted to match theme */
 }
@@ -85,10 +85,7 @@ select{
   background-color: var(--input-color);
   padding: 0.625rem; 
 }
-#accordion-collapse{
-  /* animate the box */
-  transition: all 0.3s ease;
-}
+
 #keyboard {
   position: fixed;
   max-width: 300px;

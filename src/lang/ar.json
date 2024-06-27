@@ -5,7 +5,7 @@
   "unsettleBillBtn": "الفواتير غير المسددة",
   "get-customer-info-btn": "طباعة الفاتورة",
   "print-KOt-btn": "طباعة KOT",
-  "isNumeric": "تعيين لوحة مفاتيح رقمية؟",
+  "isNumericKey": "تعيين لوحة مفاتيح رقمية؟",
   "master_option": "الماستر",
   "master_category": "الفئة",
   "master_items": "العناصر",
