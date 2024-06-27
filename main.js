@@ -52,7 +52,6 @@ async function createWindow() {
   win.loadFile('src/login.html');
 
   const url = process.env.MONGO_URI;
-  console.log(url)
   await connectDB(url)
   globalShortcut.register('Esc', () => {
     win.webContents.send('focus-input');
@@ -1230,16 +1229,16 @@ ipcMain.on("delete-whole-billItem", async (event, locationName, tableNo, product
 ipcMain.on("new-item", async (event, itemData) => {
   try {
     const data = await Item.create({
-      item_no: itemData.item_no,
+      item_no: Number(itemData.item_no),
       item_name: itemData.itemName,
       item_image: itemData.itemImage,
-      rate_one: itemData.rate_one,
-      rate_two: itemData.rate_two,
-      rate_three: itemData.rate_three,
-      rate_four: itemData.rate_four,
-      rate_five: itemData.rate_five,
-      rate_six: itemData.rate_six,
-      tax_perc: itemData.tax_perc,
+      rate_one: Number(itemData.rate_one),
+      rate_two: Number(itemData.rate_two),
+      rate_three: Number(itemData.rate_three),
+      rate_four: Number(itemData.rate_four),
+      rate_five: Number(itemData.rate_five),
+      rate_six: Number(itemData.rate_six),
+      tax_perc: Number(itemData.tax_perc),
       category_no: itemData.categoryNo,
       status: itemData.isActive,
     });
