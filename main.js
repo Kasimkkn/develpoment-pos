@@ -730,6 +730,25 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
   }
 });
 
+
+async function updateStock(itemName) {
+  try {
+      const receipeData = await Receipe.findOne({ item_name: itemName });
+      if (receipeData) {
+          for (const subItem of receipeData.sub_item_details) {
+              const stockItem = await Stock.findOne({ item_name: subItem.item_name });
+              if (stockItem) {
+                  stockItem.quantity -= (subItem.quantity / 1000); // Convert grams to kilograms
+                  await stockItem.save();
+              }
+          }
+      }
+  } catch (error) {
+      console.error("Error updating stock:", error);
+  }
+}
+
+
 // edit bills add new item
 ipcMain.on("edit-bills-add-new-Item", async (event, newItem) => {
   try {
@@ -750,7 +769,9 @@ ipcMain.on("edit-bills-add-new-Item", async (event, newItem) => {
     if (existingItem) {
       existingItem.quantity += 1;
 
-    } else {
+      await updateStock(existingItem.item_name);
+    }
+    else {
       existingBill.item_details.push({
         item_no: Number(newItem.id),
         item_name: newItem.name,
@@ -758,6 +779,8 @@ ipcMain.on("edit-bills-add-new-Item", async (event, newItem) => {
         quantity: 1,
         price: newItem.price,
       });
+
+      await updateStock(newItem.name);
     }
 
     // Recalculate total amount
@@ -875,6 +898,12 @@ ipcMain.on("update-bill-quantity", async (event, toUpdateData) => {
       return;
     }
 
+    const itemToRemove = existingBill.item_details.find(item => item.item_no === Number(itemId));
+    if (!itemToRemove) {
+      event.reply("delete-whole-billItem-error", "Item not found in the bill");
+      return;
+    }
+
     const itemIndex = existingBill.item_details.findIndex(item => item.item_no === itemId);
 
     if (itemIndex === -1) {
@@ -943,6 +972,7 @@ ipcMain.on("update-bill-quantity", async (event, toUpdateData) => {
     existingBill.is_synced = false
     await existingBill.save();
 
+    await addStock(itemToRemove.item_name)
     const data = await Bill.findOne({ bill_no: existingBill.bill_no });
     const serializedData = JSON.parse(JSON.stringify(data));
     event.reply("edit-bill-details-data", serializedData);
@@ -1099,29 +1129,46 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
   }
 });
 
+
+async function addStock(itemName) {
+  try {
+    const receipeData = await Receipe.findOne({ item_name: itemName });
+    if (receipeData) {
+      for (const subItem of receipeData.sub_item_details) {
+        const stockItem = await Stock.findOne({ item_name: subItem.item_name });
+        if (stockItem) {
+          stockItem.quantity += (subItem.quantity / 1000); // Convert grams to kilograms
+          stockItem.quantity = stockItem.quantity.toFixed(2);
+          await stockItem.save();
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error adding stock:", error);
+  }
+}
+
 // delete whote bill Items
-ipcMain.on("delete-whole-billItem", async (event, productId, locationName, tableNo, billNo) => {
+ipcMain.on("delete-whole-billItem", async (event, locationName, tableNo, product, billNo) => {
   try {
     let bill = await Bill.findOne({
       table_no: tableNo,
       location_name: locationName,
       bill_no: billNo
     });
-
-    if (!bill) {
+    if (!bill || bill==null) {
+      console.log("bill not found")
       event.reply("delete-whole-billItem-error", "Bill not found");
       return;
     }
-
-    const itemToRemove = bill.item_details.find(item => item.item_no === Number(productId));
-
+    const itemToRemove = bill.item_details.find(item => item.item_no === Number(product.item_no));
     if (!itemToRemove) {
       event.reply("delete-whole-billItem-error", "Item not found in the bill");
       return;
     }
 
     // Remove the item
-    bill.item_details = bill.item_details.filter(item => item.item_no !== Number(productId));
+    bill.item_details = bill.item_details.filter(item => item.item_no !== Number(product.item_no));
 
     // Recalculate total amount
     let totalAmount = 0;
@@ -1166,13 +1213,16 @@ ipcMain.on("delete-whole-billItem", async (event, productId, locationName, table
     bill.is_synced = false
     await bill.save();
 
+    await addStock(itemToRemove.item_name);
+
     const serializedData = JSON.parse(JSON.stringify(bill));
-    event.reply("delete-whole-billItem-success", serializedData);
+    event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
     console.error("Error deleting whole bill item:", error);
     event.reply("delete-whole-billItem-error", "Error deleting whole bill item");
   }
 });
+
 
 ipcMain.on("new-item", async (event, itemData) => {
   try {

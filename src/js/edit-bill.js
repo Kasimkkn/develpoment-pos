@@ -8,7 +8,7 @@ let cartItems = [];
 let Locations = [];
 
 const billNo = urlParams.get("billNo");
-
+console.log(billNo)
 ipcRenderer.send("fetch-bill-by-billNo", billNo);
 ipcRenderer.on("bill-fetch-error", (event, error) => {
   window.location.href = "index.html";
@@ -17,7 +17,6 @@ ipcRenderer.on("bill-fetch-error", (event, error) => {
 
 ipcRenderer.on("edit-bill-details-data", (event, data) => {
   billData = data;
-  console.log(billData)
   document.getElementById("locationName").innerHTML = data.location_name;
   document.getElementById("tableNo").innerHTML = `Table No: ${data.table_no}`;
   tableNo = data.table_no;
@@ -145,8 +144,9 @@ const addNewItemToCart = (product, price) => {
   ipcRenderer.send("edit-bills-add-new-Item", newItem);
 };
 
-const removeItemFromCart = (productId, locationName, tableNo, billNo) => {
+const removeItemFromCart = (locationName, tableNo , product) => {
   try {
+
     if (cartItems.length == 1) {
       Swal.fire({
         icon: 'error',
@@ -156,14 +156,8 @@ const removeItemFromCart = (productId, locationName, tableNo, billNo) => {
       })
     }
     else {
-      ipcRenderer.send(
-        "delete-whole-billItem",
-        productId,
-        locationName,
-        tableNo,
-        billNo
-      );
-      location.reload(true);
+      ipcRenderer.send("delete-whole-billItem", locationName, tableNo, product, billData.bill_no);
+      // location.reload(true);
       updateCartUI();
     }
   } catch (error) {
@@ -380,7 +374,6 @@ function printBill(whichBtn, billData) {
 
 
   if (whichBtn == 1) {
-    console.log("clicked by 1", whichBtn)
     try {
       ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
     }
@@ -389,11 +382,10 @@ function printBill(whichBtn, billData) {
     }
   }
   if (whichBtn == 2) {
-    console.log("clicke by 2", whichBtn)
     try {
       ipcRenderer.send("updated-bill-info", updatedbillData);
       ipcRenderer.send("fetch-bill-by-billNo", billNo);
-      ipcRenderer.send("deduct-qty", itemDetails);
+      // ipcRenderer.send("deduct-qty", itemDetails);
     }
     catch (err) {
       console.log(err)
