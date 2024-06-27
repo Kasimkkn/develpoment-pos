@@ -45,7 +45,7 @@ function customerBill() {
   const userLoyalty = JSON.parse(localStorage.getItem("loyaltyRedeemData"));
   if (userLoyalty.discount_amount) {
     document.getElementById("discountMoney").value = userLoyalty.discount_amount;
-    document.getElementById("discountReason").value = userLoyalty.redeem_amount+ " " + "Points Redeemed";
+    document.getElementById("discountReason").value = userLoyalty.redeem_amount + " " + "Points Redeemed";
   }
   customerBillInfoModal.show();
 }
@@ -437,7 +437,7 @@ function printBill() {
 
     const printer_ip = localStorage.getItem("printerSetting");
     // Send the data to the printer
-    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip);
+    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount, printer_ip);
 
     ipcRenderer.on("bill-saved", (event, data) => {
       location.reload();
@@ -511,7 +511,7 @@ function printKOT() {
     todaysDate: todaysDate,
     currentItemsMap: currentItemsMap,
     currentItemsWithSPInfo: currentItemsWithSPInfo,
-    printer_ip : localStorage.getItem("printerSetting")
+    printer_ip: localStorage.getItem("printerSetting")
   };
 
   try {
@@ -541,8 +541,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   document.getElementById("get-customer-info-btn").addEventListener("click", () => {
-    if (KotcartItems.length > 0) { 
-        customerBill();
+    if (KotcartItems.length > 0) {
+      customerBill();
     }
     else {
       Swal.fire({
@@ -562,7 +562,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("customerLoyaltyBtn").addEventListener("click", () => {
     const userLoyalty = JSON.parse(localStorage.getItem("loyaltyRedeemData"));
     if (KotcartItems.length > 0) {
-      console.log(userLoyalty)
       if (userLoyalty && userLoyalty.location_name == location_name && userLoyalty.table_no == table_no) {
         Swal.fire({
           icon: 'error',
@@ -571,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
           timer: 1250
         })
       }
-      else{
+      else {
         applyLoyaltyPoints();
       }
     }
