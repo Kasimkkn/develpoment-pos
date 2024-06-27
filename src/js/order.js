@@ -1,4 +1,3 @@
-const { Modal } = require("flowbite");
 const urlParams = new URLSearchParams(window.location.search);
 const locationName = urlParams.get("location") || "Common-Hall";
 const tableNo = urlParams.get("id") || 1;
@@ -6,6 +5,7 @@ document.getElementById("locationName").innerHTML = locationName;
 document.getElementById("tableNo").innerHTML = "Table No: " + tableNo;
 const userPref = JSON.parse(localStorage.getItem("userPreferences"));
 const userCurrency = userPref ? userPref._doc.currency_name : "₹";
+const userLoyalty = JSON.parse(localStorage.getItem("loyaltyRedeemData"));
 
 let userTaxPerc;
 
@@ -88,10 +88,16 @@ const updateCartSummary = (cartItems) => {
     (total, item) => total + item._doc.quantity,
     0
   );
-  const totalAmount = cartItems.reduce(
+  let totalAmount = cartItems.reduce(
     (total, item) => total + item._doc.price * item._doc.quantity,
     0
   );
+
+  let discountAmount = 0;
+  if(userLoyalty.discount_amount && locationName == userLoyalty.location_name && tableNo == userLoyalty.table_no) {
+    discountAmount = totalAmount * (userLoyalty.discount_amount / 100);
+    totalAmount -= discountAmount;
+  }
   const taxAmount = totalAmount * userTaxPerc;
   const netAmount = totalAmount + taxAmount;
 

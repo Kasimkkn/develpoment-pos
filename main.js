@@ -720,10 +720,7 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
       table_no: newItem.tableNo,
       location_name: newItem.locationName,
     });
-    const allCartItems = await ExistingCartItem.find();
-
     event.reply("cartItems-data", updatedCartItems);
-    event.reply("existing-cartItems-data", allCartItems);
 
   } catch (error) {
     console.error("Error adding cart item:", error);

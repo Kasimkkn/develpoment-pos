@@ -86,6 +86,15 @@ select{
   padding: 0.625rem; 
 }
 
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm:focus {
+  box-shadow: none !important ;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+  border: none !important;
+  background-color: var(--common-color) !important;
+}
+
 #keyboard {
   position: fixed;
   max-width: 300px;

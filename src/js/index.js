@@ -1,7 +1,25 @@
+const { Modal } = require("flowbite");
 const { default: Swal } = require("sweetalert2");
 let apiTable = [];
 let apiLocation = [];
 let activeTables = [];
+
+const initializeTableModal = (id) => {
+  const $targetEl = document.getElementById(id);
+  const options = {
+    placement: "center",
+    backdrop: "dynamic",
+    backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
+    closable: true,
+  };
+
+  const modal = new Modal($targetEl, options);
+  return modal;
+};
+
+const mergeTableModal = initializeTableModal("mergeTableModal");
+const transferTableModal = initializeTableModal("transferTableModal");
+
 
 ipcRenderer.on('focus-input', () => {
   document.getElementById('searchInput').focus();
@@ -24,12 +42,6 @@ ipcRenderer.on("open-customer-modal" , () => {
         customerInfoBtn.click();
       }
 })
-
-// ipcRenderer.on("location-and-tables-data", (event, locationData, tableData) => {
-//   apiLocation = locationData;
-//   apiTable = tableData;
-//   renderLocationBlocks();
-// });
 
 ipcRenderer.send("fetch-existing-cartItems");
 
@@ -78,6 +90,7 @@ mergeTableButton.addEventListener("click", () => {
     ipcRenderer.send("merge-tables", mergedDataIntoFirstTable, secondTableData);
     ipcRenderer.on("merge-tables-success", (event, data) => {
       activeTables = data;
+      mergeTableModal.hide();
       location.reload();
       renderLocationBlocks();
     });
@@ -166,7 +179,8 @@ transferTableButton.addEventListener("click", (event) => {
       ipcRenderer.send("transfer-table", toTransferTableData);
       ipcRenderer.on("transfer-table-success", (event, data) => {
         activeTables = data;
-        location.reload();
+        transferTableModal.hide();
+        location.reload(true);
         renderLocationBlocks();
       })
   }
