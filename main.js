@@ -68,8 +68,9 @@ async function createWindow() {
   });
 }
 
-ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount) => {
+ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
   try {
+    console.log(printer_ip)
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -83,7 +84,7 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: 'tcp://192.168.0.87:9100',
+      interface: `tcp://${printer_ip}`,
       timeout: 5000,
     });
 
@@ -190,13 +191,14 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
 });
 
 ipcMain.on('print-kot-data', async (event, kotContent) => {
-  const { table_no, location_name, loggedInUser, todaysDate, currentItemsMap, currentItemsWithSPInfo } = kotContent;
+  const { table_no, location_name, loggedInUser, todaysDate, currentItemsMap, currentItemsWithSPInfo , printer_ip } = kotContent;
 
   try {
+    console.log(printer_ip)
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: 'tcp://192.168.0.87:9100',
+      interface: `tcp://${printer_ip}`,
       timeout: 5000,
     });
 
@@ -255,13 +257,14 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
 });
 
 ipcMain.on('print-cancel-kot', async (event, kotContent) => {
-  const { table_no, location, loggedInUser, date, cancelItem } = kotContent;
+  const { table_no, location, loggedInUser, date, cancelItem , printer_ip } = kotContent;
 
   try {
+    console.log(printer_ip)
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: 'tcp://192.168.0.87:9100',
+      interface: `tcp://${printer_ip}`,
       timeout: 5000,
     });
 
@@ -305,8 +308,9 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
   }
 });
 
-ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount) => {
+ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
   try {
+    console.log(printer_ip)
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -320,7 +324,7 @@ ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, toda
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
-      interface: 'tcp://192.168.0.87:9100',
+      interface: `tcp://${printer_ip}`,
       timeout: 5000,
     });
 
@@ -479,6 +483,7 @@ ipcMain.on('create-only-first-user', async (event) => {
     console.error("Error creating user:", error);
   }
 })
+
 // check login user
 ipcMain.on("login", async (event, userId, password) => {
   try {

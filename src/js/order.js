@@ -419,7 +419,8 @@ function printCancelKot(locationName,tableNo,cancelItem) {
     date: todaysDate,
     location: locationName,
     loggedInUser: loggedInUser,
-    cancelItem
+    cancelItem,
+    printer_ip: localStorage.getItem("printerSetting")
   }
 
 

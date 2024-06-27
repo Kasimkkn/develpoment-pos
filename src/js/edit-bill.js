@@ -372,10 +372,10 @@ function printBill(whichBtn, billData) {
     round_off: roundOffValue,
   }
 
-
+  const printer_ip = localStorage.getItem("printerSetting");
   if (whichBtn == 1) {
     try {
-      ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
+      ipcRenderer.send("print-duplicate-bill", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip);
     }
     catch (err) {
       console.log(err)

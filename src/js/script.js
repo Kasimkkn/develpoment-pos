@@ -435,8 +435,9 @@ function printBill() {
       });
     }
 
+    const printer_ip = localStorage.getItem("printerSetting");
     // Send the data to the printer
-    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount);
+    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip);
 
     ipcRenderer.on("bill-saved", (event, data) => {
       location.reload();
@@ -509,7 +510,8 @@ function printKOT() {
     loggedInUser: loggedInUser,
     todaysDate: todaysDate,
     currentItemsMap: currentItemsMap,
-    currentItemsWithSPInfo: currentItemsWithSPInfo
+    currentItemsWithSPInfo: currentItemsWithSPInfo,
+    printer_ip : localStorage.getItem("printerSetting")
   };
 
   try {

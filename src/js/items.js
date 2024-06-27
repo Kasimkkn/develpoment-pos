@@ -119,7 +119,7 @@ const editItemHandler = async () => {
   }
 };
 
-const fileInput = document.getElementById("new_item_image");
+const fileInput = document.getElementById("new_item_image");ss
 const imageInfoText = document.getElementById("image_info_text");
 const imagePreviewIcon = document.getElementById("image_preview_icon");
 

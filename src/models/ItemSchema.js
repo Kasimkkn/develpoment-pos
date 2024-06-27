@@ -13,6 +13,7 @@ const itemSchema = new mongoose.Schema({
     },
     item_image:{
         type: String,
+        default:"src/uploads/food.png"
     },
     rate_one : {
         type: Number,

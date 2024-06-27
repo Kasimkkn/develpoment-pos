@@ -536,6 +536,42 @@
         </div>
       </div>
 
+      <div class="w-full flex gap-2">
+        <div class="flex flex-1 flex-col gap-1">
+
+          <h2 id="accordion-collapse-heading-5">
+            <button type="button"
+              class="rounded-md text-sm flex justify-between items-center px-4 py-2 w-full beautyBtn text-white gap-4"
+              data-accordion-target="#accordion-collapse-body-5" aria-expanded="false"
+              aria-controls="accordion-collapse-body-5">
+              <span id="printerSetting" class="capitalize">Printer Setting</span>
+              <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5 5 1 1 5" />
+              </svg>
+            </button>
+          </h2>
+          <div id="accordion-collapse-body-5" class="hidden" aria-labelledby="accordion-collapse-heading-5">
+            <div class="flex flex-col gap-2 w-full p-2 rounded-lg bg-white">
+              <div class="flex flex-col">
+                <label for="printer_ip" class="capitalize text-sm">Printer IP</label>
+                <div class="flex w-full">
+                  <span class="inline-flex items-center px-3 text-sm bg-secondary rounded-s-md"
+                    style="border:1px solid var(--common-color);border-right: none;">
+                    <img src="../assets/phone.png" class="w-4 h-4 bg-transparent" alt="tel">
+
+                  </span>
+                  <input id="printer_ip" min="20" max="20" maxlength="20"
+                    class="rounded-none rounded-e-lg bg-white w-full border  border-primary text-sm p-2.5"
+                    placeholder="100">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="flex px-3 gap-2">

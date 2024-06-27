@@ -127,7 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
+const printer_ip = document.getElementById("printer_ip");
+printer_ip.value = localStorage.getItem("printerSetting");
+printer_ip.addEventListener("input", () => {
+    localStorage.setItem("printerSetting", printer_ip.value);
+})
 
 saveBtn.addEventListener("click", () => {
     const customer_id = JSON.parse(localStorage.getItem("billInfo"))._doc.customer_id;
