@@ -173,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to create and append numerical keys
     const createKeys = () => {
+        console.log("hello keyboard")
         const keysContainer = document.createElement('div');
         keysContainer.className = 'keys flex flex-wrap justify-around';
         const keys = [
@@ -211,34 +212,50 @@ document.addEventListener('DOMContentLoaded', () => {
     const createAlphabeticalKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'alphakeys flex flex-wrap justify-around';
-        const keys = [
-            ...'1234567890'.split(''), ...'QWERTYUIOP'.split(''),
-            ...'ASDFGHJKL'.split(''), ...'ZXCVBNM'.split(''),
-            ' ', '❌', 'Clear'
-        ];
+        const keysRow1 = '1234567890'.split('');
+        const keysRow2 = 'QWERTYUIOP'.split('');
+        const keysRow3 = 'ASDFGHJKL'.split('');
+        const keysRow4 = 'ZXCVBNM'.split('');
+        const keysRow5 = ['@', ' ', '❌', 'Clear'];
 
-        keys.forEach(key => {
-            const button = document.createElement('button');
-            button.className = 'alphakey bg-white border p-1 m-1 rounded text-center flex-1';
-            button.dataset.key = key === '❌' ? 'backspace' : key === 'Clear' ? 'clear' : key;
-            button.textContent = key === ' ' ? 'Space' : key;
-            button.addEventListener('click', () => {
-                if (alphaActiveInput) {
-                    const keyValue = button.dataset.key;
-                    if (keyValue === 'backspace') {
-                        alphaActiveInput.value = alphaActiveInput.value.slice(0, -1);
-                    } else if (keyValue === 'clear') {
-                        alphaActiveInput.value = '';
-                    } else {
-                        alphaActiveInput.value += keyValue;
+        const addKeysToContainer = (keysArray) => {
+            const rowContainer = document.createElement('div');
+            rowContainer.className = 'flex justify-around w-full';
+            keysArray.forEach(key => {
+                const button = document.createElement('button');
+                button.className = 'alphakey bg-white border p-1 m-1 rounded text-center flex-1';
+                button.dataset.key = key === '❌' ? 'backspace' : key === 'Clear' ? 'clear' : key;
+                button.textContent = key === ' ' ? 'Space' : key; 
+                button.addEventListener('click', () => {
+                    if (alphaActiveInput) {
+                        const keyValue = button.dataset.key;
+                        if (keyValue === 'backspace') {
+                            alphaActiveInput.value = alphaActiveInput.value.slice(0, -1);
+                        } else if (keyValue === 'clear') {
+                            alphaActiveInput.value = '';
+                        } 
+                        else if(keyValue === '@'){
+                            alphaActiveInput.value += '@';
+                        }
+                        else {
+                            alphaActiveInput.value += keyValue.toLowerCase();
+                        }
+                        alphaActiveInput.focus();
+                        alphaActiveInput.dispatchEvent(new Event('input'));
+                        alphaActiveInput.dispatchEvent(new Event('change'));
                     }
-                    alphaActiveInput.focus();
-                    alphaActiveInput.dispatchEvent(new Event('input'));
-                    alphaActiveInput.dispatchEvent(new Event('change'));
-                }
+                });
+                rowContainer.appendChild(button);
             });
-            keysContainer.appendChild(button);
-        });
+            keysContainer.appendChild(rowContainer);
+        };
+
+        addKeysToContainer(keysRow1);
+        addKeysToContainer(keysRow2);
+        addKeysToContainer(keysRow3);
+        addKeysToContainer(keysRow4);
+        addKeysToContainer(keysRow5);
+
         alphKeyboard.appendChild(keysContainer);
     };
 
@@ -251,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const spaceLeft = rect.left;
         if (spaceLeft >= keyboardWidth) {
             keyboard.style.left = `${rect.left - keyboardWidth - 45}px`;
-            keyboard.style.top = `${rect.top - 120}px`;
+            keyboard.style.top = `${rect.top + 20}px`;
         } else {
             keyboard.style.left = `${rect.left}px`;
             keyboard.style.top = `${rect.bottom}px`;
@@ -267,13 +284,14 @@ document.addEventListener('DOMContentLoaded', () => {
             alphKeyboard.style.top = `${rect.top - 120}px`;
         } else {
             alphKeyboard.style.left = `${rect.left}px`;
-            alphKeyboard.style.top = `${rect.bottom + 20}px`;
+            alphKeyboard.style.top = `${rect.bottom + 10}px`;
         }
     };
 
     document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
         input.addEventListener('focus', () => {
             activeInput = input;
+            console.log("activeInput", activeInput)
             keyboard.style.display = 'block';
             updateKeyboardPosition(input);
             input.focus();
@@ -300,5 +318,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alphaActiveInput = null;
         }
     });
-});
+}); 
 

@@ -241,9 +241,9 @@ const singleBillPayUi = (billNo, apiPayModes) => {
                         for="billAmt-${index}" onclick="handleAmount(${index}, '${paymode._doc.paymode_name}', '${billNo}')">
                             ${paymode._doc.paymode_name}
                         </label>
-                        <input style="width: 50%;"
+                        <input style="width: 50%;" type="tel"
                         class="block text-sm text-black border rounded-lg border-primary"
-                        id="billAmt-${index}" name="billAmt" type="number" oninput="handleAmountChange(${index}, this.value, '${paymode._doc.paymode_name}', '${billNo}')">
+                        id="billAmt-${index}" name="billAmt" oninput="handleAmountChange(${index}, this.value, '${paymode._doc.paymode_name}', '${billNo}')">
                     </ul>
                 </div>
             `).join('')}
