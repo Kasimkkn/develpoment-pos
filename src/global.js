@@ -246,8 +246,8 @@ const languageSelector = document.getElementById("languageSettign");
 }
 
 function setLocale(locale) {
-
-    fs.readFile(`src/lang/${locale}.json`, 'utf8', (err, data) => {
+    const filepath = path.join(__dirname, 'lang', `${locale}.json`);
+    fs.readFile(filepath, 'utf8', (err, data) => {
       if (err) {
         console.error("Error fetching translations:", err);
         return;
