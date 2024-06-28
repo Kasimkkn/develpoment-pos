@@ -217,7 +217,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
     // Print column headers
     printer.tableCustom([
       { text: 'QTY', align: 'LEFT', width: 0.3, },
-      { text: 'ITEM', align: 'LEFT', width: 0.7, },
+      { text: 'ITEM', align: 'LEFT', },
     ]);
     printer.drawLine();
 
@@ -226,7 +226,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
       const currentQuantity = currentItemsMap[productName].quantity;
       printer.tableCustom([
         { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
-        { text: productName.toLowerCase(), align: 'LEFT', width: 0.7, bold: true, },
+        { text: productName.toLowerCase(), align: 'LEFT', bold: true, },
       ]);
     });
 
@@ -235,10 +235,9 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
       const sp_info = currentItemsWithSPInfo[productName].sp_info;
       printer.tableCustom([
         { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
-        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', width: 0.7, bold: true, },
+        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', bold: true, },
       ]);
     });
-    printer.println('End of KOT');
 
     printer.cut();
     if (await printer.isPrinterConnected()) {
@@ -281,14 +280,14 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     printer.drawLine();
     printer.tableCustom([
       { text: 'QTY', align: 'LEFT', width: 0.3, style: 'B' },
-      { text: 'ITEM', align: 'LEFT', width: 0.7, style: 'B' },
+      { text: 'ITEM', align: 'LEFT',  style: 'B' },
     ]);
     printer.drawLine();
 
     // Print cancelled item
     printer.tableCustom([
       { text: cancelItem.quantity.toString(), align: 'LEFT', width: 0.3 },
-      { text: cancelItem.item_name.toLowerCase(), align: 'LEFT', width: 0.7 },
+      { text: cancelItem.item_name.toLowerCase(), align: 'LEFT', },
     ]);
     // Execute the print
 
