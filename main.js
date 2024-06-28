@@ -2649,11 +2649,26 @@ ipcMain.on("get-special-info", async (event) => {
   }
 })
 
+const isValidItem = (item) => {
+  for (const key in item) {
+    if (item[key] === null || item[key] === undefined || item[key] === '') {
+      return false;
+    }
+  }
+  return true;
+};
+
 // bulk insert
 ipcMain.on('bulk-insert-item', async (event, data) => {
   try {
-    await Item.insertMany(data);
-    event.reply('bulk-insert-response', 'Data inserted successfully');
+    const validData = data.filter(isValidItem);
+
+    if (validData.length > 0) {
+      await Item.insertMany(validData);
+      event.reply('bulk-insert-response', 'Data inserted successfully');
+    } else {
+      event.reply('bulk-insert-response', 'No valid data to insert into database');
+    }
   } catch (error) {
     console.error('Bulk insert error:', error);
     event.reply('bulk-insert-response', 'Error inserting data');

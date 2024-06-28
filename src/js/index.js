@@ -38,7 +38,6 @@ ipcRenderer.on("location-and-tables-data", (event, locationData, tableData) => {
 ipcRenderer.send("fetch-existing-cartItems");
 
 ipcRenderer.on("existing-cartItems-data", (event, data) => {
-  console.log("existing-cartItems-data", data);
   activeTables = data;
   renderLocationBlocks();
 });
@@ -180,12 +179,18 @@ transferTableButton.addEventListener("click", (event) => {
 const renderLocationBlocks = () => {
   const locationTablesContainer = document.getElementById("locationTables");
   locationTablesContainer.innerHTML = "";
-  
+
   toTransferTableDropdown.innerHTML = "";
+  firstTableDropdown.innerHTML = "";
+  secondTableDropdown.innerHTML = "";
+  activeTableDropdwon.innerHTML = "";
+
   apiLocation.forEach((location) => {
-    if(!location._doc.status) return;
+    if (!location._doc.status) return;
+
     const locationSection = document.createElement("section");
     locationSection.classList.add("mt-4");
+
     const locationTitle = document.createElement("h5");
     locationTitle.classList.add("font-medium", "text-black");
     locationTitle.style.fontSize = "15px";
@@ -197,7 +202,7 @@ const renderLocationBlocks = () => {
     locationTables.classList.add("mt-4", "flex", "flex-wrap", "gap-2");
 
     apiTable.forEach((table) => {
-      if(!table._doc.status) return;
+      if (!table._doc.status) return;
       if (table._doc.location_no === location._doc.location_no) {
         const isActive = activeTables.some(
           (item) =>
@@ -207,22 +212,28 @@ const renderLocationBlocks = () => {
 
         const tableLink = document.createElement("a");
         tableLink.href = `index.html?id=${table._doc.table_no}&location=${location._doc.location_name}`;
-        tableLink.classList.add("flex", "justify-center", "items-center", "h-14", "w-16", "p-4",
-          "bg-white", "rounded-lg", "shadow", "hover:shadow-2xl", "hover:border-slate-300", "hover:cursor-pointer");
+        tableLink.classList.add(
+          "flex", "justify-center", "items-center", "h-14", "w-16", "p-4",
+          "bg-white", "rounded-lg", "shadow", "hover:shadow-2xl", "hover:border-slate-300", "hover:cursor-pointer"
+        );
+
+        const optionValue = `${location._doc.location_name} ${table._doc.table_no}`;
+        const optionText = `${location._doc.location_name} ${table._doc.table_no}`;
 
         if (isActive) {
           tableLink.classList.add("beautyBtn");
-          const option = document.createElement("option");
-          option.value = `${location._doc.location_name} ${table._doc.table_no}`;
-          option.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
-          firstTableDropdown.appendChild(option.cloneNode(true));
-          secondTableDropdown.appendChild(option.cloneNode(true));
-          activeTableDropdwon.appendChild(option.cloneNode(true));
-        }else{
-          const allTablesOption = document.createElement("option");
-          allTablesOption.value = `${location._doc.location_name} ${table._doc.table_no}`;
-          allTablesOption.textContent = `${location._doc.location_name} ${table._doc.table_no}`;
-          toTransferTableDropdown.appendChild(allTablesOption);
+
+          if (!isOptionPresent(firstTableDropdown, optionValue)) {
+            const option = createOption(optionValue, optionText);
+            firstTableDropdown.appendChild(option.cloneNode(true));
+            secondTableDropdown.appendChild(option.cloneNode(true));
+            activeTableDropdwon.appendChild(option.cloneNode(true));
+          }
+        } else {
+          if (!isOptionPresent(toTransferTableDropdown, optionValue)) {
+            const allTablesOption = createOption(optionValue, optionText);
+            toTransferTableDropdown.appendChild(allTablesOption);
+          }
         }
 
         const tableSpan = document.createElement("span");
@@ -240,6 +251,17 @@ const renderLocationBlocks = () => {
   firstTableDropdown.addEventListener("change", function() {
     filterSecondTableDropdownOptions(this.value);
   });
+};
+
+const isOptionPresent = (dropdown, value) => {
+  return Array.from(dropdown.options).some(option => option.value === value);
+};
+
+const createOption = (value, text) => {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = text;
+  return option;
 };
 
 const filterSecondTableDropdownOptions = (selectedValue) => {
