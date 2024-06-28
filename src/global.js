@@ -3,48 +3,138 @@ const path = require('path');
 const fs = require('fs');
 
 const btnToSetDefault = document.getElementById("btnToSetDefault");
-if(btnToSetDefault) {
- btnToSetDefault.addEventListener("click", () => {
-    localStorage.removeItem('primary-color');
-    localStorage.removeItem('secondary-color');
-    localStorage.removeItem('tertiary-color');
-    localStorage.removeItem('common-color');
-    localStorage.removeItem('common-hover-color');    
-    location.reload(); 
- })
+if (btnToSetDefault) {
+    btnToSetDefault.addEventListener("click", () => {
+        localStorage.removeItem('primary-color');
+        localStorage.removeItem('secondary-color');
+        localStorage.removeItem('tertiary-color');
+        localStorage.removeItem('common-color');
+        localStorage.removeItem('common-hover-color');
+        location.reload();
+    })
 }
 
 const updateColor = (variable, value) => {
     document.documentElement.style.setProperty(variable, value);
-  };
-  // Function to load saved colors from localStorage
-  const loadSavedColors = () => {
+};
+const loadSavedColors = () => {
     const savedPrimaryColor = localStorage.getItem('primary-color');
     const savedSecondaryColor = localStorage.getItem('secondary-color');
     const savedTertiaryColor = localStorage.getItem('tertiary-color');
     const savedCommonColor = localStorage.getItem('common-color');
     const savedCommonHoverColor = localStorage.getItem('common-hover-color');
     if (savedPrimaryColor) {
-      updateColor('--primary-color', savedPrimaryColor);
-      updateColor('--input-color',savedPrimaryColor)
+        updateColor('--primary-color', savedPrimaryColor);
+        updateColor('--input-color', savedPrimaryColor)
     }
-  
+
     if (savedSecondaryColor) {
-      updateColor('--secondary-color', savedSecondaryColor);
+        updateColor('--secondary-color', savedSecondaryColor);
     }
-  
+
     if (savedTertiaryColor) {
-      updateColor('--tertiary-color', savedTertiaryColor);
+        updateColor('--tertiary-color', savedTertiaryColor);
     }
-  
+
     if (savedCommonColor) {
-      updateColor('--common-color', savedCommonColor);
+        updateColor('--common-color', savedCommonColor);
     }
-  
+
     if (savedCommonHoverColor) {
-      updateColor('--common-hover-color', savedCommonHoverColor);
+        updateColor('--common-hover-color', savedCommonHoverColor);
     }
-  };
+};
+
+const logoutButton = document.getElementById("logoutButton");
+if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+        const loggedInUser = localStorage.getItem("loggedInUser");
+        if (loggedInUser) {
+            localStorage.removeItem("loggedInUser");
+            localStorage.removeItem("userRights");
+            const loginPath = path.join(__dirname, 'login.html');
+            window.location.href = loginPath;
+        }
+    });
+}
+
+function validateDiscount(input) {
+    let value = input.value;
+    value = value.replace(/\D/g, '');
+    let num = parseInt(value, 10);
+    if (isNaN(num) || num < 0) {
+        num = 0;
+    } else if (num > 100) {
+        num = 100;
+    }
+    input.value = num;
+}
+
+const syncDataOnline = document.getElementById("syncDataOnline");
+// syncDataOnline.style.display = "none";
+if (syncDataOnline) {
+    syncDataOnline.addEventListener("click", () => {
+        ipcRenderer.send("sync-data");
+    });
+}
+
+const languageSelector = document.getElementById("languageSettign");
+
+if (languageSelector) {
+    languageSelector.addEventListener("change", function () {
+        const selectedLanguage = languageSelector.value;
+        localStorage.setItem("language", selectedLanguage);
+        setLocale(selectedLanguage);
+    });
+}
+
+function setLocale(locale) {
+    let filepath = path.join(__dirname, '../', 'lang', `${locale}.json`);
+    const file1path = path.join(__dirname, 'lang', `${locale}.json`);
+    const fileName = ["index.html", "login.html", "preference.html", "profile.html", "setting.html", "unsettle-bill.html"];
+
+    const currentFile = window.location.href.split('/').pop();
+    console.log(currentFile)
+    if (fileName.includes(currentFile)) {
+        filepath = file1path;
+    }
+
+    fs.readFile(filepath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error fetching translations:", err);
+            return;
+        }
+        const translations = JSON.parse(data);
+        applyTranslations(translations, locale);
+        document.documentElement.lang = locale;
+    });
+}
+function applyTranslations(translations, locale) {
+    for (const key in translations) {
+        if (translations.hasOwnProperty(key)) {
+            const element = document.getElementById(key);
+            if (element) {
+                if (locale === "ar") {
+                    element.dir = "rtl";
+                }
+                element.innerText = translations[key];
+            }
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const languageValue = localStorage.getItem("language");
+    if (languageValue) {
+        if (languageSelector) {
+            languageSelector.value = languageValue;
+        }
+        setLocale(languageValue);
+    }
+    else {
+        setLocale("en");
+    }
+})
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSavedColors();
@@ -52,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const userRights = JSON.parse(localStorage.getItem('userRights'));
     const billInfo = JSON.parse(localStorage.getItem("billInfo"))
     if (loggedInUser) {
-        if (userRights!=null && userRights[0]?._doc) {
+        if (userRights != null && userRights[0]?._doc) {
             const userDoc = userRights[0]._doc;
             const elementsToHide = Object.keys(userDoc).filter(key => key !== '_id' && key !== 'user_no' && key !== 'first_name' && userDoc[key] === false);
             elementsToHide.forEach(id => {
@@ -64,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         const resturantName = billInfo._doc.resturant_name;
         const CustomerHotelName = document.getElementById("CustomerHotelName");
-        if (CustomerHotelName){
+        if (CustomerHotelName) {
             CustomerHotelName.innerHTML = resturantName;
         }
     }
@@ -74,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Keyboard
 document.addEventListener('DOMContentLoaded', () => {
     const keyboard = document.getElementById('keyboard');
     const alphKeyboard = document.getElementById('alphKeyboard');
@@ -87,7 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const keys = [
             { value: '1' }, { value: '2' }, { value: '3' }, { value: '4' },
             { value: '5' }, { value: '6' }, { value: '7' }, { value: '8' },
-            { value: '9' }, { value: '0' }, { value: '❌', key: 'backspace' }
+            { value: '9' }, { value: '0' }, { value: '.' }, 
+            { value: '❌', key: 'backspace' }, { value: 'Clear', key: 'clear' }
         ];
 
         keys.forEach(key => {
@@ -100,6 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const keyValue = button.dataset.key;
                     if (keyValue === 'backspace') {
                         activeInput.value = activeInput.value.slice(0, -1);
+                    } else if (keyValue === 'clear') {
+                        activeInput.value = '';
                     } else {
                         activeInput.value += keyValue;
                     }
@@ -113,22 +207,28 @@ document.addEventListener('DOMContentLoaded', () => {
         keyboard.appendChild(keysContainer);
     };
 
-    // Function to create and append alphabetical keys
+    // Function to create and append alphabetical keys with numerical keys
     const createAlphabeticalKeys = () => {
         const keysContainer = document.createElement('div');
         keysContainer.className = 'alphakeys flex flex-wrap justify-around';
-        const keys = 'abcdefghijklmnopqrstuvwxyz'.split('').concat([' ', '❌']);
+        const keys = [
+            ...'1234567890'.split(''), ...'QWERTYUIOP'.split(''),
+            ...'ASDFGHJKL'.split(''), ...'ZXCVBNM'.split(''),
+            ' ', '❌', 'Clear'
+        ];
 
         keys.forEach(key => {
             const button = document.createElement('button');
             button.className = 'alphakey bg-white border p-1 m-1 rounded text-center flex-1';
-            button.dataset.key = key === '❌' ? 'backspace' : key;
+            button.dataset.key = key === '❌' ? 'backspace' : key === 'Clear' ? 'clear' : key;
             button.textContent = key === ' ' ? 'Space' : key;
             button.addEventListener('click', () => {
                 if (alphaActiveInput) {
                     const keyValue = button.dataset.key;
                     if (keyValue === 'backspace') {
                         alphaActiveInput.value = alphaActiveInput.value.slice(0, -1);
+                    } else if (keyValue === 'clear') {
+                        alphaActiveInput.value = '';
                     } else {
                         alphaActiveInput.value += keyValue;
                     }
@@ -202,85 +302,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-const logoutButton = document.getElementById("logoutButton");
-if (logoutButton) {
-    logoutButton.addEventListener("click", () => {
-        const loggedInUser = localStorage.getItem("loggedInUser");
-        if (loggedInUser) {
-            localStorage.removeItem("loggedInUser");
-            localStorage.removeItem("userRights");
-            const loginPath = path.join(__dirname, 'login.html');
-            window.location.href = loginPath;
-        }
-    });
-}
-
-function validateDiscount(input) {
-    let value = input.value;
-    value = value.replace(/\D/g, '');
-    let num = parseInt(value, 10);
-    if (isNaN(num) || num < 0) {
-        num = 0;
-    } else if (num > 100) {
-        num = 100;
-    }
-    input.value = num;
-}
-
-const syncDataOnline = document.getElementById("syncDataOnline");
-// syncDataOnline.style.display = "none";
-if (syncDataOnline) {
-    syncDataOnline.addEventListener("click", () => {
-        ipcRenderer.send("sync-data");
-    });
-}
-
-const languageSelector = document.getElementById("languageSettign");
-
-    if(languageSelector) {    
-    languageSelector.addEventListener("change", function () {
-      const selectedLanguage = languageSelector.value;
-      localStorage.setItem("language", selectedLanguage);
-      setLocale(selectedLanguage);
-    });
-}
-
-function setLocale(locale) {
-    const filepath = path.join(__dirname, 'lang', `${locale}.json`);
-    fs.readFile(filepath, 'utf8', (err, data) => {
-      if (err) {
-        console.error("Error fetching translations:", err);
-        return;
-      }
-      const translations = JSON.parse(data);
-      applyTranslations(translations , locale);
-      document.documentElement.lang = locale;
-    });
-  }
-  function applyTranslations(translations , locale) {
-    for (const key in translations) {
-      if (translations.hasOwnProperty(key)) {
-        const element = document.getElementById(key);
-        if (element) {
-           if(locale==="ar"){
-              element.dir = "rtl";
-           }   
-          element.innerText = translations[key];
-        }
-      }
-    }
-  }
-  
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const languageValue = localStorage.getItem("language");
-  if (languageValue) {
-    if(languageSelector){
-        languageSelector.value = languageValue;
-    }
-    setLocale(languageValue);
-  }
-  else{
-      setLocale("en");
-  }
-  })

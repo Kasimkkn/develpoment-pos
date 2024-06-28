@@ -268,7 +268,7 @@ datalist option{
 }
 
 .checkbox-container input[type="checkbox"]:checked {
-  /* appearance: none; */
+  appearance: none;
   background-color: var(--common-color); 
   outline: none !important;
 }

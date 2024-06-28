@@ -365,7 +365,14 @@ bulkInput.addEventListener('change', () => {
 
 
 document.getElementById('bulkUploadButton').addEventListener('click', () => {
-  console.log("heelo")
+  if(apiCategory.length === 0){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Category is empty',
+      timer: 800
+    })
+  }
   const fileInput = document.getElementById('bulkUploadInput');
   const file = fileInput.files[0];
 

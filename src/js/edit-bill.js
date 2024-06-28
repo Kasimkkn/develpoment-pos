@@ -429,13 +429,24 @@ updateDiscountBtn.addEventListener("click", () => {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const productData = JSON.parse(localStorage.getItem("products"));
-  const locationData = JSON.parse(localStorage.getItem("locations"));
-
-  if (productData && locationData) {
+  ipcRenderer.send("fetch-products")
+  ipcRenderer.send("fetch-location")
+  // const productData = JSON.parse(localStorage.getItem("products"));
+  // const locationData = JSON.parse(localStorage.getItem("locations"));
+  ipcRenderer.on("products-data", (event, productData) => {
     apiProduct = productData;
-    Locations = locationData;
     populateProducts(apiProduct, locationName);
-  }
+  })
+
+  ipcRenderer.on("locations-data", (event, locationData) => {
+    Locations = locationData;
+
+  })
+
+  // if (productData && locationData) {
+  //   apiProduct = productData;
+  //   Locations = locationData;
+
+  // }
 })
 

@@ -55,7 +55,7 @@ const rendermonthlyPurchase = (data) => {
         sale.purchase_no,
         sale.supplier_name ? sale.supplier_name : 'no name',
         new Date(sale.date).toLocaleDateString("en-GB"),
-        `${sale.item_details[0].quantity} x ${sale.item_details[0].mrp} ${sale.item_details[0].item_name}`,
+        `${sale.item_details[0].quantity}kg x ${sale.item_details[0].mrp} ${sale.item_details[0].item_name}`,
         `${sale.item_details[0].quantity * sale.item_details[0].mrp}`,
       ])
       .draw(false);

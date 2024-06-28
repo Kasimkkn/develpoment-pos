@@ -68,9 +68,9 @@ const newSupplierHandler = () => {
     }
 
     ipcRenderer.send("new-Supplier", SupplierData)
-
     closeModal();
     fetchSupplier();
+    location.reload();
   } catch (error) {
     console.log("Error inserting", error);
   }

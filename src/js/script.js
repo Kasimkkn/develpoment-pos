@@ -442,24 +442,36 @@ function printKOT() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const initializeCustomerInfoModal = () => {
-    const $targetEl = document.getElementById("customerInfoModal");
+  const initializeModal = (id) => {
+    const $targetEl = document.getElementById(id);
     const options = {
       placement: "center",
       backdrop: "dynamic",
       backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
       closable: true,
     };
-
+  
     const modal = new Modal($targetEl, options);
     return modal;
   };
-
-  const customerInfoModal = initializeCustomerInfoModal();
+  
+  const customerBillInfoModal = initializeModal("customerInfoModal");
+  const loyaltyPointsModal = initializeModal("customerLoyaltyModal");
+  
+  
   function customerBill() {
-    customerInfoModal.show();
+    customerBillInfoModal.show();
+  }
+  function applyLoyaltyPoints() {
+    loyaltyPointsModal.show()
+  }
+  
+  
+  function customerBill() {
+    customerBillInfoModal.show();
   }
   let totalTimeKotIsPrinted = 0;
+
   document.getElementById("print-KOt-btn").addEventListener("click", function () {
     totalTimeKotIsPrinted += 1;
     if (KotcartItems.length > 0) {
@@ -492,4 +504,17 @@ document.addEventListener("DOMContentLoaded", () => {
       printBill();
     }
   });
+  document.getElementById("customerLoyaltyBtn").addEventListener("click", () => {
+    if (KotcartItems.length > 0) {
+      applyLoyaltyPoints();
+    }
+    else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Cart is empty',
+        timer: 800
+      })
+    }
+  })
 });

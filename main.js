@@ -226,7 +226,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
       const currentQuantity = currentItemsMap[productName].quantity;
       printer.tableCustom([
         { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
-        { text: productName.toLowerCase(), align: 'LEFT', bold: true, },
+        { text: productName.toLowerCase(), align: 'LEFT', width: 0.7, bold: true, },
       ]);
     });
 
@@ -235,7 +235,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
       const sp_info = currentItemsWithSPInfo[productName].sp_info;
       printer.tableCustom([
         { text: currentQuantity.toString(), align: 'LEFT', width: 0.3, bold: true, },
-        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', bold: true, },
+        { text: `${productName.toLowerCase()} (${sp_info})`, align: 'LEFT', width: 0.7, bold: true, },
       ]);
     });
 
@@ -468,8 +468,47 @@ ipcMain.on('create-only-first-user', async (event) => {
           receipe_details: true,
           is_synced: true,
         })
-        userRight.save().then(() => {
+        userRight.save().then(async () => {
           console.log("User created successfully");
+          // create a billBook if not exisit 
+          const allBillBook = await BillBook.find();
+          if (allBillBook.length == 0) {
+            const billBook = new BillBook({
+              bill_book: 1,
+              is_active: true,
+              is_synced: false
+            })
+            billBook.save().then(() => {
+              console.log("Bill book created successfully");
+              // then default billInfos if not exisit
+              const allBillInfo = BillInfo.find();
+              if (allBillInfo.length == 0) {
+                const billInfo = new BillInfo({
+                  bill_footer: "Thank you for shopping with us. Visit again.",
+                  HSN_code: "1234",
+                  GSTIN_no: "29AE932UD9892JC02",
+                  FSSAI_code: "1234567890",
+                  customer_id: 1,
+                  customer_mobile: "1234567890",
+                  customer_name: "admin",
+                  resturant_name: "inspire",
+                  loyalty_amount : 100,
+                  loyalty_points : 1,
+                  how_much_points : 1,
+                  how_much_amount : 1,
+                  is_synced: false
+                })
+                billInfo.save().then(() => {
+                  console.log("Bill info created successfully");
+                }).catch((error) => {
+                  console.error("Error creating bill info:", error);
+                })
+              }
+            }).catch((error) => {
+              console.error("Error creating bill book:", error);
+            })
+          }
+          
         }).catch((error) => {
           console.error("Error creating user right:", error);
         })

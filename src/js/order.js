@@ -22,7 +22,8 @@ else {
 let apiProduct = [];
 let cartItems = [];
 let Locations = [];
-let apiCategory = JSON.parse(localStorage.getItem("categories"));
+let apiCategory = [];
+
 
 
 let spInfList = [];
@@ -439,6 +440,12 @@ function renderFilteredSuggestions(inputText) {
   });
 }
 
+ipcRenderer.send("fetch-categories")
+
+ipcRenderer.on("categories-data", (event, categories) => {
+  apiCategory = categories;
+  populateCateogories(apiCategory);
+})
 
 ipcRenderer.send("fetch-cartItems", tableNo, locationName);
 
