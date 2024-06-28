@@ -79,7 +79,7 @@ updaeFileInput.addEventListener("change", () => {
 
 const editItemHandler = async () => {
   const itemId = document.getElementById('editItemModal').dataset.itemId;
-  // const imageFile = document.getElementById("item_image").files[0];
+  const imageFile = document.getElementById("item_image").files[0];
 
   try {
     let itemData = {
@@ -94,21 +94,21 @@ const editItemHandler = async () => {
       isActive: document.getElementById("status").value
     };
 
-    // if (imageFile) {
-    //   const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
-    //   const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
-    //   if (existingProduct) {
-    //     const existingImagePath = existingProduct._doc.item_image;
-    //     fs.unlinkSync(existingImagePath);
-    //   }
+    if (imageFile) {
+      const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
+      const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
+      if (existingProduct) {
+        const existingImagePath = existingProduct._doc.item_image;
+        fs.unlinkSync(existingImagePath);
+      }
 
-    //   fs.copyFileSync(imageFile.path, uploadPath);
-    //   itemData.itemImage = uploadPath;
-    // }
+      fs.copyFileSync(imageFile.path, uploadPath);
+      itemData.itemImage = uploadPath;
+    }
 
     ipcRenderer.send("edit-item", itemId, itemData);
     closeModal();
-    // location.reload(true);
+    location.reload(true);
     fetchProduct();
 
   } catch (error) {
@@ -138,74 +138,83 @@ fileInput.addEventListener("change", () => {
 });
 
 const newItemHandler = () => {
-
-  // const imageFile = document.getElementById("new_item_image").files[0];
-
-  // if (!imageFile) {
-  //   Swal.fire({
-  //     icon: 'error',
-  //     title: 'Oops...',
-  //     text: 'Please select an image!',
-  //     timer: 1000,
-  //   })
-  // }
-  // const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
-  // fs.copyFileSync(imageFile.path, uploadPath);
-  try {
-    const newItemNoInput = document.getElementById("new_item_no").value
-    const newItemNameInput = document.getElementById("new_item_name").value;
-    const newRateOne = document.getElementById("new_rate_one").value;
-    const newRateTwo = document.getElementById("new_rate_two").value;
-    const newRateTree = document.getElementById("new_rate_three").value;
-    const newRateFour = document.getElementById("new_rate_four").value;
-    const newRateFive = document.getElementById("new_rate_five").value;
-    const newRateSix = document.getElementById("new_rate_six").value;
-    const newCategoryInput = document.getElementById("new_category").value;
-    const newStatusInput = document.getElementById("new_status").value;
-    const newTax = document.getElementById("new_tax").value;
-
-    if (newItemNoInput == "" || newItemNameInput == "" || newRateOne == "" || newRateTwo == "" || newRateTree == "" || newRateFour == "" || newRateFive == "" || newRateSix == "" || newCategoryInput == "" || newStatusInput == "") {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please fill all the fields!',
-        timer: 1000,
-      })
-    }
-    else {
-      const itemData = {
-        item_no: newItemNoInput,
-        itemName: newItemNameInput,
-        // itemImage: uploadPath,
-        rate_one: newRateOne,
-        rate_two: newRateTwo,
-        rate_three: newRateTree,
-        rate_four: newRateFour,
-        rate_five: newRateFive,
-        rate_six: newRateSix,
-        categoryNo: newCategoryInput,
-        isActive: newStatusInput,
-        tax_perc: newTax
-      }
-
-      ipcRenderer.send("new-item", itemData)
-      closeModal();
-      // location.reload(true);
-      fetchProduct();
-    }
-  } catch (error) {
-    ipcRenderer.on("new-item-error", (event, error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error,
-        timer: 1000,
-      })
-      setTimeout(() => {
-        location.reload(true);
-      }, 1000)
+  if(apiCategory.length === 0){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Please Add Category First',
     })
   }
+  else{
+    const imageFile = document.getElementById("new_item_image").files[0];
+
+    if (!imageFile) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please select an image!',
+        timer: 1000,
+      })
+    }
+    const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
+    fs.copyFileSync(imageFile.path, uploadPath);
+    try {
+      const newItemNoInput = document.getElementById("new_item_no").value
+      const newItemNameInput = document.getElementById("new_item_name").value;
+      const newRateOne = document.getElementById("new_rate_one").value;
+      const newRateTwo = document.getElementById("new_rate_two").value;
+      const newRateTree = document.getElementById("new_rate_three").value;
+      const newRateFour = document.getElementById("new_rate_four").value;
+      const newRateFive = document.getElementById("new_rate_five").value;
+      const newRateSix = document.getElementById("new_rate_six").value;
+      const newCategoryInput = document.getElementById("new_category").value;
+      const newStatusInput = document.getElementById("new_status").value;
+      const newTax = document.getElementById("new_tax").value;
+  
+      if (newItemNoInput == "" || newItemNameInput == "" || newRateOne == "" || newRateTwo == "" || newRateTree == "" || newRateFour == "" || newRateFive == "" || newRateSix == "" || newCategoryInput == "" || newStatusInput == "") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please fill all the fields!',
+          timer: 1000,
+        })
+      }
+      else {
+        const itemData = {
+          item_no: newItemNoInput,
+          itemName: newItemNameInput,
+          itemImage: uploadPath,
+          rate_one: newRateOne,
+          rate_two: newRateTwo,
+          rate_three: newRateTree,
+          rate_four: newRateFour,
+          rate_five: newRateFive,
+          rate_six: newRateSix,
+          categoryNo: newCategoryInput,
+          isActive: newStatusInput,
+          tax_perc: newTax
+        }
+  
+        ipcRenderer.send("new-item", itemData)
+        closeModal();
+        location.reload(true);
+        fetchProduct();
+      }
+    } catch (error) {
+      ipcRenderer.on("new-item-error", (event, error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error,
+          timer: 1000,
+        })
+        setTimeout(() => {
+          location.reload(true);
+        }, 1000)
+      })
+    }
+  }
+
 }
 
 const searchInput = document.getElementById("table_search_item");
@@ -389,7 +398,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
             timer: 1000,
           });
           setTimeout(() => {
-            // location.reload(true);
+            location.reload(true);
           }, 1000);
         } else {
           Swal.fire({
@@ -399,7 +408,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
             timer: 1000,
           });
           setTimeout(() => {
-            // location.reload(true);
+            location.reload(true);
           }, 1000);
         }
       })
