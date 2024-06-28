@@ -726,6 +726,9 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
     });
     event.reply("cartItems-data", updatedCartItems);
 
+    const allCartItem = await ExistingCartItem.find({});
+    event.reply("existing-cartItems-data" , allCartItem);
+
   } catch (error) {
     console.error("Error adding cart item:", error);
     event.reply("add-error", "Error adding cart item");
@@ -855,6 +858,8 @@ ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
         location_name: locationName,
       });
       event.reply("cartItems-data", updatedCartItems);
+      const allCartItems = await ExistingCartItem.find({})
+      event.reply("existing-cartItems-data", allCartItems);
       return
     }
 
@@ -875,6 +880,7 @@ ipcMain.on("update-cartItem-quantity", async (event, toUpdateData) => {
       location_name: locationName,
     });
     event.reply("cartItems-data", updatedCartItems);
+
   } catch (error) {
     console.error(`Error updating cart item quantity:`, error);
     event.reply(
@@ -1124,6 +1130,9 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
       location_name: locationName,
     });
     event.reply("cartItems-data", data);
+
+    const allCartItems = await ExistingCartItem.find({})
+    event.reply("existing-cartItems-data", allCartItems);
 
   } catch (error) {
     console.error("Error deleting whole cartItem:", error);
@@ -2643,19 +2652,6 @@ ipcMain.on("get-special-info", async (event) => {
 // bulk insert
 ipcMain.on('bulk-insert-item', async (event, data) => {
   try {
-    const maxItem = await Item.findOne({}, { item_no: 1 }).sort({
-      item_no: -1,
-    });
-
-    let maxItemNo = 0;
-    if (maxItem) {
-      maxItemNo = maxItem.item_no;
-    }
-    maxItemNo++;
-
-    data.forEach(item => {
-      item.item_no = maxItemNo++;
-    });
     await Item.insertMany(data);
     event.reply('bulk-insert-response', 'Data inserted successfully');
   } catch (error) {

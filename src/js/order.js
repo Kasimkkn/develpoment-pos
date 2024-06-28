@@ -1,3 +1,4 @@
+const { Modal } = require("flowbite");
 const urlParams = new URLSearchParams(window.location.search);
 const locationName = urlParams.get("location") || "Common-Hall";
 const tableNo = urlParams.get("id") || 1;
@@ -5,7 +6,6 @@ document.getElementById("locationName").innerHTML = locationName;
 document.getElementById("tableNo").innerHTML = "Table No: " + tableNo;
 const userPref = JSON.parse(localStorage.getItem("userPreferences"));
 const userCurrency = userPref ? userPref._doc.currency_name : "₹";
-const userLoyalty = JSON.parse(localStorage.getItem("loyaltyRedeemData"));
 
 let userTaxPerc;
 
@@ -30,6 +30,7 @@ ipcRenderer.send("get-special-info");
 ipcRenderer.on("get-special-info-success", (event, data) => {
   spInfList = data;
 })
+
 
 
 const updateCartUI = () => {
@@ -88,21 +89,16 @@ const updateCartSummary = (cartItems) => {
     (total, item) => total + item._doc.quantity,
     0
   );
-  let totalAmount = cartItems.reduce(
+  const totalAmount = cartItems.reduce(
     (total, item) => total + item._doc.price * item._doc.quantity,
     0
   );
-
-  let discountAmount = 0;
-  if(userLoyalty.discount_amount && locationName == userLoyalty.location_name && tableNo == userLoyalty.table_no) {
-    discountAmount = totalAmount * (userLoyalty.discount_amount / 100);
-    totalAmount -= discountAmount;
-  }
   const taxAmount = totalAmount * userTaxPerc;
   const netAmount = totalAmount + taxAmount;
 
-  document.getElementById("total-items").textContent = `Total (${totalItems} Items)`;
-  
+  document.getElementById(
+    "total-items"
+  ).textContent = `Total (${totalItems} Items)`;
   document.getElementById("total-amount").textContent = `${userCurrency} ${totalAmount.toFixed(
     2
   )}`;
@@ -446,10 +442,28 @@ function renderFilteredSuggestions(inputText) {
 
 ipcRenderer.send("fetch-cartItems", tableNo, locationName);
 
+ipcRenderer.send("fetch-products");
+
+ipcRenderer.send("fetch-location");
 
 ipcRenderer.on("cartItems-data", (event, receivedCartItems) => {
   cartItems = receivedCartItems;
   updateCartUI();
+});
+
+ipcRenderer.on("location-data", (event, data) => {
+  Locations = data;
+  populateProducts(apiProduct, locationName);
+});
+
+ipcRenderer.once("fetch-error", (event, error) => {
+  console.log(error + "error fetching products");
+});
+
+ipcRenderer.on("products-data", (event, products) => {
+  apiProduct = products;
+  populateProducts(apiProduct, locationName);
+  populateCateogories(apiCategory);
 });
 
 document.getElementById("add-quantity-btn").addEventListener("click", () => {
@@ -474,14 +488,3 @@ document.getElementById("add-quantity-btn").addEventListener("click", () => {
 });
 
 
-document.addEventListener("DOMContentLoaded", () => {
-  const productData = JSON.parse(localStorage.getItem("products"));
-  const locationData = JSON.parse(localStorage.getItem("locations"));
-
-  if (productData && locationData) {
-    Locations = locationData;
-    apiProduct = productData;
-    populateProducts(apiProduct, locationName);
-    populateCateogories(apiCategory);
-  }
-})

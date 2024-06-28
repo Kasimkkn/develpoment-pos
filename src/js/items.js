@@ -22,7 +22,12 @@ const editItemModal = new Modal($targetEl, options);
 const addNewItemModal = new Modal($targetEl2, options);
 
 function closeModal() {
+  // const editModal = document.getElementById("editItemModal");
+  // editModal.classList.add("hidden");
   addNewItemModal.hide()
+
+  // const newItemModal = document.getElementById("addNewItemModal");
+  // newItemModal.classList.add("hidden");
   editItemModal.hide()
 }
 
@@ -74,7 +79,7 @@ updaeFileInput.addEventListener("change", () => {
 
 const editItemHandler = async () => {
   const itemId = document.getElementById('editItemModal').dataset.itemId;
-  const imageFile = document.getElementById("item_image").files[0];
+  // const imageFile = document.getElementById("item_image").files[0];
 
   try {
     let itemData = {
@@ -89,30 +94,22 @@ const editItemHandler = async () => {
       isActive: document.getElementById("status").value
     };
 
-    if (imageFile) {
-      const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
-      const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
-      if (existingProduct) {
-        const existingImagePath = existingProduct._doc.item_image;
-        if(existingImagePath){
-          // fs.unlinkSync(existingImagePath);
-        }
-      }
+    // if (imageFile) {
+    //   const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
+    //   const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
+    //   if (existingProduct) {
+    //     const existingImagePath = existingProduct._doc.item_image;
+    //     fs.unlinkSync(existingImagePath);
+    //   }
 
-      fs.copyFileSync(imageFile.path, uploadPath);
-      itemData.itemImage = uploadPath;
-    }
+    //   fs.copyFileSync(imageFile.path, uploadPath);
+    //   itemData.itemImage = uploadPath;
+    // }
 
     ipcRenderer.send("edit-item", itemId, itemData);
     closeModal();
-    location.reload(true);
-    // fetchProduct();
-    // ipcRenderer.on("products-data", (event, products) => {
-    //   apiProduct = products;
-    //   renderDropdown(apiProduct);
-    //   renderProducts(products);
-    // });
-    
+    // location.reload(true);
+    fetchProduct();
 
   } catch (error) {
     console.error('Error editing item:', error);
@@ -142,18 +139,18 @@ fileInput.addEventListener("change", () => {
 
 const newItemHandler = () => {
 
-  const imageFile = document.getElementById("new_item_image").files[0];
+  // const imageFile = document.getElementById("new_item_image").files[0];
 
-  if (!imageFile) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Please select an image!',
-      timer: 1000,
-    })
-  }
-  const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
-  fs.copyFileSync(imageFile.path, uploadPath);
+  // if (!imageFile) {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Oops...',
+  //     text: 'Please select an image!',
+  //     timer: 1000,
+  //   })
+  // }
+  // const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
+  // fs.copyFileSync(imageFile.path, uploadPath);
   try {
     const newItemNoInput = document.getElementById("new_item_no").value
     const newItemNameInput = document.getElementById("new_item_name").value;
@@ -179,7 +176,7 @@ const newItemHandler = () => {
       const itemData = {
         item_no: newItemNoInput,
         itemName: newItemNameInput,
-        itemImage: uploadPath,
+        // itemImage: uploadPath,
         rate_one: newRateOne,
         rate_two: newRateTwo,
         rate_three: newRateTree,
@@ -193,14 +190,8 @@ const newItemHandler = () => {
 
       ipcRenderer.send("new-item", itemData)
       closeModal();
-      location.reload(true);
-      // fetchProduct();
-      // ipcRenderer.on("products-data", (event, products) => {
-      //   apiProduct = products;
-      //   renderDropdown(apiProduct);
-      //   renderProducts(products);
-      // });
-      
+      // location.reload(true);
+      fetchProduct();
     }
   } catch (error) {
     ipcRenderer.on("new-item-error", (event, error) => {
@@ -345,6 +336,7 @@ ipcRenderer.on("products-data", (event, products) => {
   apiProduct = products;
   renderDropdown(apiProduct);
   renderProducts(products);
+
 });
 
 const bulkInput = document.getElementById('bulkUploadInput');
@@ -364,6 +356,7 @@ bulkInput.addEventListener('change', () => {
 
 
 document.getElementById('bulkUploadButton').addEventListener('click', () => {
+  console.log("heelo")
   const fileInput = document.getElementById('bulkUploadInput');
   const file = fileInput.files[0];
 
@@ -387,6 +380,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
       ipcRenderer.send('bulk-insert-item', data);
 
       ipcRenderer.on("bulk-insert-response", (event, response) => {
+        console.log(response)
         if (response === 'Data inserted successfully') {
           Swal.fire({
             icon: 'success',
@@ -395,7 +389,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
             timer: 1000,
           });
           setTimeout(() => {
-            location.reload(true);
+            // location.reload(true);
           }, 1000);
         } else {
           Swal.fire({
@@ -405,7 +399,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
             timer: 1000,
           });
           setTimeout(() => {
-            location.reload(true);
+            // location.reload(true);
           }, 1000);
         }
       })
