@@ -133,6 +133,12 @@ printer_ip.addEventListener("input", () => {
     localStorage.setItem("printerSetting", printer_ip.value);
 })
 
+const kot_printer_ip = document.getElementById("kot_printer_ip");
+kot_printer_ip.value = localStorage.getItem("kotPrinterSetting");
+kot_printer_ip.addEventListener("input", () => {
+    localStorage.setItem("kotPrinterSetting", kot_printer_ip.value);
+})
+
 saveBtn.addEventListener("click", () => {
     const customer_id = JSON.parse(localStorage.getItem("billInfo"))._doc.customer_id;
     const customerId = document.getElementById("customer_Id").value;

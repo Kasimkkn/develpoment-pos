@@ -238,7 +238,6 @@ function printBill() {
   const discountMoney = parseFloat(document.getElementById("discountMoney").value) || 0;
   const discountReason = document.getElementById("discountReason").value || '';
 
-  let productsInfo = "";
   let itemDetails = [];
   let totalAmount = 0;
   
@@ -271,16 +270,6 @@ function printBill() {
     }
   });
 
-  itemDetails.forEach((item) => {
-    productsInfo += `
-      <tr>
-        <td align="left">${item.item_name}</td>
-        <td align="center">${item.quantity}</td>
-        <td align="center">${parseFloat(item.price).toFixed(2)}</td>
-        <td align="center">${parseFloat(item.totalAmount).toFixed(2)}</td>
-      </tr>
-    `;
-  });
   
   let discountAmount = 0;
   if(discountPerc > 0){
@@ -388,9 +377,9 @@ function printBill() {
           });
       });
     }
-
+    const printer_ip = localStorage.getItem("printerSetting");
     // Send the data to the printer
-    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount,totalTaxAmount);
+    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount,totalTaxAmount , printer_ip);
     
     ipcRenderer.on("bill-saved", (event, data) => {
       location.reload();
@@ -402,8 +391,6 @@ function printBill() {
 
 
 function printKOT() {
-  let productsInfo = "";
-  let productsWithSPInfo = "";
   const currentItemsMap = {};
   const currentItemsWithSPInfo = {};
   const todaysDate = document.getElementById("todaysDate").textContent;
@@ -435,35 +422,14 @@ function printKOT() {
       }
     }
   });
-
-  Object.keys(currentItemsMap).forEach((productName) => {
-    const currentQuantity = currentItemsMap[productName].quantity;
-    productsInfo += `
-      <tr>
-        <td align="left" style="font-weight:600">${currentQuantity}</td>
-        <td align="left" style="font-weight:600">${productName.toLowerCase()}</td>
-      </tr>
-    `;
-  });
-
-  Object.keys(currentItemsWithSPInfo).forEach((productName) => {
-    const currentQuantity = currentItemsWithSPInfo[productName].quantity;
-    const sp_info = currentItemsWithSPInfo[productName].sp_info;
-    productsWithSPInfo += `
-      <tr>
-        <td align="left" style="font-weight:600">${currentQuantity}</td>
-        <td align="left" style="font-weight:600">${productName.toLowerCase()} (${sp_info})</td>
-      </tr>
-    `;
-  });
-
   const kotContent = {
     table_no: table_no,
     location_name: location_name,
     loggedInUser: loggedInUser,
     todaysDate: todaysDate,
     currentItemsMap: currentItemsMap,
-    currentItemsWithSPInfo: currentItemsWithSPInfo
+    currentItemsWithSPInfo: currentItemsWithSPInfo,
+    printer_ip: localStorage.getItem("kotPrinterSetting")
   };
 
   try {
