@@ -17,7 +17,8 @@
       <!-- Step 1: Country and Currency Name -->
       <div id="step1" class="flex flex-col gap-4 w-96">
         <h2 class="text-xl font-bold text-common">Select Currency</h2>
-        <select name="currencyName" id="currencyName" class="w-full px-4 py-3 text-common rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary ">
+        <select name="currencyName" id="currencyName"
+          class="w-full px-4 py-3 text-common rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary ">
           <option value="INR">India (₹) - INR</option>
           <option value="AUD">Australia (A$) - AUD</option>
           <option value="CAD">Canada (C$) - CAD</option>
@@ -54,8 +55,8 @@
           <option value="TRY">Turkey (₤) - TRY</option>
           <option value="Other">Other</option>
         </select>
-        <button type="button" 
-        onclick="nextStep(2)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white mt-6">
+        <button type="button" onclick="nextStep(2)"
+          class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white mt-6">
           Next
         </button>
       </div>
@@ -64,15 +65,15 @@
       <div id="step2" style="display: none" class="flex flex-col gap-4 w-96">
         <h2 class="text-xl font-bold text-common">Select Tax Options</h2>
         <label class="checkbox-container">
-          <input type="checkbox" name="taxOption" id="isGstAvailable" onchange="toggleTaxOptions()" />
+          <input type="checkbox" name="taxOption" id="isGstAvailable" />
           <span class="checkbox-label">GST</span>
         </label>
         <label class="checkbox-container">
-          <input type="checkbox" name="taxOption" id="isValueAddedTax" onchange="toggleTaxOptions()" />
+          <input type="checkbox" name="taxOption" id="isValueAddedTax" />
           <span class="checkbox-label">Value Added Tax</span>
         </label>
         <label class="checkbox-container">
-          <input type="checkbox" name="taxOption" id="noTax" onchange="toggleTaxOptions()" />
+          <input type="checkbox" name="taxOption" id="noTax" />
           <span class="checkbox-label">No Tax</span>
         </label>
         <div id="gstInputs" style="display: none">
@@ -84,9 +85,10 @@
             class="w-full px-4 py-3 rounded-lg bg-secondary mt-2 border border-primary focus:bg-primary  text-common" />
         </div>
         <div class="flex justify-between gap-1">
-          <button onclick="previousStep(2)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
-          <button type="button" 
-          onclick="nextStep(3)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">
+          <button onclick="previousStep(2)"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
+          <button type="button" onclick="nextStep(3)"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">
             Next
           </button>
         </div>
@@ -110,15 +112,17 @@
           <span class="checkbox-label">76mm</span>
         </label>
         <div class="flex gap-2 justify-between">
-          <button onclick="previousStep(3)" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
-          <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Done</button>
+          <button onclick="previousStep(3)"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Previous</button>
+          <button type="submit"
+            class="inline-flex items-center justify-center rounded-md text-sm h-10 px-4 py-2 w-full mb-2 bg-common hover:bg-common-hover text-white">Done</button>
         </div>
       </form>
     </div>
   </section>
 
   <script src="global.js"></script>
-  
+
   <script>
     const userDetails = JSON.parse(localStorage.getItem("loggedInUser"));
     const user_id = userDetails._doc.user_id;
@@ -213,31 +217,56 @@
       }
     }
 
-    function toggleTaxOptions() {
-      const isGstAvailable = document.getElementById("isGstAvailable").checked;
-      const isValueAddedTax = document.getElementById("isValueAddedTax").checked;
-      const noTax = document.getElementById("noTax").checked;
+    // function toggleTaxOptions() {
+    //   const isGstAvailable = document.getElementById("isGstAvailable").checked;
+    //   const isValueAddedTax = document.getElementById("isValueAddedTax").checked;
+    //   const noTax = document.getElementById("noTax").checked;
 
-      if (isGstAvailable) {
-        document.getElementById("gstInputs").style.display = "flex";
-        document.getElementById("valueAddedInputs").style.display = "none";
-        document.getElementById("isValueAddedTax").checked = false;
-        document.getElementById("noTax").checked = false;
-      }
-      if (isValueAddedTax) {
-        document.getElementById("valueAddedInputs").style.display = "flex";
-        document.getElementById("gstInputs").style.display = "none";
-        document.getElementById("isGstAvailable").checked = false;
-        document.getElementById("noTax").checked = false;
-      }
-      if (noTax) {
-        document.getElementById("gstInputs").style.display = "none";
-        document.getElementById("valueAddedInputs").style.display = "none";
-        document.getElementById("isGstAvailable").checked = false;
-        document.getElementById("isValueAddedTax").checked = false;
-      }
-    }
+    //   console.log("isGstAvailable", isGstAvailable, "isValueAddedTax", isValueAddedTax, "noTax", noTax);
+    //   if (isGstAvailable) {
+    //     console.log("")
+    //     document.getElementById("isGstAvailable").checked = true;
+    //     document.getElementById("gstInputs").style.display = "flex";
+    //     document.getElementById("valueAddedInputs").style.display = "none";
+    //     document.getElementById("isValueAddedTax").checked = false;
+    //     document.getElementById("noTax").checked = false;
+    //   }
+    //   if (isValueAddedTax) {
+    //     document.getElementById("isValueAddedTax").checked = true;
+    //     document.getElementById("isGstAvailable").checked = false;
+    //     document.getElementById("noTax").checked = false;
+    //     document.getElementById("valueAddedInputs").style.display = "flex";
+    //     document.getElementById("gstInputs").style.display = "none";
+    //   }
+    //   if (noTax) {
+    //     document.getElementById("noTax").checked = true;
+    //     document.getElementById("gstInputs").style.display = "none";
+    //     document.getElementById("valueAddedInputs").style.display = "none";
+    //     document.getElementById("isGstAvailable").checked = false;
+    //     document.getElementById("isValueAddedTax").checked = false;
+    //   }
+    // }
 
+    function toggleTaxOptions(event) {
+  const targetId = event.target.id;
+
+  if (targetId === "isGstAvailable") {
+    document.getElementById("gstInputs").style.display = "flex";
+    document.getElementById("valueAddedInputs").style.display = "none";
+    document.getElementById("isValueAddedTax").checked = false;
+    document.getElementById("noTax").checked = false;
+  } else if (targetId === "isValueAddedTax") {
+    document.getElementById("valueAddedInputs").style.display = "flex";
+    document.getElementById("gstInputs").style.display = "none";
+    document.getElementById("isGstAvailable").checked = false;
+    document.getElementById("noTax").checked = false;
+  } else if (targetId === "noTax") {
+    document.getElementById("gstInputs").style.display = "none";
+    document.getElementById("valueAddedInputs").style.display = "none";
+    document.getElementById("isGstAvailable").checked = false;
+    document.getElementById("isValueAddedTax").checked = false;
+  }
+}
     const currencySymbols = {
       INR: "₹",
       AUD: "A$",
@@ -276,7 +305,7 @@
       Other: "",
     };
 
-  
+
     document.getElementById("step3").addEventListener("submit", function (event) {
       event.preventDefault();
 
@@ -332,6 +361,10 @@
         window.location.href = "index.html";
       });
     });
+    document.getElementById("isGstAvailable").addEventListener("click", toggleTaxOptions);
+    document.getElementById("isValueAddedTax").addEventListener("click", toggleTaxOptions);
+    document.getElementById("noTax").addEventListener("click", toggleTaxOptions);
+
   </script>
 
 
