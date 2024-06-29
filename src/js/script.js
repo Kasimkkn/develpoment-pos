@@ -10,6 +10,24 @@ ipcRenderer.on("cartItems-data", (event, receivedCartItems) => {
   KotcartItems = receivedCartItems;
 });
 
+
+const initializeModal = (id) => {
+  const $targetEl = document.getElementById(id);
+  const options = {
+    placement: "center",
+    backdrop: "dynamic",
+    backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
+    closable: true,
+  };
+
+  const modal = new Modal($targetEl, options);
+  return modal;
+};
+
+const customerBillInfoModal = initializeModal("customerInfoModal");
+const loyaltyPointsModal = initializeModal("customerLoyaltyModal");
+
+
 ipcRenderer.send("fetch-loyalty")
 
 ipcRenderer.on("loyalty-data", (event, data) => {
@@ -65,7 +83,7 @@ function renderCustomerInfoSugestion(inputText) {
       loyaltyCustomerPhoneList.appendChild(option.cloneNode(true));
 
     }
-    if(loyaltyName.includes(inputText)) {
+    if (loyaltyName.includes(inputText)) {
       const option = document.createElement("option");
       option.value = loyalty._doc.customer_name;
       customerNameDatalist.appendChild(option);
@@ -86,6 +104,9 @@ loyalCustomerName.addEventListener("input", (event) => {
 loyaltyCustomerNO.addEventListener("input", (event) => {
   const inputText = event.target.value.trim().toLowerCase();
   renderCustomerInfoSugestion(inputText);
+  if (inputText.length == 10) {
+    ipcRenderer.send("get-loyalty-points", inputText);
+  }
 });
 
 let loyalCustomerData = {};
@@ -101,7 +122,7 @@ const otpInput = document.getElementById("otpInput");
 const otpValue = document.getElementById("otpValue");
 const redeemAmount = document.getElementById("redeemAmount");
 document.getElementById("send-otp").addEventListener("click", () => {
-  if(loyalCustomerPhone.value.length < 10 || otpInput.value != '' || redeemAmount.value == 0) {
+  if (loyaltyCustomerNO.value.length < 10  || redeemAmount.value == 0) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -110,24 +131,24 @@ document.getElementById("send-otp").addEventListener("click", () => {
     })
   }
   else {
-      const generatedOtp = Math.floor(1000 + Math.random() * 9000);
-      otpValue.value = generatedOtp;
-
-      const phone = loyalCustomerPhone.value;
-      const message = `Your OTP is ${generatedOtp}`;
-      sendWhatsAppMessage(phone, message)
-      .then(response => {
-          console.log('Response:', response);
-        })
-      .catch(error => {
-          console.error('Error sending message:', error);
-        });
+    const generatedOtp = Math.floor(1000 + Math.random() * 9000);
+    otpValue.value = generatedOtp;
+    otpInput.value = generatedOtp;
+    // const phone = loyalCustomerPhone.value;
+    // const message = `Your OTP is ${generatedOtp}`;
+    // sendWhatsAppMessage(phone, message)
+    // .then(response => {
+    //     console.log('Response:', response);
+    //   })
+    // .catch(error => {
+    //     console.error('Error sending message:', error);
+    //   });
   }
 })
 
 
 document.getElementById("apply-button").addEventListener("click", () => {
-  if(otpValue.value == '') {
+  if (otpValue.value == '') {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -136,69 +157,72 @@ document.getElementById("apply-button").addEventListener("click", () => {
     })
     return
   }
-  if(otpInput.value === otpValue.value) {
+  if (otpInput.value === otpValue.value) {
     const redeemAmount = document.getElementById("redeemAmount").value;
-  if (redeemAmount > loyalCustomerData._doc.total_points) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Insufficient Points",
-      timer: 1000,
-    })
-  }
-  else {
-    const userSettings = JSON.parse(localStorage.getItem("billInfo"));
-    const how_much_amount = userSettings._doc.how_much_amount;
-    const discountAmount = redeemAmount * how_much_amount;
-    const billAmount = Number(document.getElementById("Bill_amount").textContent.split("₹")[1]);
-    if(discountAmount > billAmount) {
+    if (redeemAmount > loyalCustomerData._doc.total_points) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "please redeem loyalty points less than bill amount",
-        timer: 5000,
-      })
-      return
-    }
-    else{
-      ipcRenderer.send("apply-loyalty-points", loyalCustomerData._doc.customer_no, redeemAmount);
-    ipcRenderer.once("apply-loyalty-points-success", (event, data) => {
-      const cusomterData = JSON.parse(data)
-      const phone = loyalCustomerData._doc.customer_no;
-      const message = `Hello ${loyalCustomerData._doc.customer_name},\nYou have redeemed a total of ${redeemAmount} loyalty points. Your new balance is ${cusomterData.total_points}.`;
-
-      sendWhatsAppMessage(phone, message)
-      .then(response => {
-          console.log('Response:', response);
-        })
-      .catch(error => {
-          console.error('Error sending message:', error);
-        });
-
-      const netAmountWithDiscount = billAmount - discountAmount;
-      document.getElementById("Bill_amount").textContent = `₹ ${netAmountWithDiscount}`;
-      document.getElementById("net-amount").textContent = `₹ ${netAmountWithDiscount}`;
-      document.getElementById("discountReason").value = `${redeemAmount} was redeemed`;
-      document.getElementById("discountMoney").value = discountAmount; 
-      otpInput.value = "";
-      otpValue.value = "";
-      redeemAmount.value = "";
-      ipcRenderer.once("fetch-loyalty-points-success", (event, data) => {
-        loyalCustomerData = data
-        document.getElementById("customerPoints").textContent = data._doc.total_points
-        document.getElementById("redeemAmount").value = data._doc.total_points
-      })
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Points redeemed successfully",
+        text: "Insufficient Points",
         timer: 1000,
       })
-    })
+    }
+    else {
+      const userSettings = JSON.parse(localStorage.getItem("billInfo"));
+      const how_much_amount = userSettings._doc.how_much_amount;
+      const discountAmount = redeemAmount * how_much_amount;
+      const billAmount = Number(document.getElementById("Bill_amount").textContent.split("₹")[1]);
+      if (discountAmount > billAmount) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "please redeem loyalty points less than bill amount",
+          timer: 5000,
+        })
+        return
+      }
+      else {
+        ipcRenderer.send("apply-loyalty-points", loyalCustomerData._doc.customer_no, redeemAmount);
+        ipcRenderer.once("apply-loyalty-points-success", (event, data) => {
+          const cusomterData = JSON.parse(data)
+          // const phone = loyalCustomerData._doc.customer_no;
+          // const message = `Hello ${loyalCustomerData._doc.customer_name},\nYou have redeemed a total of ${redeemAmount} loyalty points. Your new balance is ${cusomterData.total_points}.`;
+
+          // sendWhatsAppMessage(phone, message)
+          //   .then(response => {
+          //     console.log('Response:', response);
+          //   })
+          //   .catch(error => {
+          //     console.error('Error sending message:', error);
+          //   });
+
+          const netAmountWithDiscount = billAmount - discountAmount;
+          document.getElementById("Bill_amount").textContent = `₹ ${netAmountWithDiscount}`;
+          document.getElementById("net-amount").textContent = `₹ ${netAmountWithDiscount}`;
+          document.getElementById("discountReason").value = `${redeemAmount} was redeemed`;
+          document.getElementById("discountMoney").value = discountAmount;
+          otpInput.value = "";
+          otpValue.value = "";
+          redeemAmount.value = "";
+          ipcRenderer.once("fetch-loyalty-points-success", (event, data) => {
+            loyalCustomerData = data
+            document.getElementById("customerPoints").textContent = data._doc.total_points
+            // document.getElementById("redeemAmount").value = data._doc.total_points
+          })
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Points redeemed successfully",
+            timer: 1000,
+          })
+          // close the loyatyModel and open the customerInfor model
+          loyaltyPointsModal.hide()
+          customerBillInfoModal.show();
+        })
+      }
     }
   }
-  }
-  else{
+  else {
     Swal.fire({
       icon: "error",
       title: "Oops...",
@@ -215,7 +239,7 @@ function printBill() {
   const customerPhone = document.getElementById("customerPhoneNO").value;
   const customerGSTNo = document.getElementById("customerGSTNo").value;
   const todaysDate = document.getElementById("todaysDate").textContent;
-  
+
   let userTaxPercentage = 0;
   if (userPref._doc.is_gstAvailable) {
     userTaxPercentage = userPref._doc.gst_percentage;
@@ -239,7 +263,7 @@ function printBill() {
 
   let itemDetails = [];
   let totalAmount = 0;
-  
+
   // Assuming KotcartItems is globally accessible
   KotcartItems.forEach((item) => {
     const productNo = item._doc.item_no;
@@ -269,18 +293,18 @@ function printBill() {
     }
   });
 
-  
+
   let discountAmount = 0;
-  if(discountPerc > 0){
+  if (discountPerc > 0) {
     discountAmount = (discountPerc / 100) * totalAmount;
   }
-  if(discountMoney > 0){
+  if (discountMoney > 0) {
     discountAmount = discountMoney;
   }
 
   let netAmountWithDiscount = totalAmount - discountAmount;
   let totalTaxAmount = 0;
-  
+
   if (sgstAmount > 0 || cgstAmount > 0) {
     const gstAmount = netAmountWithDiscount * (userTaxPercentage / 100);
     totalTaxAmount = gstAmount;
@@ -297,7 +321,7 @@ function printBill() {
   let roundOffValue;
   if (decimalPart < 50) {
     roundOffValue = `-0.${(100 - decimalPart)}`;
-  } 
+  }
   else {
     roundOffValue = `0.${decimalPart}`;
   }
@@ -343,7 +367,7 @@ function printBill() {
     loyaltyData.total_points = Math.floor(conversion_rate);
     loyaltyData.remaining_points = Math.floor(conversion_rate);
   }
-  
+
   const transactData = {
     table_no: table_no,
     location_name: location_name,
@@ -359,14 +383,14 @@ function printBill() {
     ipcRenderer.send("save-bill", billData);
     ipcRenderer.send("save-transaction", transactData);
     ipcRenderer.send("deduct-qty", itemDetails);
-    
+
     if (customerName && customerPhone.length === 10) {
       ipcRenderer.send("save-loyalty", loyaltyData);
       ipcRenderer.once("save-loyalty-success", async (event, data) => {
         const loyalData = JSON.parse(data);
         const phone = loyalData.customer_no;
         const message = `Hello ${loyalData.customer_name},\nYou have earned a total of ${loyalData.total_points} loyalty points. You can redeem them on your next purchase.`;
-  
+
         await sendWhatsAppMessage(phone, message)
           .then(response => {
             console.log('Message sent successfully:', response.data);
@@ -378,8 +402,8 @@ function printBill() {
     }
     const printer_ip = localStorage.getItem("printerSetting");
     // Send the data to the printer
-    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount,totalTaxAmount , printer_ip);
-    
+    ipcRenderer.send("print-bill-data", billInfoStr, itemDetails, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount, printer_ip);
+
     ipcRenderer.on("bill-saved", (event, data) => {
       location.reload();
     });
@@ -441,31 +465,15 @@ function printKOT() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const initializeModal = (id) => {
-    const $targetEl = document.getElementById(id);
-    const options = {
-      placement: "center",
-      backdrop: "dynamic",
-      backdropClasses: "bg-gray-900/50 fixed inset-0 z-40",
-      closable: true,
-    };
-  
-    const modal = new Modal($targetEl, options);
-    return modal;
-  };
-  
-  const customerBillInfoModal = initializeModal("customerInfoModal");
-  const loyaltyPointsModal = initializeModal("customerLoyaltyModal");
-  
-  
+
   function customerBill() {
     customerBillInfoModal.show();
   }
   function applyLoyaltyPoints() {
     loyaltyPointsModal.show()
   }
-  
-  
+
+
   function customerBill() {
     customerBillInfoModal.show();
   }

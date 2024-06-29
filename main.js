@@ -2894,6 +2894,7 @@ ipcMain.on("save-loyalty", async (event, data) => {
 // get-loyalty-points
 ipcMain.on("get-loyalty-points", async (event, customer_no) => {
   try {
+    console.log("hello")
     const data = await Loyalty.findOne({
       customer_no: Number(customer_no)
     })
