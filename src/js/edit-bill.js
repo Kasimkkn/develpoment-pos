@@ -8,7 +8,6 @@ let cartItems = [];
 let Locations = [];
 
 const billNo = urlParams.get("billNo");
-console.log(billNo)
 ipcRenderer.send("fetch-bill-by-billNo", billNo);
 ipcRenderer.on("bill-fetch-error", (event, error) => {
   window.location.href = "index.html";
@@ -274,7 +273,6 @@ const populateProducts = (products, locationName) => {
 };
 
 function printBill(whichBtn, billData) {
-  console.log("clicke by", whichBtn)
   const bill_no = billNo;
   const billInfoStr = JSON.parse(localStorage.getItem("billInfo"));
   const table_no = billData.table_no
@@ -363,7 +361,6 @@ function printBill(whichBtn, billData) {
     roundOffValue = '0.00';
   }
 
-  console.log(netAmountWithDiscount, roundOffValue, totalAmount)
   let updatedbillData = {
     bill_no: billData.bill_no,
     item_details: billData.item_details,

@@ -77,7 +77,6 @@ const renderUnsettledBills = (data) => {
 const attachCheckboxListeners = () => {
     checkboxes.forEach((checkbox) => {
         checkbox.addEventListener("click", () => {
-            console.log("i clicked")
             if (checkbox.checked) {
                 allBills.push(checkbox.dataset.billNo);
             } 
@@ -116,7 +115,6 @@ mainCheckbox.addEventListener("click", () => {
 
 function setPayMode(paymodeType) {
     try {
-        console.log("allBills", allBills)
         if (allBills.length > 1) {
             allBills.shift();
             ipcRenderer.send("set-paymode", allBills, paymodeType);
@@ -133,7 +131,6 @@ function setPayMode(paymodeType) {
             }, 1250);
         } 
         else {
-            console.log("hello")
             let checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
             if (checkedBoxes.length > 0) {
                 checkedBoxes.forEach(checkbox => {

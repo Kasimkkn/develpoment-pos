@@ -31,7 +31,7 @@ const fetchMonthlyPurchase = async (fromDate, toDate) => {
 };
 
 const rendermonthlyPurchase = (data) => {
-  console.log(data);
+  
   const monthlyPurchaseTable = $("#monthly-purchase-table").DataTable({
     layout: {
       topStart: {

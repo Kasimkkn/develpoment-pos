@@ -74,7 +74,6 @@ mergeTableButton.addEventListener("click", () => {
         table._doc.table_no === secondTableNO &&
         table._doc.location_name === secondTableLocation
     );
-    console.log(firstTableData, secondTableData);
     const mergedDataIntoFirstTable = mergeTablesData(
       firstTableData,
       secondTableData

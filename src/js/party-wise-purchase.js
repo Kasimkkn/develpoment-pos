@@ -31,7 +31,7 @@ const fetchPartyWisePurchase = async (fromDate, toDate) => {
 };
 
 const renderPartyWisePurchase = (data) => {
-    console.log(data);
+    
     const PartyPurchaseTable = $("#party-wise-purchase-table").DataTable({
       layout: {
         topStart: {

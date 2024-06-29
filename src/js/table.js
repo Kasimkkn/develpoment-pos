@@ -88,7 +88,6 @@ const newtableHandler = () => {
       fetchtable();
     }
   } catch (error) {
-    console.log("Error inserting", error);
     ipcRenderer.on("new-table-error", (event, error) => {
       Swal.fire({
         icon: 'error',

@@ -33,7 +33,6 @@ const fetchPaymentWise = async (fromDate, toDate) => {
 };
 
 const renderPaymentWise = (data) => {
-    console.log(data)
     if(data.length > 0){
         const initialColumns = [
             { title: "Date" },

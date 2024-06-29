@@ -32,7 +32,7 @@ const fetchMonthlySales = async (fromDate, toDate) => {
 };
 
 const rendermonthlySales = (data) => {
-  console.log(data);
+  
   if (data.length > 0) {
     const initialColumns = [
       { title: "Bills" },

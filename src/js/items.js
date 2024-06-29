@@ -396,7 +396,7 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
       ipcRenderer.send('bulk-insert-item', data);
 
       ipcRenderer.on("bulk-insert-response", (event, response) => {
-        console.log(response)
+        response)
         if (response === 'Data inserted successfully') {
           Swal.fire({
             icon: 'success',

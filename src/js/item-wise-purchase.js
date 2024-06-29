@@ -31,7 +31,7 @@ const fetchItemyWisePurchase = async (fromDate, toDate) => {
 };
 
 const renderItemWisePurchase = (data) => {
-    console.log(data);
+    
     const PartyPurchaseTable = $("#item-wise-purchase-table").DataTable({
       layout: {
         topStart: {

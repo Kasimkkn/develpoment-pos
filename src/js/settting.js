@@ -81,7 +81,6 @@ saveBtn.addEventListener("click", () => {
   try {
     ipcRenderer.send("save-bill-info", customer_id, billInfo);
     ipcRenderer.on("save-bill-info-error", () => {
-      console.log("Error saving bill info");
       Swal.fire({
         icon: 'error',
         title: 'Error',

@@ -95,13 +95,10 @@ function setLocale(locale) {
     const fileName = ["index.html","login.html","preference.html","profile.html","settting.html","unsettle-bill.html","edit-bill.html?billNo="];
 
     const currentFile = window.location.href.split('/').pop();
-    console.log(currentFile);
     if (fileName.includes(currentFile)) {
-        console.log("here");
         filepath = file2path;
     }
     else{
-        console.log("there");
         filepath = file1path;
     }
 
@@ -304,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
         input.addEventListener('click', () => {
             activeInput = input;
-            console.log("activeInput", activeInput)
             keyboard.style.display = 'block';
             updateKeyboardPosition(input);
             input.focus();

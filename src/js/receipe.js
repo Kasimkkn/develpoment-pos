@@ -21,12 +21,10 @@ const fetchItemsAndRawMaterials = () => {
 }
 
 ipcRenderer.on("products-data", (event, products) => {
-    console.log("fetching done")
     apiProduct = products;
     renderProductDropdown(apiProduct);
 })
 ipcRenderer.on("fetch-Stock-data", (event, stock) => {
-    console.log("fetching done")
     apiStock = stock;
     renderRawMaterialsDropdown(apiStock);
 })

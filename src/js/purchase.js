@@ -108,7 +108,6 @@ const newPurchaseHandler = () => {
 
 // Function to render purchase table
 const renderPurchase = (purchaseList) => {
-  console.log(purchaseList)
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
 

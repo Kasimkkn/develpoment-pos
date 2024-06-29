@@ -69,7 +69,7 @@ async function createWindow() {
 
 ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
   try {
-    console.log(printer_ip)
+    
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -193,7 +193,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
   const { table_no, location_name, loggedInUser, todaysDate, currentItemsMap, currentItemsWithSPInfo , printer_ip } = kotContent;
 
   try {
-    console.log(printer_ip)
+    
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
@@ -258,7 +258,7 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
   const { table_no, location, loggedInUser, date, cancelItem , printer_ip } = kotContent;
 
   try {
-    console.log(printer_ip)
+    
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
@@ -308,7 +308,7 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
 
 ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
   try {
-    console.log(printer_ip)
+    
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -2628,7 +2628,6 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
 ipcMain.on("set-paymode", async (event, allBills, payMode) => {
   try {
     for (const billNo of allBills) {
-      console.log("billNo", billNo);
       const billInfo = await Bill.findOne({ bill_no: billNo });
 
       if (!billInfo) {
@@ -2639,7 +2638,6 @@ ipcMain.on("set-paymode", async (event, allBills, payMode) => {
       billInfo.splited_amount = billInfo.final_amount;
       billInfo.is_synced = false;
       await billInfo.save();
-      console.log("bill info saved", billInfo.bill_no);
     }
     event.reply("set-paymode-success", "Payment mode set successfully");
   } catch (error) {
@@ -3189,7 +3187,6 @@ ipcMain.on("new-Purchase", async (event, data) => {
     })
     if (stockData.length) {
       const stockItem = stockData[0]
-      console.log("stockItem", stockItem)
       stockItem.quantity = (Number(stockItem.quantity) + Number(data.quantity)).toFixed(2)
       stockItem.mrp = Number(data.mrp)
       stockItem.total = (stockItem.mrp * stockItem.quantity).toFixed(2)
@@ -3400,7 +3397,6 @@ ipcMain.on("edit-user-rights", async (event, userID, usedData) => {
 // set-split-paymode
 ipcMain.on("set-split-paymode", async (event, billNo, splitPayments) => {
   try {
-    console.log(splitPayments);
     const BillData = await Bill.findOne({ bill_no: billNo });
     if (!BillData) {
       event.reply("set-split-paymode-error", "Bill not found");
@@ -3427,7 +3423,6 @@ ipcMain.on("set-split-paymode", async (event, billNo, splitPayments) => {
       BillData.splited_amount[i] = splitPayments[i].amount;
     }
 
-    console.log(BillData);
     await BillData.save();
 
     event.reply("set-split-paymode-success", "Split payments set successfully");

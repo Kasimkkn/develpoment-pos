@@ -202,7 +202,6 @@ saveBillBtn.addEventListener("click", () => {
 });
 
 const renderStockDropdown = (supplierList) => {
-    console.log("supplierList", supplierList);
     const supplierDropdwon = document.getElementById("supplier_name_list");
 
     supplierDropdwon.innerHTML = "";
