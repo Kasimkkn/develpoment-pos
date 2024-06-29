@@ -67,9 +67,9 @@ async function createWindow() {
   });
 }
 
-ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
+ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount, printer_ip) => {
   try {
-    
+
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -190,10 +190,10 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
 });
 
 ipcMain.on('print-kot-data', async (event, kotContent) => {
-  const { table_no, location_name, loggedInUser, todaysDate, currentItemsMap, currentItemsWithSPInfo , printer_ip } = kotContent;
+  const { table_no, location_name, loggedInUser, todaysDate, currentItemsMap, currentItemsWithSPInfo, printer_ip } = kotContent;
 
   try {
-    
+
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
@@ -255,10 +255,10 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
 });
 
 ipcMain.on('print-cancel-kot', async (event, kotContent) => {
-  const { table_no, location, loggedInUser, date, cancelItem , printer_ip } = kotContent;
+  const { table_no, location, loggedInUser, date, cancelItem, printer_ip } = kotContent;
 
   try {
-    
+
     // Initialize the printer
     const printer = new ThermalPrinter({
       type: PrinterTypes.EPSON,
@@ -280,7 +280,7 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
     printer.drawLine();
     printer.tableCustom([
       { text: 'QTY', align: 'LEFT', width: 0.3, style: 'B' },
-      { text: 'ITEM', align: 'LEFT',  style: 'B' },
+      { text: 'ITEM', align: 'LEFT', style: 'B' },
     ]);
     printer.drawLine();
 
@@ -306,9 +306,9 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
   }
 });
 
-ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount , printer_ip) => {
+ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, todaysDate, customerName, customerGSTNo, bill_no, table_no, totalAmount, discountPerc, discountMoney, discountAmount, cgstAmount, sgstAmount, vat_Amount, roundOffValue, roundedNetAmount, totalTaxAmount, printer_ip) => {
   try {
-    
+
     // Extract bill details
     const restaurantName = billInfoStr._doc.resturant_name.toUpperCase();
     const customerMobile = billInfoStr._doc.customer_mobile;
@@ -492,10 +492,10 @@ ipcMain.on('create-only-first-user', async (event) => {
                   customer_mobile: "1234567890",
                   customer_name: "admin",
                   resturant_name: "inspire",
-                  loyalty_amount : 100,
-                  loyalty_points : 1,
-                  how_much_points : 1,
-                  how_much_amount : 1,
+                  loyalty_amount: 100,
+                  loyalty_points: 1,
+                  how_much_points: 1,
+                  how_much_amount: 1,
                   is_synced: false
                 })
                 billInfo.save().then(() => {
@@ -508,7 +508,7 @@ ipcMain.on('create-only-first-user', async (event) => {
               console.error("Error creating bill book:", error);
             })
           }
-          
+
         }).catch((error) => {
           console.error("Error creating user right:", error);
         })
@@ -765,7 +765,7 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
     event.reply("cartItems-data", updatedCartItems);
 
     const allCartItem = await ExistingCartItem.find({});
-    event.reply("existing-cartItems-data" , allCartItem);
+    event.reply("existing-cartItems-data", allCartItem);
 
   } catch (error) {
     console.error("Error adding cart item:", error);
@@ -776,18 +776,18 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
 
 async function updateStock(itemName) {
   try {
-      const receipeData = await Receipe.findOne({ item_name: itemName });
-      if (receipeData) {
-          for (const subItem of receipeData.sub_item_details) {
-              const stockItem = await Stock.findOne({ item_name: subItem.item_name });
-              if (stockItem) {
-                  stockItem.quantity -= (subItem.quantity / 1000); // Convert grams to kilograms
-                  await stockItem.save();
-              }
-          }
+    const receipeData = await Receipe.findOne({ item_name: itemName });
+    if (receipeData) {
+      for (const subItem of receipeData.sub_item_details) {
+        const stockItem = await Stock.findOne({ item_name: subItem.item_name });
+        if (stockItem) {
+          stockItem.quantity -= (subItem.quantity / 1000); // Convert grams to kilograms
+          await stockItem.save();
+        }
       }
+    }
   } catch (error) {
-      console.error("Error updating stock:", error);
+    console.error("Error updating stock:", error);
   }
 }
 
@@ -1198,7 +1198,7 @@ ipcMain.on("delete-whole-billItem", async (event, locationName, tableNo, product
       location_name: locationName,
       bill_no: billNo
     });
-    if (!bill || bill==null) {
+    if (!bill || bill == null) {
       console.log("bill not found")
       event.reply("delete-whole-billItem-error", "Bill not found");
       return;
@@ -2654,13 +2654,13 @@ ipcMain.on("set-single-paymode", async (event, billNo, payMode) => {
     if (!billDetail) {
       throw new Error("Bill not found");
     }
-      billDetail.pay_mode = payMode;
-      billDetail.splited_amount = billDetail.final_amount;
-      billDetail.is_synced = false;
-      await billDetail.save();
+    billDetail.pay_mode = payMode;
+    billDetail.splited_amount = billDetail.final_amount;
+    billDetail.is_synced = false;
+    await billDetail.save();
 
-      event.reply("set-paymode-success", "Payment mode set successfully");
-    
+    event.reply("set-paymode-success", "Payment mode set successfully");
+
   } catch (error) {
     console.log("Error setting payment mode", error);
     event.reply("set-paymode-error", "Error setting payment mode");
@@ -3432,6 +3432,160 @@ ipcMain.on("set-split-paymode", async (event, billNo, splitPayments) => {
     event.reply("set-split-paymode-error", "Error editing user rights");
   }
 });
+
+
+// fetch-dashboard-data
+ipcMain.on("fetch-dashboard-data", async (event) => {
+  try {
+    const cartItemsData = await ExistingCartItem.find();
+    const uniqueTableNo = [...new Set(cartItemsData.map(item => item.table_no))];
+    const totalActiveTable = uniqueTableNo.length;
+
+    //  now calculate total monhtly sales by gettin sum off all the final_amount in bills
+    const allBills = await Bill.find({
+      created_at: {
+        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        $lte: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+      }
+    });
+
+    const monthlySalesText = allBills.reduce((sum, bill) => sum + bill.final_amount, 0);
+  
+    //  now get yearly sales by gettin sum off all the final_amount in bills
+    const allYearlyBills = await Bill.find({
+      created_at: {
+        $gte: new Date(new Date().getFullYear(), 0, 1),
+        $lte: new Date(new Date().getFullYear() + 1, 0, 0),
+      }
+    })
+
+    const yearlySalesText = allYearlyBills.reduce((sum, bill) => sum + bill.final_amount, 0);
+    
+    // now get monhtly puchrased total 
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+    const result = await Purchase.aggregate([
+        {
+            $match: {
+                date: {
+                    $gte: startOfMonth,
+                    $lte: endOfMonth,
+                }
+            }
+        },
+        {
+            $unwind: "$item_details"
+        },
+        {
+            $group: {
+                _id: null,
+                total: { $sum: "$item_details.total" }
+            }
+        }
+    ]);
+
+    const monthlyPurchaseText = result.length > 0 ? result[0].total : 0;
+
+    // now get monhtly puchrased total 
+    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const endOfYear = new Date(new Date().getFullYear() + 1, 0, 0);
+
+    const resultyear = await Purchase.aggregate([
+        {
+            $match: {
+                date: {
+                    $gte: startOfYear,
+                    $lte: endOfYear,
+                }
+            }
+        },
+        {
+            $unwind: "$item_details"
+        },
+        {
+            $group: {
+                _id: null,
+                total: { $sum: "$item_details.total" }
+            }
+        }
+    ]);
+
+    const yearlyPurchaseText = resultyear.length > 0 ? resultyear[0].total : 0;
+
+    const thisMonthSales = monthlySalesText;
+
+    //  now get the the final_amount of each corresponding date of day and if in one day more bills are there , than sum the finalAmount in arrya for each day of this month 
+
+    const [dailySale,monthlySale, yearSale] =
+      await Promise.all([
+        
+        // daily sales
+        Bill.aggregate([
+          {
+            $match: {
+              $expr: { $eq: [{ $month: "$created_at" }, { $month: new Date() }] },
+            },
+          },
+          {
+            $group: {
+              _id: { $dayOfMonth: "$created_at" },
+              Daily_sales_total: { $sum: { $toDouble: "$final_amount" } },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]),
+        // monthly sales
+        Bill.aggregate([
+          {
+            $match: {
+              $expr: { $eq: [{ $year: "$created_at" }, { $year: new Date() }] },
+            },
+          },
+          {
+            $group: {
+              _id: { $month: "$created_at" },
+              Monthly_sales_total: { $sum: { $toDouble: "$final_amount" } },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]),
+        // yearly sales 
+        Bill.aggregate([
+          {
+            $match: {
+              $expr: { $eq: [{ $year: "$created_at" }, { $year: new Date() }] },
+            },
+          },
+          {
+            $group: {
+              _id: { $year: "$created_at" },
+              year_sale_total: { $sum: { $toDouble: "$final_amount" } },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ]),
+      ]);
+
+      const data = {
+        totalActiveTable,
+        monthlySalesText,
+        yearlySalesText,
+        monthlyPurchaseText,
+        yearlyPurchaseText,
+        thisMonthSales,
+        dailySale,
+        monthlySale,
+        yearSale
+      };
+    
+    event.reply("dashboard-data", data);
+
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    event.reply("fetch-error", "Error fetching dashboard data");
+  }
+})
 
 
 

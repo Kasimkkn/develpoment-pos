@@ -92,7 +92,7 @@ function setLocale(locale) {
     let filepath ;
     let file1path = path.join(__dirname, '../', 'lang', `${locale}.json`);
     const file2path = path.join(__dirname,'lang', `${locale}.json`);
-    const fileName = ["index.html","login.html","preference.html","profile.html","settting.html","unsettle-bill.html","edit-bill.html?billNo="];
+    const fileName = ["dashboard.html","index.html","login.html","preference.html","profile.html","settting.html","unsettle-bill.html","edit-bill.html?billNo="];
 
     const currentFile = window.location.href.split('/').pop();
     if (fileName.includes(currentFile)) {
