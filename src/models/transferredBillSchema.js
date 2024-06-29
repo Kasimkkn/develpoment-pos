@@ -13,7 +13,10 @@ const transferredBillSchema = new mongoose.Schema({
         ref:"BillBook",
         type: mongoose.Schema.Types.bill_book
     },
-    final_amount:Number,
+    final_amount:{
+        type: Number,
+        required: true
+    },
     is_synced:{
         type: Boolean,
         default: false
