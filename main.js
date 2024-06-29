@@ -3512,10 +3512,7 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
     ]);
 
     const yearlyPurchaseText = resultyear.length > 0 ? resultyear[0].total : 0;
-
     const thisMonthSales = monthlySalesText;
-
-    //  now get the the final_amount of each corresponding date of day and if in one day more bills are there , than sum the finalAmount in arrya for each day of this month 
 
     const [dailySale,monthlySale, yearSale] =
       await Promise.all([
@@ -3567,19 +3564,80 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
         ]),
       ]);
 
-      const data = {
-        totalActiveTable,
-        monthlySalesText,
-        yearlySalesText,
-        monthlyPurchaseText,
-        yearlyPurchaseText,
-        thisMonthSales,
-        dailySale,
-        monthlySale,
-        yearSale
-      };
-    
-    event.reply("dashboard-data", data);
+      const previousDay = new Date();
+previousDay.setDate(previousDay.getDate() - 1);
+
+const previousMonthStart = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+const previousMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0);
+
+// Fetch previous day sales
+const previousDaySalesData = await Bill.aggregate([
+    {
+        $match: {
+            created_at: {
+                $gte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate()),
+                $lte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate(), 23, 59, 59)
+            }
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            total: { $sum: { $toDouble: "$final_amount" } }
+        }
+    }
+]);
+
+const previousDaySales = previousDaySalesData.length > 0 ? previousDaySalesData[0].total : 0;
+
+// Fetch previous month sales
+const previousMonthSalesData = await Bill.aggregate([
+    {
+        $match: {
+            created_at: {
+                $gte: previousMonthStart,
+                $lte: previousMonthEnd
+            }
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            total: { $sum: { $toDouble: "$final_amount" } }
+        }
+    }
+]);
+
+const previousMonthSales = previousMonthSalesData.length > 0 ? previousMonthSalesData[0].total : 0;
+
+const currentDaySales = dailySale.reduce((sum, sale) => sum + sale.Daily_sales_total, 0);
+const currentMonthSales = monthlySale.reduce((sum, sale) => sum + sale.Monthly_sales_total, 0);
+
+// Percentage change for day
+const daySalesPercentageChange = previousDaySales ? ((currentDaySales - previousDaySales) / previousDaySales) * 100 : 0;
+const isDaySalesIncreased = currentDaySales > previousDaySales;
+
+// Percentage change for month
+const monthSalesPercentageChange = previousMonthSales ? ((currentMonthSales - previousMonthSales) / previousMonthSales) * 100 : 0;
+const isMonthSalesIncreased = currentMonthSales > previousMonthSales;
+
+const data = {
+    totalActiveTable,
+    monthlySalesText,
+    yearlySalesText,
+    monthlyPurchaseText,
+    yearlyPurchaseText,
+    thisMonthSales,
+    dailySale,
+    monthlySale,
+    yearSale,
+    daySalesPercentageChange,
+    isDaySalesIncreased,
+    monthSalesPercentageChange,
+    isMonthSalesIncreased
+};
+
+event.reply("dashboard-data", data);
 
   } catch (error) {
     console.error("Error fetching dashboard data:", error);

@@ -366,15 +366,16 @@
             </div>
             <!-- charts -->
             <div class="flex flex-wrap gap-3 divide-y xl:divide-x xl:divide-y-0">
+                <!-- monthly sales -->
                 <div class="flex-1 p-2 xl:w-1/4 sm:w-1/2 bg-white rounded-md">
                     <div class="max-w-xl w-full bg-white rounded-lg shadow  p-4 md:p-6">
                         <div class="flex justify-between">
                             <div>
                                 <h5 id="thisMonthSales" class="leading-none text-3xl font-bold text-gray-900  pb-2">$12,423
                                 </h5>
-                                <p class="text-base font-normal text-gray-500 ">Sales this Month</p>
+                                <p class="text-base font-normal text-gray-500 ">Sales By Days</p>
                             </div>
-                            <div
+                            <div id="thisDaySalesPercentage"
                                 class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500  text-center">
                                 23%
                                 <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -388,36 +389,18 @@
                     </div>
 
                 </div>
-
+                <!-- yearly sales -->
                 <div class="flex-1 p-2 xl:w-1/4 sm:w-1/2 bg-white rounded-md">
-                    <div class="max-w-sm w-full bg-white rounded-lg shadow  p-4 md:p-6">
-                        <div class="flex justify-between mb-2">
-                            <div>
-                                <p id="thisMonthIncome" class="text-3xl font-bold text-green-500 ">$23,635</p>
-                                <h5 class="leading-none  text-gray-900  pb-2">Income
-                                </h5>
-                            </div>
-                            <div>
-                                <p id="thisMonthExpense" class="text-3xl font-bold text-red-600 ">-$18,230</p>
-                                <h5 class="leading-none text-gray-900  pb-2">Expense
-                                </h5>
-                            </div>
-                        </div>
-                        <div id="bar-chart"></div>
-                    </div>
-                </div>
-                
-                <div class="flex-1 p-2 xl:w-1/4 sm:w-1/2 bg-white rounded-md">
-                    <div class="max-w-sm w-full bg-white rounded-lg shadow  p-4 md:p-6">
+                    <div class="max-w-xl w-full bg-white rounded-lg shadow  p-4 md:p-6">
                         <div class="flex justify-between">
                             <div>
-                                <h5 class="leading-none text-3xl font-bold text-gray-900  pb-2">32.4k
+                                <h5 id="thisYearSales" class="leading-none text-3xl font-bold text-gray-900  pb-2">$12,423
                                 </h5>
-                                <p class="text-base font-normal text-gray-500 ">Customer this Month</p>
+                                <p class="text-base font-normal text-gray-500 ">Sales By Months</p>
                             </div>
-                            <div
-                                class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500  text-center">
-                                22%
+                            <div id="thisMonthSalesPercent"
+                                class="flex items-center px-2.5 py-0.5 text-base font-semibold text-green-500 text-center">
+                                23%
                                 <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 10 14">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -425,10 +408,11 @@
                                 </svg>
                             </div>
                         </div>
-                        <div id="area-chart"></div>
+                        <div id="yearly-sales-chart"></div>
                     </div>
 
                 </div>
+                
             </div>
         </div>
     </main>
