@@ -28,6 +28,7 @@ events.EventEmitter.defaultMaxListeners = Infinity;
 import { ThermalPrinter, PrinterTypes } from 'node-thermal-printer'
 import Supplier from "./src/models/supplierSchema.js";
 import Paymode from "./src/models/paymodeSchema.js";
+import ErrorStore from "./src/models/errorSchema.js";
 
 config({
   path: "./.env",
@@ -185,6 +186,7 @@ ipcMain.on('print-bill-data', async (event, billInfoStr, productsInfo, todaysDat
 
     event.reply('bill-saved');
   } catch (error) {
+    new ErrorStore(error).save();
     console.error('Error printing bill:', error);
   }
 });
@@ -250,6 +252,7 @@ ipcMain.on('print-kot-data', async (event, kotContent) => {
 
     event.reply('bill-saved');
   } catch (error) {
+    new ErrorStore(error).save();
     console.error('Error printing KOT:', error);
   }
 });
@@ -302,6 +305,7 @@ ipcMain.on('print-cancel-kot', async (event, kotContent) => {
 
     event.reply('bill-saved');
   } catch (error) {
+    new ErrorStore(error).save();
     console.error('Error printing cancel KOT:', error);
   }
 });
@@ -423,6 +427,7 @@ ipcMain.on("print-duplicate-bill", async (event, billInfoStr, productsInfo, toda
 
     event.reply('duplicate-bill-saved');
   } catch (error) {
+    new ErrorStore(error).save();
     console.error('Error printing duplicate bill:', error);
   }
 });
@@ -501,22 +506,27 @@ ipcMain.on('create-only-first-user', async (event) => {
                 billInfo.save().then(() => {
                   console.log("Bill info created successfully");
                 }).catch((error) => {
+                  new ErrorStore(error).save();
                   console.error("Error creating bill info:", error);
                 })
               }
             }).catch((error) => {
+              new ErrorStore(error).save();
               console.error("Error creating bill book:", error);
             })
           }
 
         }).catch((error) => {
+          new ErrorStore(error).save();
           console.error("Error creating user right:", error);
         })
       }).catch((error) => {
+        new ErrorStore(error).save();
         console.error("Error creating user:", error);
       })
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating user:", error);
   }
 })
@@ -533,6 +543,7 @@ ipcMain.on("login", async (event, userId, password) => {
       return;
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error logging in:", error);
     event.reply("login-error", "Error logging in" + error);
   }
@@ -545,6 +556,7 @@ ipcMain.on("fetch-location-and-tables", async (event) => {
     const locationData = await Location.find({});
     event.reply("location-and-tables-data", locationData, tableData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching location and tables:", error);
     event.reply("fetch-error", "Error fetching location and tables");
   }
@@ -556,6 +568,7 @@ ipcMain.on("fetch-products", async (event) => {
     const data = await Item.find().sort({ item_no: 1 });
     event.reply("products-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching products:", error);
     event.reply("fetch-error", "Error fetching products");
   }
@@ -567,6 +580,7 @@ ipcMain.on("fetch-categories", async (event) => {
     const data = await Category.find({}).sort({ category_no: 1 });
     event.reply("categories-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching categories:", error);
     event.reply("fetch-error", "Error fetching categories");
   }
@@ -578,6 +592,7 @@ ipcMain.on("fetch-location", async (event) => {
     const data = await Location.find({});
     event.reply("location-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching location:", error);
     event.reply("fetch-error", "Error fetching location");
   }
@@ -600,6 +615,7 @@ ipcMain.on("fetch-user", async (event) => {
     const data = await User.find({});
     event.reply("user-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching users:", error);
     event.reply("fetch-error", "Error fetching users");
   }
@@ -611,6 +627,7 @@ ipcMain.on("fetch-loyalty", async (event) => {
     const data = await Loyalty.find({});
     event.reply("loyalty-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching loyalty:", error);
     event.reply("fetch-error", "Error fetching loyalty");
   }
@@ -622,6 +639,7 @@ ipcMain.on("fetch-kot", async (event) => {
     const data = await KOTBook.find();
     event.reply("kot-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching kot:", error);
     event.reply("fetch-error", "Error fetching kot");
   }
@@ -633,6 +651,7 @@ ipcMain.on("fetch-existing-cartItems", async (event) => {
     const data = await ExistingCartItem.find();
     event.reply("existing-cartItems-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching existing cartItems:", error);
     event.reply("fetch-error", "Error fetching existing cartItems");
   }
@@ -648,6 +667,7 @@ ipcMain.on("fetch-cartItems", async (event, tableNo, locationName) => {
 
     event.reply("cartItems-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching cartItems:", error);
     event.reply("fetch-error", "Error fetching cartItems");
   }
@@ -659,6 +679,7 @@ ipcMain.on("fetch-supplier", async (event) => {
     const data = await Supplier.find();
     event.reply("supplier-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching supplier:", error);
     event.reply("fetch-error", "Error fetching supplier");
   }
@@ -679,6 +700,7 @@ ipcMain.on("new-Supplier", async (event, supplier) => {
     const data = await Supplier.find();
     event.reply("supplier-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating supplier:", error);
   }
 });
@@ -702,6 +724,7 @@ ipcMain.on("edit-supplier", async (event, SupplierId, supplier) => {
     event.reply("supplier-data", data);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing supplier:", error);
   }
 });
@@ -768,6 +791,7 @@ ipcMain.on("add-cartItem", async (event, newItem) => {
     event.reply("existing-cartItems-data", allCartItem);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error adding cart item:", error);
     event.reply("add-error", "Error adding cart item");
   }
@@ -787,6 +811,7 @@ async function updateStock(itemName) {
       }
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating stock:", error);
   }
 }
@@ -873,6 +898,7 @@ ipcMain.on("edit-bills-add-new-Item", async (event, newItem) => {
     const serializedData = JSON.parse(JSON.stringify(existingBill));
     event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error adding cart item:", error);
     event.reply("add-error", "Error adding cart item");
   }
@@ -1122,6 +1148,7 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
     }
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error adding new quantity:", error);
     event.reply("add-new-quantity-error", error.message || error);
   }
@@ -1166,6 +1193,7 @@ ipcMain.on("delete-whole-cartItem", async (event, locationName, tableNo, item) =
     event.reply("existing-cartItems-data", allCartItems);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error deleting whole cartItem:", error);
     event.reply("delete-whole-cartItem-error", "Error deleting whole cartItem");
   }
@@ -1186,6 +1214,7 @@ async function addStock(itemName) {
       }
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error adding stock:", error);
   }
 }
@@ -1260,6 +1289,7 @@ ipcMain.on("delete-whole-billItem", async (event, locationName, tableNo, product
     const serializedData = JSON.parse(JSON.stringify(bill));
     event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error deleting whole bill item:", error);
     event.reply("delete-whole-billItem-error", "Error deleting whole bill item");
   }
@@ -1286,6 +1316,7 @@ ipcMain.on("new-item", async (event, itemData) => {
     const allData = await Item.find({});
     event.reply("products-data", allData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new item:", error);
     event.reply("new-item-error", "Error creating new item");
   }
@@ -1313,6 +1344,7 @@ ipcMain.on("edit-item", async (event, itemId, itemData) => {
     const allData = await Item.find({});
     event.reply("products-data", allData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating item:", error);
     event.reply("edit-item-error", "Error updating item");
   }
@@ -1338,6 +1370,7 @@ ipcMain.on("new-category", async (event, categoryData) => {
       status: categoryData.isActive,
     });
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new category:", error);
     event.reply("new-category-error", "Error creating new category");
   }
@@ -1357,6 +1390,7 @@ ipcMain.on("edit-category", async (event, categoryId, categoryData) => {
     );
     event.reply("edit-category-success", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating category:", error);
     event.reply("edit-category-error", "Error updating category");
   }
@@ -1384,6 +1418,7 @@ ipcMain.on("new-location", async (event, locationData) => {
     const locationsData = await Location.find({}).sort({ location_no: 1 });
     event.reply("location-data", locationsData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new location:", error);
     event.reply("new-location-error", "Error creating new location");
   }
@@ -1405,6 +1440,7 @@ ipcMain.on("edit-location", async (event, locationId, locationData) => {
     const locationsData = await Location.find({}).sort({ location_no: 1 });
     event.reply("location-data", locationsData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating location:", error);
     event.reply("edit-location-error", "Error updating location");
   }
@@ -1435,6 +1471,7 @@ ipcMain.on("new-user", async (event, userData) => {
 
     event.reply("new-user-success", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new user:", error);
     event.reply("new-user-error", "Error creating new user");
   }
@@ -1457,6 +1494,7 @@ ipcMain.on("edit-user", async (event, userId, userData) => {
     );
     event.reply("edit-user-success", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating user:", error);
     event.reply("edit-user-error", "Error updating user");
   }
@@ -1486,6 +1524,7 @@ ipcMain.on("new-table", async (event, tableData) => {
     const data = await LocationInfo.find({});
     event.reply("table-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new table:", error);
     event.reply("new-table-error", "Error creating new table");
   }
@@ -1513,6 +1552,7 @@ ipcMain.on("edit-table", async (event, serialNo, tableData) => {
 
     event.reply("table-data", updatedTable);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating table:", error);
     event.reply("edit-table-error", "Error updating table");
   }
@@ -1524,6 +1564,7 @@ ipcMain.on("fetch-bill-book", async (event) => {
     const data = await BillBook.find({});
     event.reply("bill-book-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching bill-book data:", error);
     event.reply("bill-book-data-error", "Error fetching bill-book data");
   }
@@ -1560,6 +1601,7 @@ ipcMain.on("new-bill-book", async (event, BillBookData) => {
     event.reply("bill-book-data", data);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new bill-book:", error);
     event.reply("new-bill-book-error", "Error creating new bill-book");
   }
@@ -1591,6 +1633,7 @@ ipcMain.on("edit-bill-book", async (event, billBookId, billBookData) => {
 
     event.reply("bill-book-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing bill-book:", error);
     event.reply("edit-bill-book-error", "Error editing bill-book");
   }
@@ -1637,6 +1680,7 @@ ipcMain.on("merge-tables", async (event, newData, secondTableData) => {
     const data = await ExistingCartItem.find({});
     event.reply("merge-tables-success", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error merging tables:", error);
     event.reply("merge-tables-error", "Error merging tables");
   }
@@ -1754,9 +1798,11 @@ ipcMain.on("save-bill", async (event, billData) => {
       });
       event.reply("bill-saved", cartItems);
     } catch (error) {
+      new ErrorStore(error).save();
       console.error("Error removing items from cart:", error);
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new bill:", error);
     event.reply("save-bill-error", "Error creating new bill");
   }
@@ -1807,6 +1853,7 @@ ipcMain.on("save-transaction", async (event, transactionData) => {
     const data = await Transaction.create(transactionData);
     event.reply("save-transaction-success", JSON.parse(JSON.stringify(data)));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new transaction:", error);
     event.reply("save-transaction-error", "Error creating new transaction");
   }
@@ -1818,6 +1865,7 @@ ipcMain.on("fetch-paymode", async (event) => {
     const payModes = await Paymode.find({});
     event.reply("paymode-data", payModes);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching paymodes:", error);
     event.reply("fetch-paymode-error", "Error fetching paymodes");
   }
@@ -1843,6 +1891,7 @@ ipcMain.on("new-paymode", async (event, paymodeData) => {
     const data = await Paymode.find({});
     event.reply("paymode-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating new paymode:", error);
     event.reply("save-paymode-error", "Error creating new paymode");
   }
@@ -1863,6 +1912,7 @@ ipcMain.on("edit-paymode", async (event, PayModeId, PayModeData) => {
     const data = await Paymode.find()
     event.reply("paymode-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing item:", error);
     event.reply("edit-paymode-error", "Error editing item");
   }
@@ -1907,6 +1957,7 @@ ipcMain.on("fetch-daily-sales", async (event, datesByInput) => {
     const data = await Bill.aggregate(aggregationPipeline);
     event.reply("daily-sales-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
   }
@@ -2207,6 +2258,7 @@ ipcMain.on("fetch-locationWise-sales", async (event, fromDate, toDate, locationN
 
     event.reply("locationWise-sales-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching location-wise sales:", error);
     throw error;
   }
@@ -2250,6 +2302,7 @@ ipcMain.on("fetch-itemWise-sales", async (event, datesByInput) => {
     const data = await Bill.aggregate(aggregationPipeline);
     event.reply("itemWise-sales-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
   }
@@ -2325,6 +2378,7 @@ ipcMain.on("category-item-wise-daily-table", async (event, datesByInput) => {
 
     event.reply("category-item-wise-daily-table-data", itemData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
   }
@@ -2460,6 +2514,7 @@ ipcMain.on("fetch-paymentWise-sales", async (event, fromDate, toDate) => {
     event.reply("paymentWise-sales-data", data);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching payment-wise monthly sales:", error);
     event.reply("paymentWise-sales-error", "Error fetching payment-wise monthly sales");
   }
@@ -2481,6 +2536,7 @@ ipcMain.on("fetch-unpaid-bills", async (event, datesByInput) => {
 
     event.reply("unpaid-bills-data", JSON.stringify(data));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
   }
@@ -2619,6 +2675,7 @@ ipcMain.on("fetch-unsettled-bills", async (event, datesByInput) => {
     event.reply("unsettled-bills-data", JSON.stringify(data));
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching daily sales:", error);
     event.reply("fetch-daily-sales-error", "Error fetching daily sales");
   }
@@ -2750,6 +2807,7 @@ ipcMain.on("update-bill-discount", async (event, billNo, discountPerc, taxPerc) 
     const serializedData = JSON.parse(JSON.stringify(data));
     event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating bill discount:", error);
     event.reply("update-bill-discount-error", error.message);
   }
@@ -2798,6 +2856,7 @@ ipcMain.on("update-bill-discount-rupee", async (event, billNo, discountRupee, ta
     const serializedData = JSON.parse(JSON.stringify(data));
     event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating bill discount:", error);
     event.reply("update-bill-discount-error", error.message);
   }
@@ -2831,6 +2890,7 @@ ipcMain.on("update-bill-discount-vat", async (event, billNo, discountPerc, vatPe
     const serializedData = JSON.parse(JSON.stringify(data));
     event.reply("edit-bill-details-data", serializedData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error updating bill discount:", error);
     event.reply("update-bill-discount-error", error.message);
   }
@@ -2846,6 +2906,7 @@ ipcMain.on("save-bill-info", async (event, customer_id, data) => {
     const billData = await BillInfo.findOne();
     event.reply("save-bill-info-success", billData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving bill info:", error);
     event.reply("save-bill-info-error", "Error saving bill info");
   }
@@ -2857,6 +2918,7 @@ ipcMain.on("get-bill-info", async (event) => {
     const data = await BillInfo.findOne();
     event.reply("fetch-bill-info-success", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching bill info:", error);
     event.reply("fetch-bill-info-error", "Error fetching bill info");
   }
@@ -2886,6 +2948,7 @@ ipcMain.on("save-loyalty", async (event, data) => {
     event.reply("save-loyalty-success", JSON.stringify(data));
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving loyalty:", error);
     event.reply("save-loyalty-error", "Error saving loyalty");
   }
@@ -2903,6 +2966,7 @@ ipcMain.on("get-loyalty-points", async (event, customer_no) => {
       event.reply("fetch-loyalty-points-success", data);
     }
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching loyalty points:", error);
     event.reply("fetch-loyalty-points-error", "Error fetching loyalty points");
   }
@@ -2938,6 +3002,7 @@ ipcMain.on("apply-loyalty-points", async (event, customer_no, redeemAmount) => {
     }
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error applying loyalty points:", error);
     event.reply("apply-loyalty-points-error", "Error applying loyalty points");
   }
@@ -2960,6 +3025,7 @@ ipcMain.on("new-Stock", async (event, data) => {
     await Stock.create(data)
     event.reply("fetch-Stock-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving Stock:", error);
     event.reply("new-Stock-error", "Error saving Stock");
   }
@@ -2971,6 +3037,7 @@ ipcMain.on("fetch-Stock", async (event) => {
     const data = await Stock.find();
     event.reply("fetch-Stock-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching Stock:", error);
     event.reply("fetch-Stock-error", "Error fetching Stock");
   }
@@ -2987,6 +3054,7 @@ ipcMain.on("edit-Stock", async (event, itemId, itemData) => {
     await Stock.findOneAndUpdate({ item_no: itemId }, itemData)
     event.reply("fetch-Stock-data", itemData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing Stock:", error);
     event.reply("edit-Stock-error", "Error editing Stock");
   }
@@ -2998,6 +3066,7 @@ ipcMain.on("fetch-receipe", async (event) => {
     const data = await Receipe.find();
     event.reply("fetch-receipe-data", JSON.stringify(data));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching receipe:", error);
     event.reply("fetch-receipe-error", "Error fetching receipe");
   }
@@ -3020,6 +3089,7 @@ ipcMain.on("new-receipe", async (event, data) => {
     await Receipe.create(data)
     event.reply("fetch-receipe-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving receipe:", error);
     event.reply("new-receipe-error", "Error saving receipe");
   }
@@ -3067,6 +3137,7 @@ ipcMain.on("deduct-qty", async (event, data) => {
               stockItem.total = (mrp * quantity).toFixed(2);
 
               if (isNaN(stockItem.total)) {
+                new ErrorStore(error).save();
                 console.error("Error: Calculated total is NaN for stock item:", stockItem);
               } else {
                 stockItem.is_synced = false;
@@ -3083,6 +3154,7 @@ ipcMain.on("deduct-qty", async (event, data) => {
     event.reply("deduct-qty-success", "Quantity deducted and stock updated successfully");
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error deducting qty:", error);
     event.reply("deduct-qty-error", "Error deducting qty");
   }
@@ -3108,6 +3180,7 @@ ipcMain.on("delete-edit-receipe", async (event, receipeId, itemIndex) => {
     const data = await Receipe.find();
     event.reply("fetch-receipe-data", JSON.stringify(data));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error deleting receipe:", error);
     event.reply("delete-edit-receipe-error", "Error deleting receipe");
   }
@@ -3158,6 +3231,7 @@ ipcMain.on("edit-receipe", async (event, itemId, itemData) => {
     const data = await Receipe.find();
     event.reply("fetch-receipe-data", JSON.stringify(data));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing receipe:", error);
     event.reply("edit-receipe-error", "Error editing receipe");
   }
@@ -3170,6 +3244,7 @@ ipcMain.on("fetch-purchase", async (event) => {
     const data = await Purchase.find();
     event.reply("fetch-purchase-data", JSON.stringify(data));
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching purchase:", error);
     event.reply("fetch-error", "Error fetching purchase");
   }
@@ -3256,6 +3331,7 @@ ipcMain.on("new-Purchase", async (event, data) => {
     event.reply("fetch-purchase-data", newData);
   }
   catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving Purchase:", error);
     event.reply("error-purchase-data", "error creating purchase")
   }
@@ -3335,6 +3411,7 @@ ipcMain.on("save-purchase-data", async (event, data, supplier_name) => {
     }
     event.reply("purchase-save-success", "Data saved successfully");
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error saving Purchase:", error);
     event.reply("error-purchase-data", "Error creating purchase");
   }
@@ -3346,6 +3423,7 @@ ipcMain.on("fetch-user-rights", async (event) => {
     const data = await UserRights.find();
     event.reply("fetch-user-rights-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching user rights:", error);
     event.reply("fetch-error", "Error fetching user rights");
   }
@@ -3357,6 +3435,7 @@ ipcMain.on("fetch-user-rights-by-user-no", async (event, user_no) => {
     const data = await UserRights.find({ user_no: user_no });
     event.reply("fetch-user-rights-data", data);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching user rights:", error);
     event.reply("fetch-error", "Error fetching user rights");
   }
@@ -3373,6 +3452,7 @@ ipcMain.on("new-user-right", async (event, data) => {
     const newData = await UserRights.find();
     event.reply("fetch-user-rights-data", newData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error creating user rights:", error);
     event.reply("new-user-rights-error", "Error creating user rights");
   }
@@ -3390,6 +3470,7 @@ ipcMain.on("edit-user-rights", async (event, userID, usedData) => {
     const newData = await UserRights.find();
     event.reply("fetch-user-rights-data", newData);
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing user rights:", error);
     event.reply("edit-user-rights-error", "Error editing user rights");
   }
@@ -3428,6 +3509,7 @@ ipcMain.on("set-split-paymode", async (event, billNo, splitPayments) => {
 
     event.reply("set-split-paymode-success", "Split payments set successfully");
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error editing user rights:", error);
     event.reply("set-split-paymode-error", "Error editing user rights");
   }
@@ -3450,7 +3532,7 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
     });
 
     const monthlySalesText = allBills.reduce((sum, bill) => sum + bill.final_amount, 0);
-  
+
     //  now get yearly sales by gettin sum off all the final_amount in bills
     const allYearlyBills = await Bill.find({
       created_at: {
@@ -3460,29 +3542,29 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
     })
 
     const yearlySalesText = allYearlyBills.reduce((sum, bill) => sum + bill.final_amount, 0);
-    
+
     // now get monhtly puchrased total 
     const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
     const result = await Purchase.aggregate([
-        {
-            $match: {
-                date: {
-                    $gte: startOfMonth,
-                    $lte: endOfMonth,
-                }
-            }
-        },
-        {
-            $unwind: "$item_details"
-        },
-        {
-            $group: {
-                _id: null,
-                total: { $sum: "$item_details.total" }
-            }
+      {
+        $match: {
+          date: {
+            $gte: startOfMonth,
+            $lte: endOfMonth,
+          }
         }
+      },
+      {
+        $unwind: "$item_details"
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$item_details.total" }
+        }
+      }
     ]);
 
     const monthlyPurchaseText = result.length > 0 ? result[0].total : 0;
@@ -3492,31 +3574,31 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
     const endOfYear = new Date(new Date().getFullYear() + 1, 0, 0);
 
     const resultyear = await Purchase.aggregate([
-        {
-            $match: {
-                date: {
-                    $gte: startOfYear,
-                    $lte: endOfYear,
-                }
-            }
-        },
-        {
-            $unwind: "$item_details"
-        },
-        {
-            $group: {
-                _id: null,
-                total: { $sum: "$item_details.total" }
-            }
+      {
+        $match: {
+          date: {
+            $gte: startOfYear,
+            $lte: endOfYear,
+          }
         }
+      },
+      {
+        $unwind: "$item_details"
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$item_details.total" }
+        }
+      }
     ]);
 
     const yearlyPurchaseText = resultyear.length > 0 ? resultyear[0].total : 0;
     const thisMonthSales = monthlySalesText;
 
-    const [dailySale,monthlySale, yearSale] =
+    const [dailySale, monthlySale, yearSale] =
       await Promise.all([
-        
+
         // daily sales
         Bill.aggregate([
           {
@@ -3564,82 +3646,83 @@ ipcMain.on("fetch-dashboard-data", async (event) => {
         ]),
       ]);
 
-      const previousDay = new Date();
-previousDay.setDate(previousDay.getDate() - 1);
+    const previousDay = new Date();
+    previousDay.setDate(previousDay.getDate() - 1);
 
-const previousMonthStart = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
-const previousMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0);
+    const previousMonthStart = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1);
+    const previousMonthEnd = new Date(new Date().getFullYear(), new Date().getMonth(), 0);
 
-// Fetch previous day sales
-const previousDaySalesData = await Bill.aggregate([
-    {
+    // Fetch previous day sales
+    const previousDaySalesData = await Bill.aggregate([
+      {
         $match: {
-            created_at: {
-                $gte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate()),
-                $lte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate(), 23, 59, 59)
-            }
+          created_at: {
+            $gte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate()),
+            $lte: new Date(previousDay.getFullYear(), previousDay.getMonth(), previousDay.getDate(), 23, 59, 59)
+          }
         }
-    },
-    {
+      },
+      {
         $group: {
-            _id: null,
-            total: { $sum: { $toDouble: "$final_amount" } }
+          _id: null,
+          total: { $sum: { $toDouble: "$final_amount" } }
         }
-    }
-]);
+      }
+    ]);
 
-const previousDaySales = previousDaySalesData.length > 0 ? previousDaySalesData[0].total : 0;
+    const previousDaySales = previousDaySalesData.length > 0 ? previousDaySalesData[0].total : 0;
 
-// Fetch previous month sales
-const previousMonthSalesData = await Bill.aggregate([
-    {
+    // Fetch previous month sales
+    const previousMonthSalesData = await Bill.aggregate([
+      {
         $match: {
-            created_at: {
-                $gte: previousMonthStart,
-                $lte: previousMonthEnd
-            }
+          created_at: {
+            $gte: previousMonthStart,
+            $lte: previousMonthEnd
+          }
         }
-    },
-    {
+      },
+      {
         $group: {
-            _id: null,
-            total: { $sum: { $toDouble: "$final_amount" } }
+          _id: null,
+          total: { $sum: { $toDouble: "$final_amount" } }
         }
-    }
-]);
+      }
+    ]);
 
-const previousMonthSales = previousMonthSalesData.length > 0 ? previousMonthSalesData[0].total : 0;
+    const previousMonthSales = previousMonthSalesData.length > 0 ? previousMonthSalesData[0].total : 0;
 
-const currentDaySales = dailySale.reduce((sum, sale) => sum + sale.Daily_sales_total, 0);
-const currentMonthSales = monthlySale.reduce((sum, sale) => sum + sale.Monthly_sales_total, 0);
+    const currentDaySales = dailySale.reduce((sum, sale) => sum + sale.Daily_sales_total, 0);
+    const currentMonthSales = monthlySale.reduce((sum, sale) => sum + sale.Monthly_sales_total, 0);
 
-// Percentage change for day
-const daySalesPercentageChange = previousDaySales ? ((currentDaySales - previousDaySales) / previousDaySales) * 100 : 0;
-const isDaySalesIncreased = currentDaySales > previousDaySales;
+    // Percentage change for day
+    const daySalesPercentageChange = previousDaySales ? ((currentDaySales - previousDaySales) / previousDaySales) * 100 : 0;
+    const isDaySalesIncreased = currentDaySales > previousDaySales;
 
-// Percentage change for month
-const monthSalesPercentageChange = previousMonthSales ? ((currentMonthSales - previousMonthSales) / previousMonthSales) * 100 : 0;
-const isMonthSalesIncreased = currentMonthSales > previousMonthSales;
+    // Percentage change for month
+    const monthSalesPercentageChange = previousMonthSales ? ((currentMonthSales - previousMonthSales) / previousMonthSales) * 100 : 0;
+    const isMonthSalesIncreased = currentMonthSales > previousMonthSales;
 
-const data = {
-    totalActiveTable,
-    monthlySalesText,
-    yearlySalesText,
-    monthlyPurchaseText,
-    yearlyPurchaseText,
-    thisMonthSales,
-    dailySale,
-    monthlySale,
-    yearSale,
-    daySalesPercentageChange,
-    isDaySalesIncreased,
-    monthSalesPercentageChange,
-    isMonthSalesIncreased
-};
+    const data = {
+      totalActiveTable,
+      monthlySalesText,
+      yearlySalesText,
+      monthlyPurchaseText,
+      yearlyPurchaseText,
+      thisMonthSales,
+      dailySale,
+      monthlySale,
+      yearSale,
+      daySalesPercentageChange,
+      isDaySalesIncreased,
+      monthSalesPercentageChange,
+      isMonthSalesIncreased
+    };
 
-event.reply("dashboard-data", data);
+    event.reply("dashboard-data", data);
 
   } catch (error) {
+    new ErrorStore(error).save();
     console.error("Error fetching dashboard data:", error);
     event.reply("fetch-error", "Error fetching dashboard data");
   }
@@ -3655,10 +3738,12 @@ ipcMain.on('sync-data', async (event) => {
       await syncData(cloudConnection);
       event.reply('sync-data-success');
     } catch (error) {
+      new ErrorStore(error).save();
       console.error('Error syncing data:', error);
       event.reply('sync-data-error', 'Error syncing data');
     }
   } else {
+
     event.reply('sync-data-error', 'No internet connection');
   }
 });
