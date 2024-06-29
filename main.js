@@ -1039,7 +1039,6 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
       item_no: toUpdateData.itemId,
     });
 
-    console.log(cartItems)
 
     if (cartItems && cartItems.sp_info != "none") {
       const LocationData = await Location.find();
@@ -1085,25 +1084,22 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
         is_printed: false,
       });
       await cartItem.save();
-      // }
-      const updatedCartItems = await ExistingCartItem.find({
-        table_no: toUpdateData.tableNo,
-        location_name: toUpdateData.locationName,
-      });
 
-      event.reply("cartItems-data", updatedCartItems);
+
     }
     else {
       cartItems.quantity = toUpdateData.newQuantity;
       cartItems.sp_info = toUpdateData.specialInfo;
+      cartItems.is_printed = false;
       await cartItems.save();
-      const updatedCartItems = await ExistingCartItem.find({
-        table_no: toUpdateData.tableNo,
-        location_name: toUpdateData.locationName,
-      });
-      console.log("updatedCartItems", updatedCartItems)
-      event.reply("cartItems-data", updatedCartItems);
     }
+
+    const updatedCartItems = await ExistingCartItem.find({
+      table_no: toUpdateData.tableNo,
+      location_name: toUpdateData.locationName,
+    });
+
+    event.reply("cartItems-data", updatedCartItems);
 
     const getSpInfo = await SpInfo.find({
       sp_info: toUpdateData.specialInfo
@@ -1124,9 +1120,6 @@ ipcMain.on("add-new-quantity", async (event, toUpdateData) => {
         sp_info: toUpdateData.specialInfo
       })
     }
-
-    event.reply("cartItems-data", updatedCartItems);
-
 
   } catch (error) {
     console.error("Error adding new quantity:", error);

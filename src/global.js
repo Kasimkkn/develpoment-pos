@@ -79,23 +79,29 @@ if (syncDataOnline) {
 }
 
 const languageSelector = document.getElementById("languageSettign");
-
 if (languageSelector) {
-    languageSelector.addEventListener("change", function () {
-        const selectedLanguage = languageSelector.value;
-        localStorage.setItem("language", selectedLanguage);
-        setLocale(selectedLanguage);
-    });
+    if (saveBtn) {
+        saveBtn.addEventListener("click", () => {
+            const selectedLanguage = languageSelector.value;
+            localStorage.setItem("language", selectedLanguage);
+        })
+    }
 }
 
 function setLocale(locale) {
-    let filepath = path.join(__dirname, '../', 'lang', `${locale}.json`);
-    const file1path = path.join(__dirname, 'lang', `${locale}.json`);
-    const fileName = ["index.html", "login.html", "preference.html", "profile.html", "setting.html", "unsettle-bill.html"];
+    let filepath ;
+    let file1path = path.join(__dirname, '../', 'lang', `${locale}.json`);
+    const file2path = path.join(__dirname,'lang', `${locale}.json`);
+    const fileName = ["index.html","login.html","preference.html","profile.html","settting.html","unsettle-bill.html","edit-bill.html?billNo="];
 
     const currentFile = window.location.href.split('/').pop();
-    console.log(currentFile)
+    console.log(currentFile);
     if (fileName.includes(currentFile)) {
+        console.log("here");
+        filepath = file2path;
+    }
+    else{
+        console.log("there");
         filepath = file1path;
     }
 
@@ -173,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to create and append numerical keys
     const createKeys = () => {
-        console.log("hello keyboard")
         const keysContainer = document.createElement('div');
         keysContainer.className = 'keys flex flex-wrap justify-around';
         const keys = [
@@ -291,6 +296,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
         input.addEventListener('focus', () => {
             activeInput = input;
+            keyboard.style.display = 'block';
+            updateKeyboardPosition(input);
+            input.focus();
+        });
+    });
+    document.querySelectorAll('input[type="number"], input[type="tel"]').forEach(input => {
+        input.addEventListener('click', () => {
+            activeInput = input;
             console.log("activeInput", activeInput)
             keyboard.style.display = 'block';
             updateKeyboardPosition(input);
@@ -300,6 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('input[type="text"]').forEach(input => {
         input.addEventListener('focus', () => {
+            alphaActiveInput = input;
+            alphKeyboard.style.display = 'block';
+            updateAlphaKeyboardPosition(input);
+            input.focus();
+        });
+    });
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+        input.addEventListener('click', () => {
             alphaActiveInput = input;
             alphKeyboard.style.display = 'block';
             updateAlphaKeyboardPosition(input);
