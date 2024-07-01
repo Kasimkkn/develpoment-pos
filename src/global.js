@@ -89,16 +89,16 @@ if (languageSelector) {
 }
 
 function setLocale(locale) {
-    let filepath ;
+    let filepath;
     let file1path = path.join(__dirname, '../', 'lang', `${locale}.json`);
-    const file2path = path.join(__dirname,'lang', `${locale}.json`);
-    const fileName = ["dashboard.html","index.html","login.html","preference.html","profile.html","settting.html","unsettle-bill.html","edit-bill.html?billNo="];
+    const file2path = path.join(__dirname, 'lang', `${locale}.json`);
+    const fileName = ["dashboard.html", "index.html", "login.html", "preference.html", "profile.html", "settting.html", "unsettle-bill.html", "edit-bill.html?billNo="];
 
     const currentFile = window.location.href.split('/').pop();
     if (fileName.includes(currentFile)) {
         filepath = file2path;
     }
-    else{
+    else {
         filepath = file1path;
     }
 
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const keys = [
             { value: '1' }, { value: '2' }, { value: '3' }, { value: '4' },
             { value: '5' }, { value: '6' }, { value: '7' }, { value: '8' },
-            { value: '9' }, { value: '0' }, { value: '.' }, 
+            { value: '9' }, { value: '0' }, { value: '.' },
             { value: '❌', key: 'backspace' }, { value: 'Clear', key: 'clear' }
         ];
 
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const button = document.createElement('button');
                 button.className = 'alphakey bg-white border p-1 m-1 rounded text-center flex-1';
                 button.dataset.key = key === '❌' ? 'backspace' : key === 'Clear' ? 'clear' : key;
-                button.textContent = key === ' ' ? 'Space' : key; 
+                button.textContent = key === ' ' ? 'Space' : key;
                 button.addEventListener('click', () => {
                     if (alphaActiveInput) {
                         const keyValue = button.dataset.key;
@@ -235,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             alphaActiveInput.value = alphaActiveInput.value.slice(0, -1);
                         } else if (keyValue === 'clear') {
                             alphaActiveInput.value = '';
-                        } 
-                        else if(keyValue === '@'){
+                        }
+                        else if (keyValue === '@') {
                             alphaActiveInput.value += '@';
                         }
                         else {
@@ -294,6 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('focus', () => {
             activeInput = input;
             keyboard.style.display = 'block';
+            alphKeyboard.style.display = 'none';
+            keyboard.style.transition = "all 0.8s ease"
             updateKeyboardPosition(input);
             input.focus();
         });
@@ -302,6 +304,8 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('click', () => {
             activeInput = input;
             keyboard.style.display = 'block';
+            alphKeyboard.style.display = 'none';
+            keyboard.style.transition = "all 0.8s ease"
             updateKeyboardPosition(input);
             input.focus();
         });
@@ -311,6 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('focus', () => {
             alphaActiveInput = input;
             alphKeyboard.style.display = 'block';
+            keyboard.style.display = 'none';
+            keyboard.style.transition = "all 0.8s ease"
             updateAlphaKeyboardPosition(input);
             input.focus();
         });
@@ -319,6 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('click', () => {
             alphaActiveInput = input;
             alphKeyboard.style.display = 'block';
+            keyboard.style.display = 'none';
+            keyboard.style.transition = "all 0.8s ease"
             updateAlphaKeyboardPosition(input);
             input.focus();
         });
@@ -335,5 +343,5 @@ document.addEventListener('DOMContentLoaded', () => {
             alphaActiveInput = null;
         }
     });
-}); 
+});
 

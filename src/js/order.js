@@ -47,6 +47,7 @@ const updateCartUI = () => {
     else {
       itemElement.classList.add("bg-white");
     }
+    itemElement.style.transition = "all 0.8s ease"
     itemElement.innerHTML = `
     <input type="hidden" value="${item._doc.item_no}" id="itemNo"/>
   <div class="flex flex-col gap-1 w-full">

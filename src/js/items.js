@@ -31,6 +31,13 @@ function closeModal() {
   editItemModal.hide()
 }
 
+ipcRenderer.on("products-data", (event, products) => {
+  apiProduct = products;
+  renderDropdown(apiProduct);
+  renderProducts(products);
+
+});
+
 function openEditModal(itemId) {
   const product = apiProduct.find(
     (product) => product._doc.item_no === itemId
@@ -79,8 +86,12 @@ updaeFileInput.addEventListener("change", () => {
 
 const editItemHandler = async () => {
   const itemId = document.getElementById('editItemModal').dataset.itemId;
-  const imageFile = document.getElementById("item_image").files[0];
-
+  let imageFile = document.getElementById("item_image").files[0];
+  console.log(imageFile);
+  let uploadPath;
+  if (!imageFile) {
+     uploadPath = "../assets/placeholder.png";
+  }
   try {
     let itemData = {
       itemName: document.getElementById("item_name").value,
@@ -95,20 +106,23 @@ const editItemHandler = async () => {
     };
 
     if (imageFile) {
-      const uploadPath = path.join(__dirname, '../uploads', imageFile.name);
+      uploadPath = path.join(__dirname, '../uploads', imageFile.name);
       const existingProduct = apiProduct.find(product => String(product._doc.item_no) === String(itemId));
       if (existingProduct) {
         const existingImagePath = existingProduct._doc.item_image;
-        fs.unlinkSync(existingImagePath);
+        try {
+          fs.unlinkSync(existingImagePath);
+        } catch (error) {
+          console.log('Error deleting image:', error);
+        }
       }
-
       fs.copyFileSync(imageFile.path, uploadPath);
-      itemData.itemImage = uploadPath;
     }
-
+    
+    itemData.itemImage = uploadPath;
+    console.log(itemData.itemImage)
     ipcRenderer.send("edit-item", itemId, itemData);
     closeModal();
-    location.reload(true);
     fetchProduct();
 
   } catch (error) {
@@ -146,18 +160,16 @@ const newItemHandler = () => {
     })
   }
   else{
-    const imageFile = document.getElementById("new_item_image").files[0];
-
+    let imageFile = document.getElementById("new_item_image").files[0];
+    let uploadPath;
     if (!imageFile) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please select an image!',
-        timer: 1000,
-      })
+       imageFile = "../assets/placeholder.png";
+       uploadPath = "../assets/placeholder.png";
     }
-    const uploadPath = path.join(__dirname,'../uploads', imageFile.name);
-    fs.copyFileSync(imageFile.path, uploadPath);
+    else{
+     uploadPath = path.join(__dirname,'../uploads', imageFile.name);
+      fs.copyFileSync(imageFile.path, uploadPath);
+    }
     try {
       const newItemNoInput = document.getElementById("new_item_no").value
       const newItemNameInput = document.getElementById("new_item_name").value;
@@ -339,13 +351,6 @@ ipcRenderer.on("categories-data", (event, categories) => {
   apiCategory = categories;
   populateEditCategories(categories);
   populateNewCategories(apiCategory);
-});
-
-ipcRenderer.on("products-data", (event, products) => {
-  apiProduct = products;
-  renderDropdown(apiProduct);
-  renderProducts(products);
-
 });
 
 const bulkInput = document.getElementById('bulkUploadInput');
