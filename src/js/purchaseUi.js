@@ -92,7 +92,7 @@ document.getElementById("add-quantity-btn").addEventListener("click", () => {
 
     const existingItem = cartItems.find((item) => item.item_no == cartItemId);
     if (existingItem) {
-        existingItem.quantity += newQuantity;
+        existingItem.quantity = newQuantity;
         existingItem.price = newPrice;
     } else {
         const productFromApi = apiRawProduct.find((item) => item._doc.item_no == cartItemId);
