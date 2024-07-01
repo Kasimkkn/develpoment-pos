@@ -156,7 +156,7 @@ const newItemHandler = () => {
         timer: 1000,
       })
     }
-    const uploadPath = path.join(__dirname, 'uploads', imageFile.name);
+    const uploadPath = path.join(__dirname,'../uploads', imageFile.name);
     fs.copyFileSync(imageFile.path, uploadPath);
     try {
       const newItemNoInput = document.getElementById("new_item_no").value
@@ -396,7 +396,6 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
       ipcRenderer.send('bulk-insert-item', data);
 
       ipcRenderer.on("bulk-insert-response", (event, response) => {
-        response)
         if (response === 'Data inserted successfully') {
           Swal.fire({
             icon: 'success',
