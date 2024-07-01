@@ -567,6 +567,18 @@
     </div>
   </main>
 
+  <div id="loader" class="fixed top-0 left-0 w-full h-full bg-transparent bg-opacity-50 justify-center items-center z-50 hidden">
+    <div class="bg-white p-5 rounded-lg shadow-lg">
+      <p>Loading...</p>
+      <div class="relative pt-1 mt-3">
+        <div id="progressBar" class="overflow-hidden h-6 mb-4 text-xs flex rounded bg-common">
+          <div style="width:0%" id="innerBar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
   <div id="keyboard" class="hidden fixed shadow-lg">
   </div>
     <div id="alphKeyboard" class="hidden fixed shadow-lg">

@@ -365,14 +365,6 @@ bulkInput.addEventListener('change', () => {
 
 
 document.getElementById('bulkUploadButton').addEventListener('click', () => {
-  if(apiCategory.length === 0){
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Category is empty',
-      timer: 800
-    })
-  }
   const fileInput = document.getElementById('bulkUploadInput');
   const file = fileInput.files[0];
 
@@ -393,7 +385,24 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
         data = await parseCsv(text);
       }
 
+      closeModal()
+      // Show loader
+      const loader = document.getElementById('loader');
+      loader.classList.remove("hidden");
+      loader.classList.add("flex");
+      
+
+      // Send data to main process for bulk insert
       ipcRenderer.send('bulk-insert-item', data);
+
+      ipcRenderer.on("bulk-insert-progress", (event, { progress }) => {
+        // Update progress bar
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = `${progress}%`;
+        const progressText = document.getElementById('progressText');
+        progressText.textContent = `${progress}%`;
+        progressBar.setAttribute('aria-valuenow', progress);
+      });
 
       ipcRenderer.on("bulk-insert-response", (event, response) => {
         if (response === 'Data inserted successfully') {
@@ -402,22 +411,24 @@ document.getElementById('bulkUploadButton').addEventListener('click', () => {
             title: 'Success',
             text: 'Data inserted successfully',
             timer: 1000,
-          });
-          setTimeout(() => {
+          }).then(() => {
             location.reload(true);
-          }, 1000);
+          });
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
             text: 'Error inserting data',
             timer: 1000,
-          });
-          setTimeout(() => {
+          }).then(() => {
             location.reload(true);
-          }, 1000);
+          });
         }
-      })
+
+        // Hide loader after completion
+        loader.classList.remove("flex");
+        loader.classList.add("hidden");
+      });
     };
 
     reader.readAsArrayBuffer(file);
@@ -445,8 +456,6 @@ function parseCsv(data) {
       .on('error', (error) => reject(error));
   });
 }
-
-
 document.addEventListener("DOMContentLoaded", () => {
   fetchProduct();
   renderProducts(apiProduct);

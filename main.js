@@ -2735,6 +2735,23 @@ ipcMain.on("get-special-info", async (event) => {
   }
 })
 
+import axios from 'axios';
+
+const fetchItemImage = async (itemName) => {
+  const apiKey = 'AIzaSyApK9hyKeBVGxmtuCX9uuayoTmP_MmmCY8'; 
+  const cx = 'c5945ffe7d9ef4dc6'; 
+  const searchUrl = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(itemName)}&cx=${cx}&searchType=image&key=${apiKey}`;
+
+  try {
+    const response = await axios.get(searchUrl);
+    const imageUrl = response.data.items[0]?.link;
+    return imageUrl;
+  } catch (error) {
+    console.error('Error fetching image for', itemName, error);
+    return null;
+  }
+};
+
 const isValidItem = (item) => {
   for (const key in item) {
     if (item[key] === null || item[key] === undefined || item[key] === '') {
@@ -2744,17 +2761,37 @@ const isValidItem = (item) => {
   return true;
 };
 
+const placeholder_img = "../assets/placeholder.png";
+
 // bulk insert
 ipcMain.on('bulk-insert-item', async (event, data) => {
   try {
-    const validData = data.filter(isValidItem);
+    const totalItems = data.length;
+    let processedItems = 0;
 
-    if (validData.length > 0) {
-      await Item.insertMany(validData);
-      event.reply('bulk-insert-response', 'Data inserted successfully');
-    } else {
-      event.reply('bulk-insert-response', 'No valid data to insert into database');
+    for (const item of data) {
+      const imageUrl = await fetchItemImage(item.item_name);
+
+      if (imageUrl) {
+        item.item_image = imageUrl;
+      } else {
+        console.warn('No image found for item:', item.item_name);
+        item.item_image = placeholder_img; // Assign default placeholder image
+      }
+
+      if (isValidItem(item)) {
+        try {
+          await Item.create(item);
+          processedItems++;
+          event.reply('bulk-insert-progress', { progress: (processedItems / totalItems) * 100 });
+        } catch (insertError) {
+          console.error('Error inserting item:', item, insertError);
+        }
+      }
     }
+
+    // All items processed
+    event.reply('bulk-insert-response', 'Data inserted successfully');
   } catch (error) {
     console.error('Bulk insert error:', error);
     event.reply('bulk-insert-response', 'Error inserting data');
